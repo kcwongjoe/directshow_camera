@@ -172,6 +172,8 @@ OpenCV version: 4.3.0
 6. Build solution in visual studio. Executable file will be constructed but you will encounter a missing dll error.
 7. Go to Solution folder and run **copy_dll.bat** to copy dll from vcpkg folder.
 
+    Type `copy_dll x86` or `copy_dll x64`
+
    If vcpkg is not installed in current folder, change the *VCPKG_PATH* in copy_dll.bat
 
 # License
