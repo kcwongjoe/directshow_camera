@@ -1,7 +1,7 @@
 @echo off
 
 :: Set vcpkg path. If vcpkg is not installed in current folder, change this path.
-:; For example: set "VCPKG_PATH=C:/vcpkg"
+:: For example: set "VCPKG_PATH=C:/Program Files/vcpkg"
 set "VCPKG_PATH=.\vcpkg"
 
 :: Window version

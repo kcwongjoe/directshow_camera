@@ -2,159 +2,168 @@
 
 #ifdef HAS_OPENCV
 
-/**
- * @brief Constructor
-*/
-OpenCVMatConvter::OpenCVMatConvter()
+namespace DirectShowCamera
 {
-	
-	m_supportVideoType.push_back(MEDIASUBTYPE_RGB8);
-	m_supportVideoType.push_back(MEDIASUBTYPE_GREY);
-	m_supportVideoType.push_back(MEDIASUBTYPE_Y8);
-	m_supportVideoType.push_back(MEDIASUBTYPE_Y800);
-	m_supportVideoType.push_back(MEDIASUBTYPE_Y16);
-	m_supportVideoType.push_back(MEDIASUBTYPE_YUY2);
-	m_supportVideoType.push_back(MEDIASUBTYPE_RGB565);
-	m_supportVideoType.push_back(MEDIASUBTYPE_RGB555);
-	m_supportVideoType.push_back(MEDIASUBTYPE_RGB24);
-	m_supportVideoType.push_back(MEDIASUBTYPE_MJPG);
-	
-}
 
-/**
- * @brief Convet Byte[] to cv::Mat
- * @param data Byte[]
- * @param width Widht of frame
- * @param height Height of frmae
- * @return Return cv::Mat
-*/
-cv::Mat OpenCVMatConvter::convert(unsigned char* data, int width, int height)
-{
-	// Initialize
-	cv::Mat result;
-
-	// Convert to Mat
-	if (videoType == MEDIASUBTYPE_Y800 || videoType == MEDIASUBTYPE_Y8 || videoType == MEDIASUBTYPE_GREY)
+	/**
+	 * @brief Constructor
+	*/
+	OpenCVMatConvter::OpenCVMatConvter()
 	{
-		// 1 byte per pixel
-
-		// Create Mat
-		result = cv::Mat(height, width, CV_8UC1);
-
-		// Copy
-		memcpy(result.ptr(), data, (long)height * (long)width);
+		
+		m_supportVideoType.push_back(MEDIASUBTYPE_RGB8);
+		m_supportVideoType.push_back(MEDIASUBTYPE_GREY);
+		m_supportVideoType.push_back(MEDIASUBTYPE_Y8);
+		m_supportVideoType.push_back(MEDIASUBTYPE_Y800);
+		m_supportVideoType.push_back(MEDIASUBTYPE_Y16);
+		m_supportVideoType.push_back(MEDIASUBTYPE_YUY2);
+		m_supportVideoType.push_back(MEDIASUBTYPE_RGB565);
+		m_supportVideoType.push_back(MEDIASUBTYPE_RGB555);
+		m_supportVideoType.push_back(MEDIASUBTYPE_RGB24);
+		m_supportVideoType.push_back(MEDIASUBTYPE_MJPG);
+		
 	}
-	else if (videoType == MEDIASUBTYPE_Y16)
+
+	/**
+	 * @brief Convet Byte[] to cv::Mat
+	 * @param data Byte[]
+	 * @param width Widht of frame
+	 * @param height Height of frmae
+	 * @return Return cv::Mat
+	*/
+	cv::Mat OpenCVMatConvter::convert(unsigned char* data, int width, int height)
 	{
-		// 2 byte per pixel
+		// Initialize
+		cv::Mat result;
 
-		// Create Mat
-		result = cv::Mat(height, width, CV_16UC1);
-		unsigned char* matPtr = result.ptr();
-
-		if (!isBGR)
+		// Convert to Mat
+		if (videoType == MEDIASUBTYPE_Y800 || videoType == MEDIASUBTYPE_Y8 || videoType == MEDIASUBTYPE_GREY)
 		{
-			// 2 byte - RGB
-			memcpy(matPtr, data, (long)height * (long)width * 2L);
+			// 1 byte per pixel
+
+			// Create Mat
+			result = cv::Mat(height, width, CV_8UC1);
+
+			// Copy
+			memcpy(result.ptr(), data, (long)height * (long)width);
 		}
-		else
+		else if (videoType == MEDIASUBTYPE_Y16)
 		{
-			// 2 byte - BGR
-			for (int i = 0; i < width * height; i++) {
-				*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
-				matPtr++;
+			// 2 byte per pixel
 
-				*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
-				matPtr++;
+			// Create Mat
+			result = cv::Mat(height, width, CV_16UC1);
+			unsigned char* matPtr = result.ptr();
 
-				*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
-				matPtr++;
-
-				data += 2;
-			}
-		}
-	}
-	else
-	{
-		// 3 byte per pixel
-
-		// Create Mat
-		result = cv::Mat(height, width, CV_8UC3);
-		long numOfBytePerRow = width * 3;
-		int frameSize = width * height * 3;
-		unsigned char* dataPtrTemp = data;
-		unsigned char* matPtr = result.ptr();
-
-		if (!isBGR) {
-			// RGB
-
-			if (isVerticalFlip)
+			if (!isBGR)
 			{
-				// 3 byte - RGB - Vertical flip
-				for (long y = 0; y < height; y++) {
-					memcpy(matPtr + (numOfBytePerRow * (long)y), data + (numOfBytePerRow * (long)(height - y - 1)), numOfBytePerRow);
-				}
+				// 2 byte - RGB
+				memcpy(matPtr, data, (long)height * (long)width * 2L);
 			}
 			else
 			{
-				// 3 byte - RGB - No Vertical flip
-				memcpy(matPtr, data, frameSize);
+				// 2 byte - BGR
+				for (int i = 0; i < width * height; i++) {
+					*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
+					matPtr++;
+
+					*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
+					matPtr++;
+
+					*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
+					matPtr++;
+
+					data += 2;
+				}
 			}
 		}
 		else
 		{
-			// BGR
-			if (isVerticalFlip) {
-				// 3 byte - BGR - Vertical flip
+			// 3 byte per pixel
 
-				int x = 0;
-				int y = (height - 1) * numOfBytePerRow;
-				dataPtrTemp += y;
+			// Create Mat
+			result = cv::Mat(height, width, CV_8UC3);
+			long numOfBytePerRow = width * 3;
+			int frameSize = width * height * 3;
+			unsigned char* dataPtrTemp = data;
+			unsigned char* matPtr = result.ptr();
 
-				for (int i = 0; i < frameSize; i += 3) {
-					if (x >= width) {
-						x = 0;
-						dataPtrTemp -= numOfBytePerRow * 2;
+			if (!isBGR) {
+				// RGB
+
+				if (isVerticalFlip)
+				{
+					// 3 byte - RGB - Vertical flip
+					for (long y = 0; y < height; y++) {
+						memcpy(matPtr + (numOfBytePerRow * (long)y), data + (numOfBytePerRow * (long)(height - y - 1)), numOfBytePerRow);
 					}
-
-					*matPtr = *(dataPtrTemp + 2);
-					matPtr++;
-
-					*matPtr = *(dataPtrTemp + 1);
-					matPtr++;
-
-					*matPtr = *dataPtrTemp;
-					matPtr++;
-
-					dataPtrTemp += 3;
-					x++;
+				}
+				else
+				{
+					// 3 byte - RGB - No Vertical flip
+					memcpy(matPtr, data, frameSize);
 				}
 			}
 			else
 			{
-				// 3 byte - BGR - No Vertical flip
-				for (int i = 0; i < frameSize; i += 3) {
-					*matPtr = *(dataPtrTemp + 2);
-					matPtr++;
+				// BGR
+				if (isVerticalFlip) {
+					// 3 byte - BGR - Vertical flip
 
-					*matPtr = *(dataPtrTemp + 1);
-					matPtr++;
+					int x = 0;
+					int y = (height - 1) * numOfBytePerRow;
+					dataPtrTemp += y;
 
-					*matPtr = *dataPtrTemp;
-					matPtr++;
+					for (int i = 0; i < frameSize; i += 3) {
+						if (x >= width) {
+							x = 0;
+							dataPtrTemp -= numOfBytePerRow * 2;
+						}
 
-					dataPtrTemp += 3;
+						*matPtr = *(dataPtrTemp + 2);
+						matPtr++;
+
+						*matPtr = *(dataPtrTemp + 1);
+						matPtr++;
+
+						*matPtr = *dataPtrTemp;
+						matPtr++;
+
+						dataPtrTemp += 3;
+						x++;
+					}
+				}
+				else
+				{
+					// 3 byte - BGR - No Vertical flip
+					for (int i = 0; i < frameSize; i += 3) {
+						*matPtr = *(dataPtrTemp + 2);
+						matPtr++;
+
+						*matPtr = *(dataPtrTemp + 1);
+						matPtr++;
+
+						*matPtr = *dataPtrTemp;
+						matPtr++;
+
+						dataPtrTemp += 3;
+					}
 				}
 			}
 		}
+
+		return result;
 	}
 
-	return result;
-}
-
-std::vector<GUID> OpenCVMatConvter::getSupportVideoType()
-{
-	return m_supportVideoType;
+	/**
+	 * @brief Get the support video type
+	 * 
+	 * @return std::vector<GUID> 
+	 */
+	std::vector<GUID> OpenCVMatConvter::getSupportVideoType()
+	{
+		return m_supportVideoType;
+	}
 }
 
 #endif

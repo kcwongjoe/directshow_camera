@@ -17,100 +17,102 @@
 #include <vector>
 #include <functional>
 
-
-class DirectShowCamera
+namespace DirectShowCamera
 {
-private:
+    class DirectShowCamera
+    {
+    private:
 
-    static bool s_isInitializedCOMLib;
+        static bool s_isInitializedCOMLib;
 
-    // Graph and filter
-    ICaptureGraphBuilder2* m_captureGraphBuilder = NULL;
-    IGraphBuilder* m_filterGraphManager = NULL;
-    IBaseFilter* m_videoInputFilter = NULL;
-    IBaseFilter* m_grabberFilter = NULL;
-    IBaseFilter* m_nullRendererFilter = NULL;
+        // Graph and filter
+        ICaptureGraphBuilder2* m_captureGraphBuilder = NULL;
+        IGraphBuilder* m_filterGraphManager = NULL;
+        IBaseFilter* m_videoInputFilter = NULL;
+        IBaseFilter* m_grabberFilter = NULL;
+        IBaseFilter* m_nullRendererFilter = NULL;
 
-    // Config
-    IAMStreamConfig* m_streamConfig = NULL;
-    //std::vector<CameraResolution> m_resolutions;
-    DirectShowCameraProperties* m_property = NULL;
+        // Config
+        IAMStreamConfig* m_streamConfig = NULL;
+        //std::vector<CameraResolution> m_resolutions;
+        DirectShowCameraProperties* m_property = NULL;
 
-    std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;
-    int m_currentVideoFormatIndex = -1;
+        std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;
+        int m_currentVideoFormatIndex = -1;
 
-    // Callback
-    ISampleGrabber* m_sampleGrabber = NULL;
-    SampleGrabberCallback* m_sampleGrabberCallback = new SampleGrabberCallback();
-    GUID m_grabberMediaSubType = MEDIASUBTYPE_None;
+        // Callback
+        ISampleGrabber* m_sampleGrabber = NULL;
+        SampleGrabberCallback* m_sampleGrabberCallback = new SampleGrabberCallback();
+        GUID m_grabberMediaSubType = MEDIASUBTYPE_None;
 
-    IMediaEventEx* m_mediaEvent = NULL;
-    IMediaControl* m_mediaControl = NULL;
+        IMediaEventEx* m_mediaEvent = NULL;
+        IMediaControl* m_mediaControl = NULL;
 
-    bool m_isOpening = false;
-    bool m_isCapturing = false;
-    std::string m_errorString = "";
+        bool m_isOpening = false;
+        bool m_isCapturing = false;
+        std::string m_errorString = "";
 
-    std::thread m_checkConnectionThread;
-    bool m_isRunningCheckConnectionThread = false;
-    bool m_stopCheckConnectionThread = false;
-    std::function<void()> m_disconnectionProcess = NULL;
-    void startCheckConnectionThread();
+        std::thread m_checkConnectionThread;
+        bool m_isRunningCheckConnectionThread = false;
+        bool m_stopCheckConnectionThread = false;
+        std::function<void()> m_disconnectionProcess = NULL;
+        void startCheckConnectionThread();
 
-    void updateGrabberFilterVideoFormat();
-    bool updateVideoFormatList();
-    void updateVideoFormatIndex();
+        void updateGrabberFilterVideoFormat();
+        bool updateVideoFormatList();
+        void updateVideoFormatIndex();
 
-    int getVideoFormatIndex(AM_MEDIA_TYPE* mediaType);
-    int getVideoFormatIndex(DirectShowVideoFormat* videoFormat);
+        int getVideoFormatIndex(AM_MEDIA_TYPE* mediaType);
+        int getVideoFormatIndex(DirectShowVideoFormat* videoFormat);
 
-public:
+    public:
 
-    DirectShowCamera();
-    ~DirectShowCamera();
-    void release();
+        DirectShowCamera();
+        ~DirectShowCamera();
+        void release();
 
-    bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
-    void close();
-    bool isOpening();
-    bool checkDisconnection();
-    void setDisconnectionProcess(std::function<void()> func);
+        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
+        void close();
+        bool isOpening();
+        bool checkDisconnection();
+        void setDisconnectionProcess(std::function<void()> func);
 
-    bool start();
-    bool stop();
-    bool isCapturing();
+        bool start();
+        bool stop();
+        bool isCapturing();
 
-    bool getFrame(unsigned char* pixels, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
-    void setMinimumPFS(double minimumFPS);
-    double getFPS();
-    long getFrameTotalSize();
-    GUID getFrameType();
+        bool getFrame(unsigned char* pixels, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
+        void setMinimumPFS(double minimumFPS);
+        double getFPS();
+        long getFrameTotalSize();
+        GUID getFrameType();
 
-    // Video Format
-    std::vector<DirectShowVideoFormat> getVideoFormatList();
-    int getCurrentVideoFormatIndex();
-    DirectShowVideoFormat getCurrentVideoFormat();
+        // Video Format
+        std::vector<DirectShowVideoFormat> getVideoFormatList();
+        int getCurrentVideoFormatIndex();
+        DirectShowVideoFormat getCurrentVideoFormat();
 
-    bool DirectShowCamera::setVideoFormat(DirectShowVideoFormat* videoFormat);
-    bool DirectShowCamera::setVideoFormat(int videoFormatIndex);
+        bool DirectShowCamera::setVideoFormat(DirectShowVideoFormat* videoFormat);
+        bool DirectShowCamera::setVideoFormat(int videoFormatIndex);
 
-    // Property
-    void refreshProperties();
-    DirectShowCameraProperties* getProperties();
+        // Property
+        void refreshProperties();
+        DirectShowCameraProperties* getProperties();
 
-    void resetDefault(bool asAuto = true);
-    bool setValue(DirectShowCameraProperty* property, long value, bool isAuto);
+        void resetDefault(bool asAuto = true);
+        bool setValue(DirectShowCameraProperty* property, long value, bool isAuto);
 
-    // Get camera
-    bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices);
-    bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter);
-    bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter);
-    bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter);
+        // Get camera
+        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices);
+        bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter);
+        bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter);
+        bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter);
 
-    std::string getLastError();
+        std::string getLastError();
 
 
-};
+    };
+}
 
 
 //*******************************

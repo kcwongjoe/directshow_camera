@@ -1,8 +1,9 @@
 #include "eg4_exposure_fusion.h"
 
 #include <uvc_camera.h>
-
 #include <iostream>
+
+using namespace DirectShowCamera;
 
 void eg4_exposure_fusion()
 {

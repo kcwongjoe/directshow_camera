@@ -8,47 +8,49 @@
 #include <string>
 #include <vector>
 
+namespace DirectShowCamera
+{
+    class DirectShowCameraDevice
+    {
+        public:
+            DirectShowCameraDevice(std::string friendlyName, std::string description, std::string devicePath, std::vector<DirectShowVideoFormat> videoFormats);
 
-class DirectShowCameraDevice {
+            std::vector<DirectShowVideoFormat> getDirectShowVideoFormats();
+            std::string getFriendlyName();
+            std::string getDescription();
+            std::string getDevicePath();
 
-public:
-    DirectShowCameraDevice(std::string friendlyName, std::string description, std::string devicePath, std::vector<DirectShowVideoFormat> videoFormats);
+            // To string
 
-    std::vector<DirectShowVideoFormat> getDirectShowVideoFormats();
-    std::string getFriendlyName();
-    std::string getDescription();
-    std::string getDevicePath();
-
-	// To string
-
-	operator std::string() const
-	{
-        std::string result = "Friend Name: " + m_friendlyName + "\n";
-        result += "Description: " + m_description + "\n";
-        result += "Device Path: " + m_devicePath + "\n";
+            operator std::string() const
+            {
+                std::string result = "Friend Name: " + m_friendlyName + "\n";
+                result += "Description: " + m_description + "\n";
+                result += "Device Path: " + m_devicePath + "\n";
 
 
-        if (m_videoFormats.size() > 0)
-        {
-            result += "---Support Video Formats---\n";
-            for (int i = 0; i < m_videoFormats.size();i++) {
-                result += (std::string)m_videoFormats[i] + "\n";
+                if (m_videoFormats.size() > 0)
+                {
+                    result += "---Support Video Formats---\n";
+                    for (int i = 0; i < m_videoFormats.size();i++) {
+                        result += (std::string)m_videoFormats[i] + "\n";
+                    }
+                }        
+
+                return result;
             }
-        }        
 
-		return result;
-	}
+            friend std::ostream& operator << (std::ostream& out, const DirectShowCameraDevice& obj) {
+                return out << (std::string)obj;
+            }
 
-	friend std::ostream& operator << (std::ostream& out, const DirectShowCameraDevice& obj) {
-		return out << (std::string)obj;
-	}
-
-private:
-    std::vector<DirectShowVideoFormat> m_videoFormats;
-    std::string m_friendlyName;
-    std::string m_description;
-    std::string m_devicePath;
-};
+        private:
+            std::vector<DirectShowVideoFormat> m_videoFormats;
+            std::string m_friendlyName;
+            std::string m_description;
+            std::string m_devicePath;
+    };
+}
 
 //*******************************
 

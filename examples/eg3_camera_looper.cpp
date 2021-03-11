@@ -1,8 +1,9 @@
 #include "eg3_camera_looper.h"
 
 #include <uvc_camera_looper.h>
-
 #include <iostream>
+
+using namespace DirectShowCamera;
 
 void eg3_camera_looper()
 {

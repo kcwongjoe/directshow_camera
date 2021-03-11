@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+using namespace DirectShowCamera;
+
 void eg1_capture()
 {
     // Get a empty camera

@@ -4,7 +4,6 @@
 
 # Docs
 /docs/html
-/docs/doxygen.cfg
 
 # DrawIO
 *.drawio

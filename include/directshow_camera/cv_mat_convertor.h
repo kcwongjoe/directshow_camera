@@ -13,34 +13,39 @@
 
 #include <ds_video_format.h>
 
-/**
- * @brief A converter to convert byte[] to cv::Mat. Reference: https://github.com/opencv/opencv/tree/master/modules/videoio/src/cap_dshow.cpp
-*/
-class OpenCVMatConvter
+namespace DirectShowCamera
 {
-private:
-	std::vector<GUID> m_supportVideoType;
-
-public:
-
-	OpenCVMatConvter();
 
 	/**
-	 * @brief Set it as true to return a BGR Mat, otherwise return a RGB Mat. Default as false.
+	 * @brief A converter to convert byte[] to cv::Mat. Reference: https://github.com/opencv/opencv/tree/master/modules/videoio/src/cap_dshow.cpp
 	*/
-	bool isBGR = false;
+	class OpenCVMatConvter
+	{
+		private:
+			std::vector<GUID> m_supportVideoType;
 
-	/**
-	 * @brief Set it as true to flip iamge vertically. Default as true
-	*/
-	bool isVerticalFlip = true;
+		public:
 
-	GUID videoType = MEDIASUBTYPE_None;
-	
-	cv::Mat convert(unsigned char* data, int width, int height);
+			OpenCVMatConvter();
 
-	std::vector<GUID> getSupportVideoType();
-};
+			/**
+			 * @brief Set it as true to return a BGR Mat, otherwise return a RGB Mat. Default as false.
+			*/
+			bool isBGR = false;
+
+			/**
+			 * @brief Set it as true to flip iamge vertically. Default as true
+			*/
+			bool isVerticalFlip = true;
+
+			GUID videoType = MEDIASUBTYPE_None;
+			
+			cv::Mat convert(unsigned char* data, int width, int height);
+
+			std::vector<GUID> getSupportVideoType();
+	};
+
+}
 
 #endif
 

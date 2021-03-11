@@ -3,6 +3,7 @@
 #include <uvc_camera.h>
 #include <iostream>
 
+using namespace DirectShowCamera;
 
 void eg2_properties()
 {

@@ -50,8 +50,8 @@ else()
 
     #******Set vcpkg as submodule******
 
-    # If vcpkg is not installed in current folder, change this variable.
-    # For example: set(VCPKG_PATH "C:/vcpkg")
+    # If the vcpkg folder is not located in current folder, change this variable.
+    # For example: set(VCPKG_PATH "C:/Program Files")
     set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
     set(CMAKE_TOOLCHAIN_FILE

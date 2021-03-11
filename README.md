@@ -24,6 +24,8 @@ A window based camera library in c++.
 ```cpp
 #include <uvc_camera.h>
 
+using namespace DirectShowCamera;
+
 // Get a empty camera
 UVCCamera camera = UVCCamera();
 
@@ -46,7 +48,7 @@ cv::Mat frame = camera.getMat();
 camera.close();
 ```
 
-*For more details, please see [example code](./examples) and reference to the [Documentation](http://kcwongjoe.com/directshow_camera/index.html)*
+*For more details, please see [example code](./examples) and reference to the [Documentation](http://directshow_camera.kcwongjoe.com)*
 
 # Looper
 
@@ -57,6 +59,8 @@ Looper is a loop thread worked in detach mode, making the camera life cycle easy
 ```cpp
 #include <uvc_camera_looper.h>
 #include <iostream>
+
+using namespace DirectShowCamera;
 
 // Create a looper
 UVCCameraLooper cameraLooper = UVCCameraLooper();
@@ -121,10 +125,9 @@ OpenCV version: 4.3.0
 
 # Installation
 
-1. Install Window SDK
+### Install Window SDK
 
     Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
-
 
 ### Cmake
 
