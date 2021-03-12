@@ -30,7 +30,11 @@ namespace DirectShowCamera
     UVCCameraLooper::~UVCCameraLooper()
     {
         stop(false);
-        m_capturedImage.release();
+
+        if (this)
+        {
+            m_capturedImage.release();
+        }
     }
 
     /**
@@ -77,7 +81,7 @@ namespace DirectShowCamera
     */
     bool UVCCameraLooper::stop(bool async, bool stopCapture)
     {
-        if (m_isRunning)
+        if (this && m_isRunning)
         {
             m_stopCapture = stopCapture;
             m_stopThread = true;

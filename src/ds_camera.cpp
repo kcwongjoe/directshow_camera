@@ -26,57 +26,60 @@ namespace DirectShowCamera
 	*/
 	void DirectShowCamera::release()
 	{
-		HRESULT hr = NOERROR;
+		if (this)
+		{
+			HRESULT hr = NOERROR;
 
-		stop();
+			stop();
 
-		// Release video format
-		DirectShowVideoFormat::release(m_videoFormats);
-		m_videoFormats = NULL;
-		m_currentVideoFormatIndex = -1;
+			// Release video format
+			DirectShowVideoFormat::release(m_videoFormats);
+			m_videoFormats = NULL;
+			m_currentVideoFormatIndex = -1;
 
-		// Release stream config
-		DirectShowCameraUtils::SafeRelease(&m_streamConfig);
+			// Release stream config
+			DirectShowCameraUtils::SafeRelease(&m_streamConfig);
 
-		// Release sample grabber callback
-		if (m_sampleGrabber != NULL) m_sampleGrabber->SetCallback(NULL, 1);
-		DirectShowCameraUtils::SafeRelease(&m_sampleGrabberCallback);
+			// Release sample grabber callback
+			if (m_sampleGrabber != NULL) m_sampleGrabber->SetCallback(NULL, 1);
+			DirectShowCameraUtils::SafeRelease(&m_sampleGrabberCallback);
 
-		// Release sample grabber
-		DirectShowCameraUtils::SafeRelease(&m_sampleGrabber);
+			// Release sample grabber
+			DirectShowCameraUtils::SafeRelease(&m_sampleGrabber);
 
-		// Disconnect filters from capture device
-		DirectShowCameraUtils::nukeDownStream(m_filterGraphManager, m_videoInputFilter);
+			// Disconnect filters from capture device
+			DirectShowCameraUtils::nukeDownStream(m_filterGraphManager, m_videoInputFilter);
 
-		// Release media event
-		DirectShowCameraUtils::SafeRelease(&m_mediaEvent);
+			// Release media event
+			DirectShowCameraUtils::SafeRelease(&m_mediaEvent);
 
-		// Release media control
-		DirectShowCameraUtils::SafeRelease(&m_mediaControl);
+			// Release media control
+			DirectShowCameraUtils::SafeRelease(&m_mediaControl);
 
-		// Release null renderer filter
-		DirectShowCameraUtils::SafeRelease(&m_nullRendererFilter);
+			// Release null renderer filter
+			DirectShowCameraUtils::SafeRelease(&m_nullRendererFilter);
 
-		// Release grabber filter
-		DirectShowCameraUtils::SafeRelease(&m_grabberFilter);
+			// Release grabber filter
+			DirectShowCameraUtils::SafeRelease(&m_grabberFilter);
 
-		// Release video input filter
-		DirectShowCameraUtils::SafeRelease(&m_videoInputFilter);
+			// Release video input filter
+			DirectShowCameraUtils::SafeRelease(&m_videoInputFilter);
 
-		// Release capture graph builder
-		DirectShowCameraUtils::destroyGraph(m_filterGraphManager);
-		DirectShowCameraUtils::SafeRelease(&m_filterGraphManager);
+			// Release capture graph builder
+			DirectShowCameraUtils::destroyGraph(m_filterGraphManager);
+			DirectShowCameraUtils::SafeRelease(&m_filterGraphManager);
 
-		// Release capture graph builder
-		DirectShowCameraUtils::SafeRelease(&m_captureGraphBuilder);
+			// Release capture graph builder
+			DirectShowCameraUtils::SafeRelease(&m_captureGraphBuilder);
 
-		//Release Properties
-		delete m_property;
-		m_property = NULL;
+			//Release Properties
+			delete m_property;
+			m_property = NULL;
 
-		m_grabberMediaSubType = MEDIASUBTYPE_None;
+			m_grabberMediaSubType = MEDIASUBTYPE_None;
 
-		m_isOpening = false;
+			m_isOpening = false;
+		}		
 	}
 
 #pragma endregion Life cycle
@@ -451,44 +454,47 @@ namespace DirectShowCamera
 		HRESULT hr = NOERROR;
 		bool result = true;
 
-		if (m_isOpening)
+		if (this)
 		{
-			if (m_isCapturing)
+			if (m_isOpening)
 			{
-				// Pause
-				if (result)
+				if (m_isCapturing)
 				{
-					hr = m_mediaControl->Pause();
-					if (FAILED(hr))
+					// Pause
+					if (result)
 					{
-						result = false;
-						m_errorString = " Could not pause media contol.(hr = " + std::to_string(hr) + ").";
+						hr = m_mediaControl->Pause();
+						if (FAILED(hr))
+						{
+							result = false;
+							m_errorString = " Could not pause media contol.(hr = " + std::to_string(hr) + ").";
+						}
 					}
-				}
 
-				// Stop
-				if (result)
-				{
-					hr = m_mediaControl->Stop();
-					if (FAILED(hr))
+					// Stop
+					if (result)
 					{
-						result = false;
-						m_errorString = " Could not stop media contol.(hr = " + std::to_string(hr) + ").";
+						hr = m_mediaControl->Stop();
+						if (FAILED(hr))
+						{
+							result = false;
+							m_errorString = " Could not stop media contol.(hr = " + std::to_string(hr) + ").";
+						}
 					}
+
+					// Reset isCapturing
+					//if (result)
+					m_isCapturing = false;
+
+					// Stop the check disconnection thread
+					m_stopCheckConnectionThread = true;
 				}
-
-				// Reset isCapturing
-				//if (result)
-				m_isCapturing = false;
-
-				// Stop the check disconnection thread
-				m_stopCheckConnectionThread = true;
 			}
-		}
-		else
-		{
-			result = false;
-			m_errorString = "Graph is not initialized, please call initialize().";
+			else
+			{
+				result = false;
+				m_errorString = "Graph is not initialized, please call initialize().";
+			}
 		}
 
 		return result;

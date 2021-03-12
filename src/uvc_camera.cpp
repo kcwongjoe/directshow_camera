@@ -28,9 +28,12 @@ namespace DirectShowCamera
 	{
 		close();
 
-		m_directShowCamera->release();
-		delete m_directShowCamera;
-
+		if (this && m_directShowCamera)
+		{
+			m_directShowCamera->release();
+			delete m_directShowCamera;
+		}
+		
 		// Uninitialize COM Library
 		DirectShowCameraUtils::uninitCOMLib();
 	}
@@ -228,12 +231,12 @@ namespace DirectShowCamera
 	bool UVCCamera::close()
 	{
 		bool result = true;
-		if (result && isCapturing())
+		if (this && result && isCapturing())
 		{
 			result = stopCapture();
 		}
 
-		if (result && isOpened())
+		if (this && result && isOpened())
 		{
 			m_directShowCamera->close();
 		}
