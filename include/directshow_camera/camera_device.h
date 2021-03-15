@@ -12,6 +12,9 @@
 
 namespace DirectShowCamera
 {
+    /**
+     * @brief A class to store UVC Camera Device information
+     */
     class CameraDevice
     {
 

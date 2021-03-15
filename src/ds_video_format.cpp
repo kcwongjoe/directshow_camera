@@ -41,7 +41,7 @@ namespace DirectShowCamera
 	/**
 	 * @brief Collect all video format from IAMStreamConfig
 	 * @param[in] streamConfig IAMStreamConfig
-	 * @param[out] videoFormat Video format
+	 * @param[out] videoFormats Video format
 	 * @param[in] keepAmMediaType Set as true if you want to keep the AmMediaType
 	 * @param[out] errorString (Option) Error string, set as NULL to disabled.
 	 * @param[out] supportVideoTypes (Option) Support video type. It will only add Video format matched supportVideoTypes, set as NULL to disabled.

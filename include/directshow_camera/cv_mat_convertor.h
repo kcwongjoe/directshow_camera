@@ -17,7 +17,8 @@ namespace DirectShowCamera
 {
 
 	/**
-	 * @brief A converter to convert byte[] to cv::Mat. Reference: https://github.com/opencv/opencv/tree/master/modules/videoio/src/cap_dshow.cpp
+	 * @brief A converter to convert byte[] to cv::Mat.
+	 * @details Reference: https://github.com/opencv/opencv/tree/master/modules/videoio/src/cap_dshow.cpp
 	*/
 	class OpenCVMatConvter
 	{

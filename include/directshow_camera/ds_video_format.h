@@ -12,7 +12,11 @@
 #include <algorithm>
 
 namespace DirectShowCamera
-	{
+{
+	/**
+	 * @brief A class to store the Directshow Video Format information
+	 * 
+	 */
 	class DirectShowVideoFormat
 	{
 	// Static function

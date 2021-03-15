@@ -11,6 +11,10 @@
 
 namespace DirectShowCamera
 {
+	/**
+	 * @brief A class to store the DirectShow Camera Property
+	 * 
+	 */
 	class DirectShowCameraProperty
 	{
 	// Const

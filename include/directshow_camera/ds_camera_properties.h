@@ -13,6 +13,10 @@
 
 namespace DirectShowCamera
 {
+	/**
+	 * @brief A class to store the DirectShow Camera Properties
+	 * 
+	 */
 	class DirectShowCameraProperties
 	{
 	private:

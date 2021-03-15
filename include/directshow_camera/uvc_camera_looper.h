@@ -8,6 +8,10 @@
 #include <uvc_camera.h>
 namespace DirectShowCamera
 {
+    /**
+     * @brief UVC Camera Looper
+     * 
+     */
     class UVCCameraLooper {
     public:
 

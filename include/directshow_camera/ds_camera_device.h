@@ -10,6 +10,9 @@
 
 namespace DirectShowCamera
 {
+    /**
+     * @brief A Class to store DirectShow Camera Device information
+     */
     class DirectShowCameraDevice
     {
         public:

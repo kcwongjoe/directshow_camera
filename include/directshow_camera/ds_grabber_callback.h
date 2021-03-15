@@ -13,6 +13,10 @@
 
 namespace DirectShowCamera
 {
+	/**
+	 * @brief A Callback for image sampling
+	 * 
+	 */
 	class SampleGrabberCallback : public ISampleGrabberCB
 	{
 		private:

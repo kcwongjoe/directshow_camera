@@ -1123,7 +1123,7 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Set WhiteBalance
-	 * @param value Value to be set in degree kelvin
+	 * @param kelvin Value to be set in degree kelvin
 	 * @return Return true if success.
 	*/
 	bool UVCCamera::setWhiteBalance(long kelvin)
@@ -2654,9 +2654,9 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Get new cv::Mat in sync mode.
-	 * @param step(Option) Step for checking new frame in ms. Default as 50ms
-	 * @param timeout(Option) Timeout in ms. Default as 3000ms
-	 * @param skip(Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
+	 * @param step (Option) Step for checking new frame in ms. Default as 50ms
+	 * @param timeout (Option) Timeout in ms. Default as 3000ms
+	 * @param skip (Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
 	 * @return Return the cv::Mat. Empty mat return if timeout.
 	*/
 	cv::Mat UVCCamera::getNewMat(int step, int timeout, int skip)

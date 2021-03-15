@@ -8,7 +8,10 @@
 
 namespace DirectShowCamera
 {
-
+    /**
+     * @brief A class to store UVC Camera Resolution information
+     * 
+     */
     class CameraResolution
     {
         public:

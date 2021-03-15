@@ -231,6 +231,7 @@ namespace DirectShowCameraUtils
 	 * @param iPin IPin
 	 * @param func Lambda function to process AM_MEDIA_TYPE
 	 * @param errorString Error String
+	 * @param releaseAMMediaType Set as false if you want to release AMMediaType in your function. Default as true which AMMediaType will be released internally after your funciton processed.
 	 * @return Return true if success.
 	*/
 	template <typename Func> bool amMediaTypeDecorator(IPin* iPin, Func func, std::string* errorString = NULL, bool releaseAMMediaType = true)

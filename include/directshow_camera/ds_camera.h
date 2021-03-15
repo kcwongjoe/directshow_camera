@@ -19,6 +19,10 @@
 
 namespace DirectShowCamera
 {
+    /**
+     * @brief Directshow Camera. This is the core of this project.
+     * 
+     */
     class DirectShowCamera
     {
     private:
@@ -92,8 +96,8 @@ namespace DirectShowCamera
         int getCurrentVideoFormatIndex();
         DirectShowVideoFormat getCurrentVideoFormat();
 
-        bool DirectShowCamera::setVideoFormat(DirectShowVideoFormat* videoFormat);
-        bool DirectShowCamera::setVideoFormat(int videoFormatIndex);
+        bool setVideoFormat(DirectShowVideoFormat* videoFormat);
+        bool setVideoFormat(int videoFormatIndex);
 
         // Property
         void refreshProperties();

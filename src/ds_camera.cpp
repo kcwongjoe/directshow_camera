@@ -88,7 +88,8 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Build the directshow graph
-	 * @param videoInputFilter Video input filter. Look up from getCamera()
+	 * @param videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
+	 * @param videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
 	 * @return Return true if success
 	*/
 	bool DirectShowCamera::open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat)
@@ -909,7 +910,6 @@ namespace DirectShowCamera
 	/**
 	 * @brief Get the available camera list
 	 * @param[out] cameraDevices Camera Devices. This variable must be initialized first. 
-	 * @param[in] includeAMMediaType Whether include AMMediaType in the DirectShowVideoFormat list. 
 	 * @return Return true if success
 	*/
 	bool DirectShowCamera::getCameras(std::vector<DirectShowCameraDevice>* cameraDevices)
@@ -1016,7 +1016,7 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Get the video input filter based on the Camera device path
-	 * @param[in] device Camera device path
+	 * @param[in] devicePath Camera device path
 	 * @param[out] videoInputFilter Output video input filter
 	 * @return Return true if success.
 	*/

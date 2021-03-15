@@ -19,8 +19,19 @@
 #include <math.h>
 #include <vector>
 
+/**
+ * @example eg1_capture.cpp
+ * @example eg2_properties.cpp
+ * @example eg3_camera_looper.cpp
+ * @example eg4_exposure_fusion.cpp
+ * @example eg5_disconnect_process.cpp
+ */
 namespace DirectShowCamera
 {
+	/**
+	 * @brief UVC Camera Class
+	 * 
+	 */
 	class UVCCamera
 	{
 
@@ -231,8 +242,8 @@ namespace DirectShowCamera
 		// Utils
 		void copyError(bool success);
 		int confirmDegreeRange(int degree);
-		double UVCCamera::exposureConvertion(long dsValue);
-		long UVCCamera::exposureConvertion(double second);
+		double exposureConvertion(long dsValue);
+		long exposureConvertion(double second);
 
 		/**
 		 * @brief A template to return property whether support.
