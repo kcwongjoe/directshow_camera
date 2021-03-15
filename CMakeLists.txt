@@ -96,6 +96,9 @@ else()
     LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg3_camera_looper.cpp")
     LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg4_exposure_fusion.h")
     LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg4_exposure_fusion.cpp")
+    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg5_disconnect_process.h")
+    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg5_disconnect_process.cpp")
+
 
     # Add sources files
     add_executable(${PROJECT_NAME} ${DIRECTSHOWCAMERA_SOURCES_FILES})

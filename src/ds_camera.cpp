@@ -339,7 +339,7 @@ namespace DirectShowCamera
 	}
 
 	/**
-	 * @brief Set the disconnection process. When the process was set, a connection thread will start to keep check the connection. If camera is cdisconnected, this process will run and then run stop() internally.
+	 * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run and then run stop() internally.
 	 * @param func void()
 	*/
 	void DirectShowCamera::setDisconnectionProcess(std::function<void()> func)

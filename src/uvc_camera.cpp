@@ -244,11 +244,19 @@ namespace DirectShowCamera
 		return result;
 	}
 
+	/**
+	 * @brief Return true if camera is disconnected.
+	 * @return Return true if camera is disconnected.
+	 */
 	bool UVCCamera::checkDisconnection()
 	{
 		return m_directShowCamera->checkDisconnection();
 	}
 
+	/**
+	 * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run.
+	 * @param func void()
+	 */
 	void UVCCamera::setDisconnectionProcess(std::function<void()> func)
 	{
 		m_directShowCamera->setDisconnectionProcess(func);

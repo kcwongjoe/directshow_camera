@@ -4,6 +4,7 @@ A window based camera library in c++.
 
 ### Features
 * Work with OpenCV::Mat
+* Support camera resolutions setting
 * Support camera properties setting
 * Support Exposure Fusion
 * A looper to handle the camera cycle
@@ -121,15 +122,15 @@ Minimum C++ 17
 
 vcpkg commit version: #14121
 
-OpenCV version: 4.3.0
+OpenCV version: 4.3.0 (Option)
 
 # Installation
 
-### Install Window SDK
+### 1. Install Window SDK
 
-    Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
+1. Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
 
-### Cmake
+### 2.1 Cmake
 
 1. Create **libs** folder in you project
 2. Clone this repository into the **libs** folder
@@ -145,7 +146,7 @@ OpenCV version: 4.3.0
             directshow_camera
     )
    ```
-### For dummy
+### 2.2 For dummy
 1. Copy all files inside **src** folder and **include/directshow_camera** folder to your project.
 
 # Deploy example codes
