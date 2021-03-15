@@ -48,7 +48,7 @@ cv::Mat frame = camera.getMat();
 camera.close();
 ```
 
-*For more details, please see [example code](./examples) and reference to the [Documentation](http://kcwongjoe.code.com/directshow_camera/)*
+*For more details, please see [example code](./examples) and reference to the [Documentation](http://kcwongjoe.lovestoblog.com/directshow_camera/index.html)*
 
 # Looper
 
