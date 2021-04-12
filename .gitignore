@@ -5,9 +5,6 @@
 # Docs
 /docs/html
 
-# DrawIO
-*.drawio
-
 # Prerequisites
 *.d
 
