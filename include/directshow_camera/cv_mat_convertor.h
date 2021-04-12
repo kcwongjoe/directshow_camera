@@ -20,14 +20,14 @@ namespace DirectShowCamera
 	 * @brief A converter to convert byte[] to cv::Mat.
 	 * @details Reference: https://github.com/opencv/opencv/tree/master/modules/videoio/src/cap_dshow.cpp
 	*/
-	class OpenCVMatConvter
+	class OpenCVMatConverter
 	{
 		private:
 			std::vector<GUID> m_supportVideoType;
 
 		public:
 
-			OpenCVMatConvter();
+			OpenCVMatConverter();
 
 			/**
 			 * @brief Set it as true to return a BGR Mat, otherwise return a RGB Mat. Default as false.

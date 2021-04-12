@@ -38,7 +38,6 @@ namespace DirectShowCamera
 
         // Config
         IAMStreamConfig* m_streamConfig = NULL;
-        //std::vector<CameraResolution> m_resolutions;
         DirectShowCameraProperties* m_property = NULL;
 
         std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;

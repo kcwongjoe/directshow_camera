@@ -235,7 +235,7 @@ namespace DirectShowCamera
 	#ifdef HAS_OPENCV
 		unsigned char* m_matBuffer = NULL;
 		int m_matBufferSize = 0;
-		OpenCVMatConvter m_matConvertor;
+		OpenCVMatConverter m_matConvertor;
 	#endif
 		bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
 

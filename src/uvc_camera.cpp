@@ -15,7 +15,7 @@ namespace DirectShowCamera
 		m_directShowCamera = new DirectShowCamera();
 
 	#ifdef HAS_OPENCV
-		m_matConvertor = OpenCVMatConvter();
+		m_matConvertor = OpenCVMatConverter();
 		m_matConvertor.isBGR = false;
 		m_matConvertor.isVerticalFlip = true;
 	#endif

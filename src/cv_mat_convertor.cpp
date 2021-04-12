@@ -8,7 +8,7 @@ namespace DirectShowCamera
 	/**
 	 * @brief Constructor
 	*/
-	OpenCVMatConvter::OpenCVMatConvter()
+	OpenCVMatConverter::OpenCVMatConverter()
 	{
 		
 		m_supportVideoType.push_back(MEDIASUBTYPE_RGB8);
@@ -31,7 +31,7 @@ namespace DirectShowCamera
 	 * @param height Height of frmae
 	 * @return Return cv::Mat
 	*/
-	cv::Mat OpenCVMatConvter::convert(unsigned char* data, int width, int height)
+	cv::Mat OpenCVMatConverter::convert(unsigned char* data, int width, int height)
 	{
 		// Initialize
 		cv::Mat result;
@@ -160,7 +160,7 @@ namespace DirectShowCamera
 	 * 
 	 * @return std::vector<GUID> 
 	 */
-	std::vector<GUID> OpenCVMatConvter::getSupportVideoType()
+	std::vector<GUID> OpenCVMatConverter::getSupportVideoType()
 	{
 		return m_supportVideoType;
 	}
