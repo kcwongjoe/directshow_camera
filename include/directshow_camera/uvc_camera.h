@@ -68,8 +68,7 @@ namespace DirectShowCamera
 
 		// ------Frame------
 
-		bool onlyGetNewFrame = true;
-		bool getFrame(unsigned char* frame, int* numOfBytes = NULL);
+		bool getFrame(unsigned char* frame, int* numOfBytes = NULL, bool onlyGetNewFrame = false);
 		long getFrameIndex();
 
 		double getFPS();
@@ -83,7 +82,7 @@ namespace DirectShowCamera
 		void vecticalFlipMat(bool verticalFlip);
 		void setMatAsBGR(bool asBGR);
 		bool allocateMatBuffer();
-		cv::Mat getMat();
+		cv::Mat getMat(bool onlyGetNewMat = false);
 		cv::Mat getLastMat();
 		cv::Mat getNewMat(int step = 50, int timeout = 3000, int skip = 0);
 

@@ -2504,10 +2504,11 @@ namespace DirectShowCamera
 	/**
 	 * @brief Get frame
 	 * @param[out] frame Frame bytes
-	 * @param[out] numOfBytes Number of bytes of the frame
+	 * @param[out] numOfBytes (Option) Number of bytes of the frame. Default as NULL
+	 * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame. Default as false
 	 * @return Return true if success
 	*/
-	bool UVCCamera::getFrame(unsigned char* frame, int* numOfBytes)
+	bool UVCCamera::getFrame(unsigned char* frame, int* numOfBytes, bool onlyGetNewFrame)
 	{
 		bool result = false;
 
@@ -2619,9 +2620,11 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Get cv::Mat of the current frame
+	 * 
+	 * @param[in] onlyGetNewMat (Option) Set it as true if you only want to get the new Mat. Default as false
 	 * @return Return cv::Mat
 	*/
-	cv::Mat UVCCamera::getMat()
+	cv::Mat UVCCamera::getMat(bool onlyGetNewMat)
 	{
 		// Reallocate frame buffer size if changed
 		if (m_matBufferSize != m_directShowCamera->getFrameTotalSize())
@@ -2630,7 +2633,7 @@ namespace DirectShowCamera
 		}
 
 		// Get frame
-		bool success = getFrame(m_matBuffer);
+		bool success = getFrame(m_matBuffer, NULL, onlyGetNewMat);
 
 		if (success)
 		{
@@ -2654,9 +2657,9 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Get new cv::Mat in sync mode.
-	 * @param step (Option) Step for checking new frame in ms. Default as 50ms
-	 * @param timeout (Option) Timeout in ms. Default as 3000ms
-	 * @param skip (Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
+	 * @param[in] step (Option) Step for checking new frame in ms. Default as 50ms
+	 * @param[in] timeout (Option) Timeout in ms. Default as 3000ms
+	 * @param[in] skip (Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
 	 * @return Return the cv::Mat. Empty mat return if timeout.
 	*/
 	cv::Mat UVCCamera::getNewMat(int step, int timeout, int skip)
@@ -2672,7 +2675,7 @@ namespace DirectShowCamera
 			std::this_thread::sleep_for(std::chrono::milliseconds(step));
 
 			// Get mat and update m_lastFrameIndex
-			result = getMat();
+			result = getMat(true);
 
 			// Update past time
 			pastTime += step;
@@ -2741,7 +2744,7 @@ namespace DirectShowCamera
 
 			std::this_thread::sleep_for(std::chrono::milliseconds(minSetExposureDelay + (int)(exposures[i] * 1000)));
 
-			cv::Mat newMat = getNewMat();
+			cv::Mat newMat = getMat(false);
 			if (!newMat.empty())
 			{
 				exposureImages->push_back(newMat);

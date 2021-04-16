@@ -142,7 +142,7 @@ namespace DirectShowCamera
                 {
 
                     // Get Image
-                    cv::Mat image = m_camera->getMat();
+                    cv::Mat image = m_camera->getMat(true);
                     if (!image.empty())
                     {
                         m_capturedImage = image;

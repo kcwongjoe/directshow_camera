@@ -11,7 +11,6 @@
 #include <ds_grabber_callback.h>
 
 #include <camera_device.h>
-#include <camera_resolution.h>
 
 #include <string>
 #include <vector>
