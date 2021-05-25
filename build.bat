@@ -25,4 +25,12 @@ if "%SYSVERSION%" == "X86" (
     cmake -B ./build -G "Visual Studio 16 2019" -A x64
 )
 
+:: Copy dll from vcpkg
+if "%SYSVERSION%" == "X86" (
+    call copy_dll.bat "x86"
+) else (
+    call copy_dll.bat "x64"
+)
+
+
 echo Finished

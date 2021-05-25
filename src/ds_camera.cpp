@@ -290,7 +290,7 @@ namespace DirectShowCamera
 	}
 
 	/**
-	 * @brief Destory the graph
+	 * @brief Close
 	*/
 	void DirectShowCamera::close()
 	{
@@ -298,8 +298,8 @@ namespace DirectShowCamera
 	}
 
 	/**
-	 * @brief Return true if the graph is built.
-	 * @return Return true if the graph is built.
+	 * @brief Return true if camera was opened
+	 * @return Return true if camera was opened
 	*/
 	bool DirectShowCamera::isOpening()
 	{
@@ -798,7 +798,7 @@ namespace DirectShowCamera
 	}
 
 	/**
-	 * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opening camera.
+	 * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opened camera.
 	 * @param videoFormat Video format to be set
 	 * @return Return true if success.
 	*/
@@ -858,6 +858,9 @@ namespace DirectShowCamera
 
 #pragma region Properties
 
+	/**
+	 * @brief Refresh properties
+	 */
 	void DirectShowCamera::refreshProperties()
 	{
 		if (m_isOpening && m_property != NULL)
@@ -875,6 +878,11 @@ namespace DirectShowCamera
 		return m_property;
 	}
 
+	/**
+	 * @brief Reset properties to default
+	 * 
+	 * @param[in] asAuto (Option) Set as true if you also want to set properties to auto. Default as true.
+	 */
 	void DirectShowCamera::resetDefault(bool asAuto)
 	{
 		if (m_videoInputFilter != NULL)

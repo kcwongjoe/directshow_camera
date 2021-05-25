@@ -1,8 +1,17 @@
 @echo off
+setlocal enabledelayedexpansion
 
-:: Set vcpkg path. If vcpkg is not installed in current folder, change this path.
-:: For example: set "VCPKG_PATH=C:/Program Files/vcpkg"
-set "VCPKG_PATH=.\vcpkg"
+:: Get current path
+SET CURRENT_PATH=%~dp0
+
+:: Load vcpkg path from config folder. If vcpkg_path.txt is not found, current folder will be used.
+set "VCPKG_PATH_TXT_FILE=.\config\vcpkg_path.txt"
+
+if exist %VCPKG_PATH_TXT_FILE% (
+    set /p VCPKG_PATH=<%VCPKG_PATH_TXT_FILE%
+) else (
+    set "VCPKG_PATH=.\vcpkg"
+)
 
 :: Window version
 if "%~1" == "x86" (
@@ -12,14 +21,26 @@ if "%~1" == "x64" (
     set "VCPKG_PATH=%VCPKG_PATH%\installed\x64-windows"
 )
 
+:: Get vcpkg dll location
 set "VCPKG_PATH_DEBUG=%VCPKG_PATH%\debug\bin"
 set "VCPKG_PATH_RELEASE=%VCPKG_PATH%\bin"
 
-:: Build Dll in Debug Folder
-if exist build/Debug (
+:: Set Copy target information
+set "TARGET_DIR[0]=build/examples"
+
+mkdir build
+for /l %%i in (0,1) do ( 
+    call set "CURRENT_TARGET_DIR=%%TARGET_DIR[%%i]%%" 
+
+    :: Make folder
+    mkdir "!CURRENT_TARGET_DIR!"
+    mkdir "!CURRENT_TARGET_DIR!/Debug"
+    mkdir "!CURRENT_TARGET_DIR!/Release"
 
     :: Go to Debug
-    cd ./build/Debug
+    cd !CURRENT_TARGET_DIR!/Debug
+
+    echo "Start to copy dll from %VCPKG_PATH_DEBUG% to !CURRENT_TARGET_DIR!/Debug"
 
     :: Copy dll
     xcopy "%VCPKG_PATH_DEBUG%\jpeg62.dll" "."
@@ -37,33 +58,31 @@ if exist build/Debug (
     xcopy "%VCPKG_PATH_DEBUG%\webpd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\zlibd1.dll" "."
 
-    :: Exit Dbug
-    cd ../../
-)
+    :: Exit Debug
+    cd %CURRENT_PATH%
 
-:: Build Dll in Release Folder
-if exist build/Release (
+    echo "Start to copy dll from %VCPKG_PATH_RELEASE% to !CURRENT_TARGET_DIR!/Release"
 
     :: Go to Release
-    cd ./build/Release
+    cd !CURRENT_TARGET_DIR!/Release
 
     :: Copy dll
     xcopy "%VCPKG_PATH_RELEASE%\jpeg62.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\libpng16d.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\lzmad.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_calib3dd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_cored.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_features2dd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_flannd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_imgcodecsd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_imgprocd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_photod.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_stitchingd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opengl32sw.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\tiffd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\webpd.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\zlibd1.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\libpng16.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\lzma.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_calib3d.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_core.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_features2d.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_flann.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_imgcodecs.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_imgproc.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_photo.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\opencv_stitching.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\tiff.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\webp.dll" "."
+    xcopy "%VCPKG_PATH_RELEASE%\zlib1.dll" "."
 
-    :: Exit Dbug
-    cd ../../
+    :: Exit Debug
+    cd %CURRENT_PATH%
+
 )

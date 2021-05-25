@@ -14,103 +14,96 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++lastest")
 
 # Check static library or executable
 if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-    set(DIRECTSHOWCAMERA_AS_SUBDIRECTORY TRUE)
+    set(DIRECTSHOWCAMERA_AS_STATIC_LIBRARY TRUE)
 endif()
 
-# Create source files list
-set(DIRECTSHOWCAMERA_SOURCES_FILES)
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_camera_utils.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/uvc_camera.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/uvc_camera_looper.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/camera_device.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/cv_mat_convertor.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_camera.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_camera_properties.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_camera_property.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_camera_device.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_video_format.cpp")
-LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./src/ds_grabber_callback.cpp")
-# Add source files and link
-if (${DIRECTSHOWCAMERA_AS_SUBDIRECTORY})
+#******Source******
+if (${DIRECTSHOWCAMERA_AS_STATIC_LIBRARY}) 
     # ---Static library---
 
-    # Add sources files to library
-    add_library(${PROJECT_NAME} STATIC ${DIRECTSHOWCAMERA_SOURCES_FILES})
+    #******Source******
+    add_subdirectory("./src")
 
-    # Link header files
-    target_include_directories(${PROJECT_NAME}
-        PUBLIC 
-            ${PROJECT_SOURCE_DIR}/include/directshow_camera
-    )
 else()
-    # ---Build example---
+    # ---Build example and test---
 
     # ******OpenCV and Window SDK******
 
     #******Set vcpkg as submodule******
 
-    # If the vcpkg folder is not located in current folder, change this variable.
-    # For example: set(VCPKG_PATH "C:/Program Files")
-    set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+    # If the vcpkg folder is not located in current folder, change the path in the vcpkg_path.txt
+
+    #    vcpkg folder path txt file
+    set(VCPKG_PATH_FILE "config/vcpkg_path.txt")
+
+    #    try to load from that file
+    if (EXISTS ${VCPKG_PATH_FILE})
+        # Read path from file
+        file(READ ${VCPKG_PATH_FILE} VCPKG_PATH)
+    endif()
+
+    #    fail to load the path, use current folder as vcpkg path.
+    if (NOT DEFINED VCPKG_PATH)
+        set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
+    endif()
+
+    message(${VCPKG_PATH})
 
     set(CMAKE_TOOLCHAIN_FILE
-        ${VCPKG_PATH}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
         CACHE STRING "Vcpkg toolchain file")
 
-    # Set Window SDK path
-    set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
+    #******Set Window SDK path******
 
-    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-        # 32bit
-        set( OpenCV_DIR "${VCPKG_PATH}/vcpkg/installed/x86-windows/share/opencv" )  # Opencv path
+    #    Window SDK path txt file
+    set(WINDOW_SDK_PATH_FILE "config/window_sdk_path.txt")
 
-        if(NOT DEFINED OpenCV_LIB_DIR)
-            set( OpenCV_LIB_DIR "${VCPKG_PATH}/vcpkg/installed/x86-windows/lib" "${VCPKG_PATH}/vcpkg/installed/x86-windows/debug/bin")  # Opencv lib path
-        endif()
-    elseif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-        # 64bit
-        set( OpenCV_DIR "${VCPKG_PATH}/vcpkg/installed/x64-windows/share/opencv" )  # Opencv path
+    #    try to load path from file
+    if (EXISTS ${WINDOW_SDK_PATH_FILE})
+        # Read path from file
+        file(READ ${WINDOW_SDK_PATH_FILE} CMAKE_WINDOWS_KITS_10_DIR)
+    endif()
 
-        if(NOT DEFINED OpenCV_LIB_DIR)
-            set( OpenCV_LIB_DIR "${VCPKG_PATH}/vcpkg/installed/x64-windows/lib" "${VCPKG_PATH}/vcpkg/installed/x64-windows/debug/bin")  # Opencv lib path
-        endif()
+    #    fail to load the path, use current folder as vcpkg path.
+    if (NOT DEFINED ${CMAKE_WINDOWS_KITS_10_DIR})
+        set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
     endif()
 
     #******Packages******
 
     # OpenCV
+    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+        # 32bit
+        set( OpenCV_DIR "${VCPKG_PATH}/installed/x86-windows/share/opencv" )  # Opencv path
+
+        if(NOT DEFINED OpenCV_LIB_DIR)
+            set( OpenCV_LIB_DIR "${VCPKG_PATH}/installed/x86-windows/lib" "${VCPKG_PATH}/installed/x86-windows/debug/bin")  # Opencv lib path
+        endif()
+    elseif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+        # 64bit
+        set( OpenCV_DIR "${VCPKG_PATH}/installed/x64-windows/share/opencv" )  # Opencv path
+
+        if(NOT DEFINED OpenCV_LIB_DIR)
+            set( OpenCV_LIB_DIR "${VCPKG_PATH}/installed/x64-windows/lib" "${VCPKG_PATH}/installed/x64-windows/debug/bin")  # Opencv lib path
+        endif()
+    endif()
+
     find_package(OpenCV REQUIRED)
     include_directories( ${OpenCV_INCLUDE_DIRS} )
     link_directories( ${OpenCV_LIB_DIR} )
 
-    #******Add source files******
+    #******Source******
+    add_subdirectory("./src")
 
-    # Add examples
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/example.cpp")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg1_capture.h")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg1_capture.cpp")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg2_properties.h")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg2_properties.cpp")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg3_camera_looper.h")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg3_camera_looper.cpp")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg4_exposure_fusion.h")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg4_exposure_fusion.cpp")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg5_disconnect_process.h")
-    LIST(APPEND DIRECTSHOWCAMERA_SOURCES_FILES "./examples/eg5_disconnect_process.cpp")
+    #******Example******
+    add_subdirectory("./examples")
 
+    #******Test******
 
-    # Add sources files
-    add_executable(${PROJECT_NAME} ${DIRECTSHOWCAMERA_SOURCES_FILES})
+    #include(CTest)
+    #if(BUILD_TESTING)
+    #    enable_testing()
+    #    add_subdirectory("./test")
+    #endif()
 
-    # ******Link header files*******
-    target_include_directories(${PROJECT_NAME}
-        PRIVATE 
-            ${PROJECT_SOURCE_DIR}/include/directshow_camera
-            ${PROJECT_SOURCE_DIR}/examples
-    )
-    
-    target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-        ${OpenCV_LIBS}
-    )
 endif()

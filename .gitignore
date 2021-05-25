@@ -5,6 +5,10 @@
 # Docs
 /docs/html
 
+# Config
+/config/vcpkg_path.txt
+/config/window_sdk_path.txt
+
 # Prerequisites
 *.d
 
