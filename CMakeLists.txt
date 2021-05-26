@@ -47,8 +47,6 @@ else()
         set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
     endif()
 
-    message(${VCPKG_PATH})
-
     set(CMAKE_TOOLCHAIN_FILE
         ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
         CACHE STRING "Vcpkg toolchain file")
@@ -68,6 +66,7 @@ else()
     if (NOT DEFINED ${CMAKE_WINDOWS_KITS_10_DIR})
         set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
     endif()
+
 
     #******Packages******
 
