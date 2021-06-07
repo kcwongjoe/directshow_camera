@@ -97,7 +97,7 @@ namespace DirectShowCamera
 		m_videoInputFilter = *videoInputFilter;
 
 		// Initialize variable
-		HRESULT hr = NOERROR;;
+		HRESULT hr = NOERROR;
 		bool result = true;
 
 		// Create the capture graph builder
