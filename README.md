@@ -8,6 +8,7 @@ A window based camera library in c++.
 * Support camera properties setting
 * Support Exposure Fusion
 * A looper to handle the camera cycle
+* Internal fake Camera (Stub) for testing
 
 # Table of contents
 
