@@ -94,196 +94,200 @@ namespace DirectShowCamera
 	*/
 	bool DirectShowCamera::open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat)
 	{
-		m_videoInputFilter = *videoInputFilter;
-
 		// Initialize variable
 		HRESULT hr = NOERROR;
 		bool result = true;
 
-		// Create the capture graph builder
-		if (result)
+		if (!m_isOpening)
 		{
-			hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2, (void**)&m_captureGraphBuilder);
-			result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Capture Graph Builder");
-		}
+			m_videoInputFilter = *videoInputFilter;
 
-		// Create the Filter Graph Manager.
-		if (result)
-		{
-			hr = CoCreateInstance(CLSID_FilterGraph, 0, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&m_filterGraphManager);
-			result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Filter Graph Manager");
-		}
-
-		// Set a media event. We can use this to check device disconnection.
-		if (result)
-		{
-			hr = m_filterGraphManager->QueryInterface(IID_IMediaEventEx, (void**)&m_mediaEvent);
-			if (FAILED(hr))
+			// Create the capture graph builder
+			if (result)
 			{
-				result = false;
-				m_errorString = " Could not create media event object for device disconnection(hr = " + std::to_string(hr) + ").";
+				hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2, (void**)&m_captureGraphBuilder);
+				result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Capture Graph Builder");
 			}
-		}
 
-		// Set the Filter Graph Manager into Capture Graph Builder
-		if (result)
-		{
-			hr = m_captureGraphBuilder->SetFiltergraph(m_filterGraphManager);
-			result = DirectShowCameraUtils::checkICGB2SetFiltergraphResult(hr, &m_errorString, "Error on setting the Filter Graph Manager to Capture Graph Builder");
-		}
-
-		// Set the media control
-		if (result)
-		{
-			hr = m_filterGraphManager->QueryInterface(IID_IMediaControl, (void**)&m_mediaControl);
-			if (FAILED(hr))
+			// Create the Filter Graph Manager.
+			if (result)
 			{
-				result = false;
-				m_errorString = "Could not create media control object(hr = " + std::to_string(hr) + ").";
+				hr = CoCreateInstance(CLSID_FilterGraph, 0, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&m_filterGraphManager);
+				result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Filter Graph Manager");
 			}
-		}
 
-		// Add video input filter
-		if (result)
-		{
-			hr = m_filterGraphManager->AddFilter(m_videoInputFilter, NULL);
-			result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding video input filter");
-		}
-
-		// Set capture pin
-		if (result)
-		{
-			hr = m_captureGraphBuilder->FindInterface(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, IID_IAMStreamConfig, (void**)&m_streamConfig);
-			result = DirectShowCameraUtils::checkICGB2FindInterfaceResult(hr, &m_errorString, "Error on setting capture pin");
-		}
-
-		// Get media type
-		AM_MEDIA_TYPE* amMediaType = NULL;
-		if (result)
-		{
-			// Set video format
-			if (videoFormat)
+			// Set a media event. We can use this to check device disconnection.
+			if (result)
 			{
-				// Update the video format list so that we can find the AM_Media_Type in the list.
+				hr = m_filterGraphManager->QueryInterface(IID_IMediaEventEx, (void**)&m_mediaEvent);
+				if (FAILED(hr))
+				{
+					result = false;
+					m_errorString = " Could not create media event object for device disconnection(hr = " + std::to_string(hr) + ").";
+				}
+			}
+
+			// Set the Filter Graph Manager into Capture Graph Builder
+			if (result)
+			{
+				hr = m_captureGraphBuilder->SetFiltergraph(m_filterGraphManager);
+				result = DirectShowCameraUtils::checkICGB2SetFiltergraphResult(hr, &m_errorString, "Error on setting the Filter Graph Manager to Capture Graph Builder");
+			}
+
+			// Set the media control
+			if (result)
+			{
+				hr = m_filterGraphManager->QueryInterface(IID_IMediaControl, (void**)&m_mediaControl);
+				if (FAILED(hr))
+				{
+					result = false;
+					m_errorString = "Could not create media control object(hr = " + std::to_string(hr) + ").";
+				}
+			}
+
+			// Add video input filter
+			if (result)
+			{
+				hr = m_filterGraphManager->AddFilter(m_videoInputFilter, NULL);
+				result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding video input filter");
+			}
+
+			// Set capture pin
+			if (result)
+			{
+				hr = m_captureGraphBuilder->FindInterface(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, IID_IAMStreamConfig, (void**)&m_streamConfig);
+				result = DirectShowCameraUtils::checkICGB2FindInterfaceResult(hr, &m_errorString, "Error on setting capture pin");
+			}
+
+			// Get media type
+			AM_MEDIA_TYPE* amMediaType = NULL;
+			if (result)
+			{
+				// Set video format
+				if (videoFormat)
+				{
+					// Update the video format list so that we can find the AM_Media_Type in the list.
+					updateVideoFormatList();
+
+					// Set format
+					bool success = setVideoFormat(videoFormat);
+					if (success)
+					{
+						std::cout << "Success to set: " + std::string(*videoFormat) << std::endl;
+					}
+					else
+					{
+						std::cout << "Fail to set: " + std::string(*videoFormat) + "; Error: " + m_errorString << std::endl;
+					}
+				}
+
+				// Get format
+				hr = m_streamConfig->GetFormat(&amMediaType);
+				result = DirectShowCameraUtils::checkIIAMSCGetFormatResult(hr, &m_errorString, "Error on getting media type");
+			}
+
+			// Create the Sample Grabber.
+			if (result)
+			{
+				hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&m_grabberFilter);
+				result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Sample Grabber");
+			}
+
+			// Add Sample Grabber
+			if (result)
+			{
+				hr = m_filterGraphManager->AddFilter(m_grabberFilter, L"Sample Grabber");
+				result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding Sample Grabber");
+			}
+
+			// Connect Sample Grabber
+			if (result)
+			{
+				hr = m_grabberFilter->QueryInterface(IID_ISampleGrabber, (void**)&m_sampleGrabber);
+				if (FAILED(hr))
+				{
+					result = false;
+					m_errorString = "Could not query Sample Grabber(hr = " + std::to_string(hr) + ").";
+				}
+			}
+
+			// Set Grabber callback function
+			if (result)
+			{
+				m_sampleGrabber->SetOneShot(FALSE);
+				m_sampleGrabber->SetBufferSamples(FALSE);
+				hr = m_sampleGrabber->SetCallback(m_sampleGrabberCallback, 0);// 0 is for SampleCB and 1 for BufferCB
+				if (FAILED(hr))
+				{
+					result = false;
+					m_errorString = "Could not set sample grabber callback function(hr = " + std::to_string(hr) + ").";
+				}
+			}
+
+			// Set grabber filter media type
+			if (result)
+			{
+				updateGrabberFilterVideoFormat();
+			}
+
+			// Create a null renderer filter to discard the samples after you are done with them.
+			if (result)
+			{
+				hr = CoCreateInstance(CLSID_NullRenderer, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)(&m_nullRendererFilter));
+				result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the null renderer filter");
+			}
+
+			// Add null renderer filter to graph
+			if (result)
+			{
+				hr = m_filterGraphManager->AddFilter(m_nullRendererFilter, L"NullRenderer");
+				result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding Null Renderer filter");
+			}
+
+			//  Connect all filter as stream : Video Input Filter - Grabber Filter - Null Renderer Filter
+			if (result)
+			{
+				hr = m_captureGraphBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, m_grabberFilter, m_nullRendererFilter);
+				result = DirectShowCameraUtils::checkICGB2RenderStreamResult(hr, &m_errorString, "Error on connecting filter (Video Input Filter - Grabber Filter - Null Renderer Filter)");
+			}
+
+			// Try setting the sync source to null - and make it run as fast as possible
+			bool syncSourceAsNull = false;
+			if (result && syncSourceAsNull)
+			{
+				IMediaFilter* iMediaFilter = 0;
+				hr = m_filterGraphManager->QueryInterface(IID_IMediaFilter, (void**)&iMediaFilter);
+				if (SUCCEEDED(hr)) {
+					iMediaFilter->SetSyncSource(NULL);
+					iMediaFilter->Release();
+				}
+			}
+
+			// ****Release****
+
+			// Free media type
+			if (amMediaType != NULL)
+			{
+				DirectShowCameraUtils::deleteMediaType(&amMediaType);
+			}
+
+			if (result)
+			{
+				m_isOpening = true;
+
+				// Get property
+				if (m_property != NULL) delete m_property;
+				m_property = new DirectShowCameraProperties(m_videoInputFilter, &m_errorString);
+
+				// Update video format
 				updateVideoFormatList();
-
-				// Set format
-				bool success = setVideoFormat(videoFormat);
-				if (success)
-				{
-					std::cout << "Success to set: " + std::string(*videoFormat) << std::endl;
-				}
-				else
-				{
-					std::cout << "Fail to set: " + std::string(*videoFormat) + "; Error: " + m_errorString << std::endl;
-				}
+				updateVideoFormatIndex();
 			}
-
-			// Get format
-			hr = m_streamConfig->GetFormat(&amMediaType);
-			result = DirectShowCameraUtils::checkIIAMSCGetFormatResult(hr, &m_errorString, "Error on getting media type");
-		}
-		
-		// Create the Sample Grabber.
-		if (result)
-		{
-			hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&m_grabberFilter);
-			result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Sample Grabber");
-		}
-
-		// Add Sample Grabber
-		if (result)
-		{
-			hr = m_filterGraphManager->AddFilter(m_grabberFilter, L"Sample Grabber");
-			result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding Sample Grabber");
-		}
-
-		// Connect Sample Grabber
-		if (result)
-		{
-			hr = m_grabberFilter->QueryInterface(IID_ISampleGrabber, (void**)&m_sampleGrabber);
-			if (FAILED(hr))
+			else
 			{
-				result = false;
-				m_errorString = "Could not query Sample Grabber(hr = " + std::to_string(hr) + ").";
+				// Release everything if error
+				release();
 			}
-		}
-
-		// Set Grabber callback function
-		if (result)
-		{
-			m_sampleGrabber->SetOneShot(FALSE);
-			m_sampleGrabber->SetBufferSamples(FALSE);
-			hr = m_sampleGrabber->SetCallback(m_sampleGrabberCallback, 0);// 0 is for SampleCB and 1 for BufferCB
-			if (FAILED(hr))
-			{
-				result = false;
-				m_errorString = "Could not set sample grabber callback function(hr = " + std::to_string(hr) + ").";
-			}
-		}
-
-		// Set grabber filter media type
-		if (result)
-		{
-			updateGrabberFilterVideoFormat();
-		}
-
-		// Create a null renderer filter to discard the samples after you are done with them.
-		if (result)
-		{
-			hr = CoCreateInstance(CLSID_NullRenderer, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)(&m_nullRendererFilter));
-			result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the null renderer filter");
-		}
-
-		// Add null renderer filter to graph
-		if (result)
-		{
-			hr = m_filterGraphManager->AddFilter(m_nullRendererFilter, L"NullRenderer");
-			result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding Null Renderer filter");
-		}
-
-		//  Connect all filter as stream : Video Input Filter - Grabber Filter - Null Renderer Filter
-		if (result)
-		{
-			hr = m_captureGraphBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, m_grabberFilter, m_nullRendererFilter);
-			result = DirectShowCameraUtils::checkICGB2RenderStreamResult(hr, &m_errorString, "Error on connecting filter (Video Input Filter - Grabber Filter - Null Renderer Filter)");
-		}
-
-		// Try setting the sync source to null - and make it run as fast as possible
-		bool syncSourceAsNull = false;
-		if (result && syncSourceAsNull)
-		{
-			IMediaFilter* iMediaFilter = 0;
-			hr = m_filterGraphManager->QueryInterface(IID_IMediaFilter, (void**)&iMediaFilter);
-			if (SUCCEEDED(hr)) {
-				iMediaFilter->SetSyncSource(NULL);
-				iMediaFilter->Release();
-			}
-		}
-
-		// ****Release****
-		
-		// Free media type
-		if (amMediaType != NULL)
-		{
-			DirectShowCameraUtils::deleteMediaType(&amMediaType);
-		}
-
-		if (result)
-		{
-			m_isOpening = true;
-
-			// Get property
-			m_property = new DirectShowCameraProperties(m_videoInputFilter, &m_errorString);
-
-			// Update video format
-			updateVideoFormatList();
-			updateVideoFormatIndex();
-		}
-		else
-		{
-			// Release everything if error
-			release();
 		}
 
 		return result;
@@ -484,7 +488,6 @@ namespace DirectShowCamera
 					}
 
 					// Reset isCapturing
-					//if (result)
 					m_isCapturing = false;
 
 					// Stop the check disconnection thread
@@ -544,6 +547,7 @@ namespace DirectShowCamera
 	{
 		if (m_sampleGrabberCallback)
 		{
+			if (minimumFPS < 0) minimumFPS = 0;
 			m_sampleGrabberCallback->minimumFPS = minimumFPS;
 		}
 	}
@@ -917,11 +921,15 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Get the available camera list
-	 * @param[out] cameraDevices Camera Devices. This variable must be initialized first. 
+	 * @param[out] cameraDevices Camera Devices.
 	 * @return Return true if success
 	*/
 	bool DirectShowCamera::getCameras(std::vector<DirectShowCameraDevice>* cameraDevices)
 	{
+		// Initialize and clear
+		if (cameraDevices == nullptr) cameraDevices = new std::vector<DirectShowCameraDevice>();
+		cameraDevices->clear();
+
 		bool success = DirectShowCameraUtils::iPropertyDecorator(
 			CLSID_VideoInputDeviceCategory,
 			[this, cameraDevices](IMoniker* moniker, IPropertyBag* propertyBag)

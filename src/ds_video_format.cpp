@@ -129,11 +129,11 @@ namespace DirectShowCamera
 	{
 		std::string result;
 		if (guid == MEDIATYPE_AnalogAudio)			result = "Analog audio.";
-		else if (guid == MEDIATYPE_AnalogVideo)	result = "Analog video.";
+		else if (guid == MEDIATYPE_AnalogVideo)		result = "Analog video.";
 		else if (guid == MEDIATYPE_Audio)			result = "Audio.";
 		else if (guid == MEDIATYPE_AUXLine21Data)	result = "Line 21 data. Used by closed captions.";
 		else if (guid == MEDIATYPE_File)			result = "File. (Obsolete)";
-		else if (guid == MEDIATYPE_Interleaved)	result = "Interleaved audio and video. Used for Digital Video (DV).";
+		else if (guid == MEDIATYPE_Interleaved)		result = "Interleaved audio and video. Used for Digital Video (DV).";
 		else if (guid == MEDIATYPE_LMRT)			result = "Obsolete. Do not use.";
 		else if (guid == MEDIATYPE_Midi)			result = "MIDI format.";
 		else if (guid == MEDIATYPE_MPEG2_PES)		result = "MPEG-2 PES packets.";
@@ -144,18 +144,18 @@ namespace DirectShowCamera
 		else if (guid == MEDIATYPE_Timecode)		result = "Timecode data. Note: DirectShow does not provide any filters that support this media type.";
 		else if (guid == MEDIATYPE_URL_STREAM)		result = "Obsolete. Do not use.";
 		else if (guid == MEDIATYPE_Video)			result = "Video.";
-		else if (guid == MEDIASUBTYPE_None)						result += "None.";
+		else if (guid == MEDIASUBTYPE_None)					result += "None.";
 		else if (guid == MEDIASUBTYPE_PCM)					result += "PCM audio.";
 		else if (guid == MEDIASUBTYPE_MPEG1Packet)			result += "MPEG1 Audio packet.";
 		else if (guid == MEDIASUBTYPE_MPEG1Payload)			result += "MPEG1 Audio Payload.";
 		else if (guid == MEDIASUBTYPE_MPEG2_AUDIO)			result += "MPEG-2 audio data.";
 		else if (guid == MEDIASUBTYPE_DVD_LPCM_AUDIO)		result += "DVD audio data.";
 		else if (guid == MEDIASUBTYPE_MPEG2_AUDIO)			result += "MPEG-2 audio data.";
-		else if (guid == MEDIASUBTYPE_DRM_Audio)				result += "Corresponds to WAVE_FORMAT_DRM.";
+		else if (guid == MEDIASUBTYPE_DRM_Audio)			result += "Corresponds to WAVE_FORMAT_DRM.";
 		else if (guid == MEDIASUBTYPE_IEEE_FLOAT)			result += "Corresponds to WAVE_FORMAT_IEEE_FLOAT.";
-		else if (guid == MEDIASUBTYPE_DOLBY_AC3)				result += "Dolby data.";
+		else if (guid == MEDIASUBTYPE_DOLBY_AC3)			result += "Dolby data.";
 		else if (guid == MEDIASUBTYPE_DOLBY_AC3_SPDIF)		result += "Dolby AC3 over SPDIF.";
-		else if (guid == MEDIASUBTYPE_RAW_SPORT)				result += "Equivalent to MEDIASUBTYPE_DOLBY_AC3_SPDIF.";
+		else if (guid == MEDIASUBTYPE_RAW_SPORT)			result += "Equivalent to MEDIASUBTYPE_DOLBY_AC3_SPDIF.";
 		else if (guid == MEDIASUBTYPE_SPDIF_TAG_241h)		result += "Equivalent to MEDIASUBTYPE_DOLBY_AC3_SPDIF.";
 		else if (guid == MEDIASUBTYPE_AIFF)					result += "Data from AIFF file.";
 		else if (guid == MEDIASUBTYPE_Asf)					result += "Advanced Systems Format (ASF).";
@@ -576,6 +576,26 @@ namespace DirectShowCamera
 	DirectShowVideoFormat::DirectShowVideoFormat()
 	{
 		m_isEmpty = true;
+	}
+
+	/**
+	 * @brief Constructor
+	 * 
+	 * @param mediaType Media Type
+	 * @param width Width in pixel
+	 * @param height Height in pixel
+	 * @param bitPerPixel Bit per pixel
+	 * @param totalSize Total bytes
+	*/
+	DirectShowVideoFormat::DirectShowVideoFormat(GUID mediaType, int width, int height, int bitPerPixel, int totalSize)
+	{
+		m_videoType = mediaType;
+		m_totalSize = totalSize;
+		m_width = width;
+		m_height = height;
+		m_bitPerPixel = bitPerPixel;
+
+		m_isEmpty = false;
 	}
 
 	/**

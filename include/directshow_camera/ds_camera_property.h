@@ -97,13 +97,17 @@ namespace DirectShowCamera
 		bool supportManualMode();
 
 		// Import
+
+		void importProperty(bool supported, long min, long max, long step, long default, bool isAuto, long value, bool supportAuto, bool supportManual);
+
 		/**
 		 * @brief Import property from IAMVideoProcAmp/IAMCameraControl
 		 * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
 		 * @param cameraControl IAMVideoProcAmp or IAMCameraControl
 		 * @return Return true if success.
 		*/
-		template<class CameraControl> bool importProperty(CameraControl* cameraControl)
+		template<class CameraControl>
+		bool importProperty(CameraControl* cameraControl)
 		{
 			HRESULT hr = NO_ERROR;
 			long min;
@@ -146,7 +150,8 @@ namespace DirectShowCamera
 		 * @param cameraControl IAMVideoProcAmp or IAMCameraControl
 		 * @return Return true if success.
 		*/
-		template<class CameraControl> bool importPropertyValue(CameraControl* cameraControl)
+		template<class CameraControl>
+		bool importPropertyValue(CameraControl* cameraControl)
 		{
 			HRESULT hr = NO_ERROR;
 

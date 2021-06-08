@@ -36,9 +36,9 @@ void eg5_disconnect_process()
     std::cout << "Start capture..." << std::endl;
     camera.startCapture();
 
-    // Wait for 10 second
+    // Wait for 2 second
     std::cout << "You can unplug the USB camera now." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Stop Capture
     camera.stopCapture();

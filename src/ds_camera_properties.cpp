@@ -70,7 +70,7 @@ namespace DirectShowCamera
 		m_iris->reset();
 		m_focus->reset();
 
-		bool m_isinitialized = false;
+		m_isinitialized = false;
 	}
 
 	void DirectShowCameraProperties::resetDefault(IBaseFilter* videoInputFilter, bool asAuto)
@@ -92,6 +92,8 @@ namespace DirectShowCamera
 		m_exposure->setAsDefault(videoInputFilter);
 		m_iris->setAsDefault(videoInputFilter);
 		m_focus->setAsDefault(videoInputFilter);
+
+		m_isinitialized = true;
 	}
 
 	/**
@@ -138,7 +140,15 @@ namespace DirectShowCamera
 			errorString
 		);
 
-		m_isinitialized = success;
+		m_isinitialized = true;
+	}
+
+	/**
+	 * @brief Mark this object as initialized.
+	*/
+	void DirectShowCameraProperties::markAsInitialized()
+	{
+		m_isinitialized = true;
 	}
 
 #pragma endregion Constructor

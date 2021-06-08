@@ -10,16 +10,36 @@ namespace DirectShowCamera
 	*/
 	UVCCamera::UVCCamera()
 	{
+		constructor(new DirectShowCamera());
+	}
+
+	/**
+	 * @brief Constructor
+	 * @param abstractDirectShowCamera DirectShowCamera or DirectShowCameraStub.
+	*/
+	UVCCamera::UVCCamera(AbstractDirectShowCamera* abstractDirectShowCamera)
+	{
+		constructor(abstractDirectShowCamera);
+	}
+
+	/**
+	 * @brief Constructor
+	 * @param abstractDirectShowCamera Abstract DirectShow Camera
+	*/
+	void UVCCamera::constructor(AbstractDirectShowCamera* abstractDirectShowCamera)
+	{
 		DirectShowCameraUtils::initCOMLib();
 
-		m_directShowCamera = new DirectShowCamera();
+		m_directShowCamera = abstractDirectShowCamera;
 
-	#ifdef HAS_OPENCV
+#ifdef HAS_OPENCV
 		m_matConvertor = OpenCVMatConverter();
 		m_matConvertor.isBGR = false;
 		m_matConvertor.isVerticalFlip = true;
-	#endif
+#endif
 	}
+
+
 
 	/**
 	 * @brief Destructor

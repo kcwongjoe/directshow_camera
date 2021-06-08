@@ -1,14 +1,12 @@
 #pragma once
-#ifndef DIRECTSHOW_CAMERA_H
-#define DIRECTSHOW_CAMERA_H
+#ifndef DIRECTSHOW_CAMERA_STUB_H
+#define DIRECTSHOW_CAMERA_STUB_H
 
 //************Content************
-#include <ds_camera_utils.h>
-
 #include <abstract_ds_camera.h>
 #include <ds_camera_properties.h>
+#include <ds_camera_stub_default.h>
 #include <ds_video_format.h>
-#include <ds_grabber_callback.h>
 
 #include <camera_device.h>
 
@@ -19,68 +17,59 @@
 namespace DirectShowCamera
 {
     /**
-     * @brief Directshow Camera. This is the core of this project.
-     * 
+     * @brief Directshow Camera Stub. Youc can use this stub to simulate a camera for testing.
+     *
      */
-    class DirectShowCamera : public AbstractDirectShowCamera
+    class DirectShowCameraStub : public AbstractDirectShowCamera
     {
+    public:
+        /**
+         * @brief Get Frame function
+        */
+        typedef std::function<void(unsigned char* pixels, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)> GetFrameFunc;
     private:
-
-        // Graph and filter
-        ICaptureGraphBuilder2* m_captureGraphBuilder = NULL;
-        IGraphBuilder* m_filterGraphManager = NULL;
-        IBaseFilter* m_videoInputFilter = NULL;
-        IBaseFilter* m_grabberFilter = NULL;
-        IBaseFilter* m_nullRendererFilter = NULL;
-
         // Config
-        IAMStreamConfig* m_streamConfig = NULL;
-        DirectShowCameraProperties* m_property = NULL;
+        DirectShowCameraProperties* m_properties = NULL;
 
         std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;
         int m_currentVideoFormatIndex = -1;
-
-        // Callback
-        ISampleGrabber* m_sampleGrabber = NULL;
-        SampleGrabberCallback* m_sampleGrabberCallback = new SampleGrabberCallback();
-        GUID m_grabberMediaSubType = MEDIASUBTYPE_None;
-
-        IMediaEventEx* m_mediaEvent = NULL;
-        IMediaControl* m_mediaControl = NULL;
 
         bool m_isOpening = false;
         bool m_isCapturing = false;
         std::string m_errorString = "";
 
+        bool m_disconnectCamera = false;
         std::thread m_checkConnectionThread;
         bool m_isRunningCheckConnectionThread = false;
         bool m_stopCheckConnectionThread = false;
         std::function<void()> m_disconnectionProcess = NULL;
         void startCheckConnectionThread();
 
-        void updateGrabberFilterVideoFormat();
-        bool updateVideoFormatList();
-        void updateVideoFormatIndex();
+        double m_fps = 0.5;
 
-        int getVideoFormatIndex(AM_MEDIA_TYPE* mediaType);
+        GetFrameFunc m_getFrameFunc = NULL;
+
+        bool updateVideoFormatList();
         int getVideoFormatIndex(DirectShowVideoFormat* videoFormat);
 
     public:
 
-        DirectShowCamera();
-        ~DirectShowCamera();
+        DirectShowCameraStub();
+        ~DirectShowCameraStub();
         void release();
 
         bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
         void close();
         bool isOpening();
         bool checkDisconnection();
+        void disconnetCamera();
         void setDisconnectionProcess(std::function<void()> func);
 
         bool start();
         bool stop();
         bool isCapturing();
 
+        void setGetFrameFunction(GetFrameFunc func);
         bool getFrame(unsigned char* pixels, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
         void setMinimumPFS(double minimumFPS);
         double getFPS();

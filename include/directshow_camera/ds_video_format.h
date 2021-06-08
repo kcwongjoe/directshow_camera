@@ -48,6 +48,7 @@ namespace DirectShowCamera
 
 		// Constuctor
 		DirectShowVideoFormat();
+		DirectShowVideoFormat(GUID mediaType, int width, int height, int bitPerPixel, int totalSize);
 		DirectShowVideoFormat(AM_MEDIA_TYPE* m_AmMediaType, bool keepAmMediaType);
 		DirectShowVideoFormat(IAMStreamConfig* streamConfig, int videoFormatIndex, bool keepAmMediaType);
 		void constructor(AM_MEDIA_TYPE* m_AmMediaType, bool keepAmMediaType);

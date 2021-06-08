@@ -52,6 +52,7 @@ namespace DirectShowCamera
 		void reset();
 		void resetDefault(IBaseFilter* videoInputFilter, bool asAuto = true);
 		void refresh(IBaseFilter* videoInputFilter, std::string* errorString);
+		void markAsInitialized();
 
 		// Getter
 		DirectShowCameraProperty* getBrightness();

@@ -8,6 +8,7 @@
 #include <ds_camera_utils.h>
 #include <camera_device.h>
 #include <ds_camera.h>
+#include<abstract_ds_camera.h>
 #include <ds_libs_setting.h>
 
 // Include Opencv
@@ -25,6 +26,7 @@
  * @example eg3_camera_looper.cpp
  * @example eg4_exposure_fusion.cpp
  * @example eg5_disconnect_process.cpp
+ * @example eg6_stub.cpp
  */
 namespace DirectShowCamera
 {
@@ -42,6 +44,8 @@ namespace DirectShowCamera
 
 		// Constructor
 		UVCCamera();
+		UVCCamera(AbstractDirectShowCamera* abstractDirectShowCamera);
+		void constructor(AbstractDirectShowCamera* abstractDirectShowCamera);
 
 		~UVCCamera();
 
@@ -226,7 +230,7 @@ namespace DirectShowCamera
 
 	/**********************Private********************************/
 	private:
-		DirectShowCamera* m_directShowCamera = NULL;
+		AbstractDirectShowCamera* m_directShowCamera = NULL;
 
 		unsigned long m_lastFrameIndex = 0;
 		std::string m_errorString;

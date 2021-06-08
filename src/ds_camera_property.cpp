@@ -259,11 +259,39 @@ namespace DirectShowCamera
 
 #pragma endregion Getter
 
+
+	/**
+	 * @brief Import property
+	 * 
+	 * @param supported Is camera supported?
+	 * @param min Min value
+	 * @param max Max value
+	 * @param step Step
+	 * @param default Default value
+	 * @param isAuto Is auto?
+	 * @param value Current value
+	 * @param supportAuto Support auto?
+	 * @param supportManual Support manual?
+	*/
+	void DirectShowCameraProperty::importProperty(bool supported, long min, long max, long step, long default, bool isAuto, long value, bool supportAuto, bool supportManual)
+	{
+		m_min = min;
+		m_max = max;
+		m_step = step;
+		m_default = default;
+		m_isAuto = isAuto;
+		m_value = value;
+
+		m_supported = supported;
+		m_supportAuto = supportAuto;
+		m_supportManual = supportManual;
+	}
+
 #pragma region Setter
 
 	/**
 	 * @brief Set the property to default value.
-	 * @param videoInputFilter Video Input filter (Camera)
+	 * @param videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
 	 * @param asAuto The property will try to set as auto mode if this value is true.
 	 * @param errorString Error string
 	 * @return Return true if success
@@ -281,7 +309,7 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Set property
-	 * @param videoInputFilter Video Input filter (Camera)
+	 * @param videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
 	 * @param value Value to be set
 	 * @param isAutoMode Set as auto mode?
 	 * @param errorString Error String
@@ -328,7 +356,7 @@ namespace DirectShowCamera
 					}
 					else
 					{
-						*errorString += "Set " + m_name + " property error: Mnaual mode is not supported.";
+						*errorString += "Set " + m_name + " property error: Manual mode is not supported.";
 					}
 				}
 
@@ -339,39 +367,49 @@ namespace DirectShowCamera
 			if (result)
 			{
 				bool success = true;
-				if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
+				if (videoInputFilter == NULL)
 				{
-					// Convert mode to VideoProcAmpFlags
-					long mode = 0;
-					if (isAutoMode)
+					// Only update object value
+					m_value = value;
+					m_isAuto = isAutoMode;
+				}
+				else
+				{
+					// Set in directshow
+					if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
 					{
-						mode = VideoProcAmp_Flags_Auto;
-					}
-					else
-					{
-						mode = VideoProcAmp_Flags_Manual;
-					}
+						// Convert mode to VideoProcAmpFlags
+						long mode = 0;
+						if (isAutoMode)
+						{
+							mode = VideoProcAmp_Flags_Auto;
+						}
+						else
+						{
+							mode = VideoProcAmp_Flags_Manual;
+						}
 
-					// Am_VideoProcAmp
-					result = DirectShowCameraUtils::amVideoProcAmpDecorator(videoInputFilter,
-						[this, &success, value, isAutoMode](IAMVideoProcAmp* videoProcAmp)
-						{
-							success = setValueTemplate(videoProcAmp, value, isAutoMode);
-						},
-						errorString
-							);
-				}
-				else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
-				{
-					// Am_CameraControl
-					result = DirectShowCameraUtils::amCameraControlDecorator(videoInputFilter,
-						[this, &success, value, isAutoMode](IAMCameraControl* cameraControl)
-						{
-							success = setValueTemplate(cameraControl, value, isAutoMode);
-						},
-						errorString
-							);
-				}
+						// Am_VideoProcAmp
+						result = DirectShowCameraUtils::amVideoProcAmpDecorator(videoInputFilter,
+							[this, &success, value, isAutoMode](IAMVideoProcAmp* videoProcAmp)
+							{
+								success = setValueTemplate(videoProcAmp, value, isAutoMode);
+							},
+							errorString
+								);
+					}
+					else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
+					{
+						// Am_CameraControl
+						result = DirectShowCameraUtils::amCameraControlDecorator(videoInputFilter,
+							[this, &success, value, isAutoMode](IAMCameraControl* cameraControl)
+							{
+								success = setValueTemplate(cameraControl, value, isAutoMode);
+							},
+							errorString
+								);
+					}
+				}				
 
 				// Combine result
 				result = result & success;
