@@ -26,11 +26,11 @@ if "%SYSVERSION%" == "X86" (
 )
 
 :: Copy dll from vcpkg
-if "%SYSVERSION%" == "X86" (
-    call copy_dll.bat "x86"
-) else (
-    call copy_dll.bat "x64"
-)
+:: if "%SYSVERSION%" == "X86" (
+::     call copy_dll.bat "x86"
+:: ) else (
+::     call copy_dll.bat "x64"
+::)
 
 
 echo Finished

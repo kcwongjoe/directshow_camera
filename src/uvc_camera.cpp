@@ -251,15 +251,19 @@ namespace DirectShowCamera
 	bool UVCCamera::close()
 	{
 		bool result = true;
-		if (this && result && isCapturing())
+		if (m_directShowCamera)
 		{
-			result = stopCapture();
+			if (this && result && isCapturing())
+			{
+				result = stopCapture();
+			}
+
+			if (this && result && isOpened())
+			{
+				m_directShowCamera->close();
+			}
 		}
 
-		if (this && result && isOpened())
-		{
-			m_directShowCamera->close();
-		}
 
 		return result;
 	}
@@ -335,7 +339,15 @@ namespace DirectShowCamera
 	*/
 	bool UVCCamera::isCapturing()
 	{
-		return m_directShowCamera->isCapturing();
+		if (m_directShowCamera)
+		{
+			return m_directShowCamera->isCapturing();
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 
 #pragma endregion Capture

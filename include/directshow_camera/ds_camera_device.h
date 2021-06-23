@@ -23,6 +23,29 @@ namespace DirectShowCamera
             std::string getDescription();
             std::string getDevicePath();
 
+            // Operator
+
+            bool operator == (const DirectShowCameraDevice& device) const
+            {
+                bool result = true;
+                if (result) result = (m_friendlyName == device.m_friendlyName);
+                if (result) result = (m_description == device.m_description);
+                if (result) result = (m_devicePath == device.m_devicePath);
+                if (result) result = (m_videoFormats.size() == device.m_videoFormats.size());
+                if (result)
+                {
+                    for (int i = 0; i < m_videoFormats.size();i++) {
+                        if (m_videoFormats != device.m_videoFormats)
+                        {
+                            result = false;
+                            break;
+                        }
+                    }
+                }
+
+                return result;
+            }
+
             // To string
 
             operator std::string() const

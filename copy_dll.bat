@@ -27,9 +27,11 @@ set "VCPKG_PATH_RELEASE=%VCPKG_PATH%\bin"
 
 :: Set Copy target information
 set "TARGET_DIR[0]=build/examples"
+set "TARGET_DIR[1]=build/test"
 
 mkdir build
-for /l %%i in (0,1) do ( 
+for /l %%i in (0,1,1) do ( 
+
     call set "CURRENT_TARGET_DIR=%%TARGET_DIR[%%i]%%" 
 
     :: Make folder
@@ -46,14 +48,10 @@ for /l %%i in (0,1) do (
     xcopy "%VCPKG_PATH_DEBUG%\jpeg62.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\libpng16d.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\lzmad.dll" "."
-    xcopy "%VCPKG_PATH_DEBUG%\opencv_calib3dd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\opencv_cored.dll" "."
-    xcopy "%VCPKG_PATH_DEBUG%\opencv_features2dd.dll" "."
-    xcopy "%VCPKG_PATH_DEBUG%\opencv_flannd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\opencv_imgcodecsd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\opencv_imgprocd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\opencv_photod.dll" "."
-    xcopy "%VCPKG_PATH_DEBUG%\opencv_stitchingd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\tiffd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\webpd.dll" "."
     xcopy "%VCPKG_PATH_DEBUG%\zlibd1.dll" "."
@@ -70,14 +68,10 @@ for /l %%i in (0,1) do (
     xcopy "%VCPKG_PATH_RELEASE%\jpeg62.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\libpng16.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\lzma.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_calib3d.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\opencv_core.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_features2d.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_flann.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\opencv_imgcodecs.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\opencv_imgproc.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\opencv_photo.dll" "."
-    xcopy "%VCPKG_PATH_RELEASE%\opencv_stitching.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\tiff.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\webp.dll" "."
     xcopy "%VCPKG_PATH_RELEASE%\zlib1.dll" "."

@@ -8,7 +8,7 @@ A window based camera library in c++.
 * Support camera properties setting
 * Support Exposure Fusion
 * A looper to handle the camera cycle
-* Internal fake Camera (Stub) for testing
+* Internal fake camera (Stub) for testing
 
 # Table of contents
 
@@ -152,36 +152,41 @@ OpenCV version: 4.3.0 (Option)
    ```
 
 4. Install OpenCV library in CMake from vcpgk (Option)
-   ```cmake
-    # Set vcpkg path. Change here if the vcpkg folder is not located in your solution folder.
-   set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
+    1. Add the code in your project CMakeLists.txt
+        ```cmake
+        # Set vcpkg path. Change here if the vcpkg folder is not located in your solution folder.
+        set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
 
-    set(CMAKE_TOOLCHAIN_FILE
-        ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
-        CACHE STRING "Vcpkg toolchain file")
+        set(CMAKE_TOOLCHAIN_FILE
+            ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
+            CACHE STRING "Vcpkg toolchain file")
 
-    # OpenCV
-    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-        # 32bit
-        set( OpenCV_DIR "${VCPKG_PATH}/installed/x86-windows/share/opencv" )  # Opencv path
+        # OpenCV
+        
+        #   Install OpenCV from vcpkg. See cmake/InstallVcpkgOpenCV.cmake
+        install_vcpkg_opencv()
 
-        if(NOT DEFINED OpenCV_LIB_DIR)
-            set( OpenCV_LIB_DIR "${VCPKG_PATH}/installed/x86-windows/lib" "${VCPKG_PATH}/installed/x86-windows/debug/bin")  # Opencv lib path
-        endif()
-    elseif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-        # 64bit
-        set( OpenCV_DIR "${VCPKG_PATH}/installed/x64-windows/share/opencv" )  # Opencv path
+        #   Link OpenCV
+        include_directories( ${OpenCV_INCLUDE_DIRS} )
+        link_directories( ${OpenCV_LIB_DIR} )
 
-        if(NOT DEFINED OpenCV_LIB_DIR)
-            set( OpenCV_LIB_DIR "${VCPKG_PATH}/installed/x64-windows/lib" "${VCPKG_PATH}/installed/x64-windows/debug/bin")  # Opencv lib path
-        endif()
-    endif()
+        target_link_libraries(${PROJECT_NAME}
+            PRIVATE
+                OpenCV_LIBS
+        )
+        ```
+    2. Copy dll from vcpkg. You can use **copy_dll.bat** or **build-in CMake module** to copy necessary dll from vcpkg.
 
-    find_package(OpenCV REQUIRED)
-    include_directories( ${OpenCV_INCLUDE_DIRS} )
-    link_directories( ${OpenCV_LIB_DIR} )
-   ```
+       * Type `copy_dll.bat x86` or `copy_dll.bat x64`
+       * Add the code in your project CMakeLists.txt
+            ``` cmake
+            # dll will be copied when the target built.
+            copy_vcpkg_opencv_dll("<YOUR_TARGET>" "<COPY TO, e.g. ${CMAKE_BINARY_DIR}/examples>")
+            ```
+   
+
 ### 2.2 For dummy
+
 1. Copy all files inside **src** folder and **include/directshow_camera** folder to your project.
 
 # Deploy example codes

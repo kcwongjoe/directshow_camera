@@ -11,7 +11,7 @@ void eg6_stub()
 
     // Define a flag to indicate whether open as stub.
     // So you just have to comment this line to disable the stub.
-    // You can also add this flag in CMake for your testing project
+    // You can also add this flag in your testing project by CMake
     // target_compile_definitions(${ PROJECT_NAME } PUBLIC USE_STUB)
 #define USE_STUB
 
@@ -78,6 +78,7 @@ void eg6_stub()
     cv::Mat frame = camera.getMat();
     cv::imwrite("image.jpg", frame);
 
+#ifdef USE_STUB
     // User define a image
     int width = camera.getWidth();
     int height = camera.getHeight();
@@ -120,13 +121,16 @@ void eg6_stub()
     std::cout << "Capture a user defined frame in cv::Mat and save as image.jpg" << std::endl;
     frame = camera.getMat();
     cv::imwrite("image2.jpg", frame);
+#endif
 
+#ifdef USE_STUB
     // ******Disconnect process******
-    std::cout << "The fake camera is disconnect accidently now..." << std::endl;
+    std::cout << "The fake camera is disconnected accidently now..." << std::endl;
     stub->disconnetCamera();
 
     // Wait for 2 second
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+#endif
 
     // Close the camera.
     camera.close();

@@ -17,6 +17,10 @@ if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
     set(DIRECTSHOWCAMERA_AS_STATIC_LIBRARY TRUE)
 endif()
 
+# Add cmake module
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(InstallVcpkgOpenCV)
+
 #******Source******
 if (${DIRECTSHOWCAMERA_AS_STATIC_LIBRARY}) 
     # ---Static library---
@@ -67,27 +71,14 @@ else()
         set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
     endif()
 
-
     #******Packages******
 
     # OpenCV
-    if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-        # 32bit
-        set( OpenCV_DIR "${VCPKG_PATH}/installed/x86-windows/share/opencv" )  # Opencv path
 
-        if(NOT DEFINED OpenCV_LIB_DIR)
-            set( OpenCV_LIB_DIR "${VCPKG_PATH}/installed/x86-windows/lib" "${VCPKG_PATH}/installed/x86-windows/debug/bin")  # Opencv lib path
-        endif()
-    elseif ( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-        # 64bit
-        set( OpenCV_DIR "${VCPKG_PATH}/installed/x64-windows/share/opencv" )  # Opencv path
+    #   Install OpenCV in vcpkg. See cmake/InstallVcpkgOpenCV.cmake
+    install_vcpkg_opencv()
 
-        if(NOT DEFINED OpenCV_LIB_DIR)
-            set( OpenCV_LIB_DIR "${VCPKG_PATH}/installed/x64-windows/lib" "${VCPKG_PATH}/installed/x64-windows/debug/bin")  # Opencv lib path
-        endif()
-    endif()
-
-    find_package(OpenCV REQUIRED)
+    #   Link OpenCV
     include_directories( ${OpenCV_INCLUDE_DIRS} )
     link_directories( ${OpenCV_LIB_DIR} )
 
@@ -99,10 +90,12 @@ else()
 
     #******Test******
 
-    #include(CTest)
-    #if(BUILD_TESTING)
-    #    enable_testing()
-    #    add_subdirectory("./test")
-    #endif()
+    include(CTest)
+    if(BUILD_TESTING)
+        enable_testing()
+        add_subdirectory("./test")
+    endif()
+
+    message(${CMAKE_BINARY_DIR})
 
 endif()
