@@ -30,9 +30,9 @@ namespace DirectShowCamera
 			OpenCVMatConverter();
 
 			/**
-			 * @brief Set it as true to return a BGR Mat, otherwise return a RGB Mat. Default as false.
+			 * @brief Set it as true if the input byte is BGR order, otherwise the input byte is RGB order. Default as false.
 			*/
-			bool isBGR = false;
+			bool isBGR = true;
 
 			/**
 			 * @brief Set it as true to flip iamge vertically. Default as true

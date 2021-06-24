@@ -34,7 +34,7 @@ namespace DirectShowCamera
 
 #ifdef HAS_OPENCV
 		m_matConvertor = OpenCVMatConverter();
-		m_matConvertor.isBGR = false;
+		m_matConvertor.isBGR = true;
 		m_matConvertor.isVerticalFlip = true;
 #endif
 	}
@@ -2535,7 +2535,7 @@ namespace DirectShowCamera
 
 	/**
 	 * @brief Get frame
-	 * @param[out] frame Frame bytes
+	 * @param[out] frame Frame bytes (BGR)
 	 * @param[out] numOfBytes (Option) Number of bytes of the frame. Default as NULL
 	 * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame. Default as false
 	 * @return Return true if success

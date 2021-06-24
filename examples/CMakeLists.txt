@@ -17,4 +17,4 @@ target_include_directories(${EXAMPLE_PROJECT_NAME}
 target_link_libraries(${EXAMPLE_PROJECT_NAME} LINK_PUBLIC ${PROJECT_NAME} ${OpenCV_LIBS})
 
 # Post-build process to copy dll from vcpkg
-copy_vcpkg_opencv_dll(${EXAMPLE_PROJECT_NAME} "${CMAKE_BINARY_DIR}/examples")
+prebuild_copy_vcpkg_opencv_dll(${EXAMPLE_PROJECT_NAME} "${CMAKE_BINARY_DIR}/examples")

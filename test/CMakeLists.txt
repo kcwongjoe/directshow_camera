@@ -33,7 +33,7 @@ target_link_libraries(${TEST_PROJECT_NAME}
 )
 
 # Post-build process to copy dll from vcpkg
-copy_vcpkg_opencv_dll(${TEST_PROJECT_NAME} "${CMAKE_BINARY_DIR}/test")
+prebuild_copy_vcpkg_opencv_dll(${TEST_PROJECT_NAME} "${CMAKE_BINARY_DIR}/test")
 
 # Google test
 include(GoogleTest)

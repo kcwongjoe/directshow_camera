@@ -29,7 +29,7 @@ namespace DirectShowCamera
 	 * @param data Byte[]
 	 * @param width Widht of frame
 	 * @param height Height of frmae
-	 * @return Return cv::Mat
+	 * @return Return cv::Mat which store data in BGR
 	*/
 	cv::Mat OpenCVMatConverter::convert(unsigned char* data, int width, int height)
 	{
@@ -55,14 +55,14 @@ namespace DirectShowCamera
 			result = cv::Mat(height, width, CV_16UC1);
 			unsigned char* matPtr = result.ptr();
 
-			if (!isBGR)
+			if (isBGR)
 			{
-				// 2 byte - RGB
+				// 2 byte - BGR
 				memcpy(matPtr, data, (long)height * (long)width * 2L);
 			}
 			else
 			{
-				// 2 byte - BGR
+				// 2 byte - RGB
 				for (int i = 0; i < width * height; i++) {
 					*matPtr = (uint8_t)(*((uint16_t*)data) >> 8);
 					matPtr++;
@@ -88,8 +88,8 @@ namespace DirectShowCamera
 			unsigned char* dataPtrTemp = data;
 			unsigned char* matPtr = result.ptr();
 
-			if (!isBGR) {
-				// RGB
+			if (isBGR) {
+				// BGR
 
 				if (isVerticalFlip)
 				{
@@ -106,7 +106,7 @@ namespace DirectShowCamera
 			}
 			else
 			{
-				// BGR
+				// RGB
 				if (isVerticalFlip) {
 					// 3 byte - BGR - Vertical flip
 

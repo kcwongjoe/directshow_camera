@@ -1,11 +1,10 @@
 # Directshow Camera
 
-A window based camera library in c++.
+A window-based camera library in c++.
 
 ### Features
 * Work with OpenCV::Mat
-* Support camera resolutions setting
-* Support camera properties setting
+* Support all camera settings
 * Support Exposure Fusion
 * A looper to handle the camera cycle
 * Internal fake camera (Stub) for testing
@@ -83,7 +82,7 @@ cameraLooper.setCapturedProcess(
 cameraLooper.start();
 
 // 1 second
-std::this_thread::sleep_for(std::chrono::seconds(2));
+std::this_thread::sleep_for(std::chrono::seconds(1));
 
 // Stop looper
 cameraLooper.stop();
@@ -103,13 +102,13 @@ cv::Mat frame = camera.exposureFusion();
 
 This library can be used without opencv.
 1. Find **ds_libs_setting.h** in the **include/directshow_camera** folder.
-2. Comment
+2. Comment this line
 
 ```cpp
    //#define HAS_OPENCV
 ```
 
-Then you can use the following code to get frame in bytes.
+Then you can use the following code to get frame bytes in BGR order.
 
 ```cpp
 int frameSize;
@@ -181,7 +180,7 @@ OpenCV version: 4.3.0 (Option)
        * Add the code in your project CMakeLists.txt
             ``` cmake
             # dll will be copied when the target built.
-            copy_vcpkg_opencv_dll("<YOUR_TARGET>" "<COPY TO, e.g. ${CMAKE_BINARY_DIR}/examples>")
+            prebuild_copy_vcpkg_opencv_dll("<YOUR_TARGET>" "<COPY TO, e.g. ${CMAKE_BINARY_DIR}/examples>")
             ```
    
 

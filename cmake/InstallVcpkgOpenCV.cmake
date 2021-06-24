@@ -31,7 +31,7 @@ macro(install_vcpkg_opencv)
 endmacro()
 
 # Pre-build process: Copy opencv dll from VCPKG
-macro(copy_vcpkg_opencv_dll PostBuildTarget CopyLocation)
+macro(prebuild_copy_vcpkg_opencv_dll PostBuildTarget CopyLocation)
 
     add_custom_command(TARGET ${PostBuildTarget} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OpenCV_INSTALLED_DIR}/debug/bin/jpeg62.dll" "${CopyLocation}/Debug/jpeg62.dll"
