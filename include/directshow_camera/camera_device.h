@@ -36,6 +36,7 @@ namespace DirectShowCamera
             std::vector<std::pair<int,int>> getRGBResolutions();
 
             std::vector<std::pair<int,int>> getResolutions();
+            bool containResolution(int width, int height);
 
             std::string getFriendlyName();
             std::string getDescription();

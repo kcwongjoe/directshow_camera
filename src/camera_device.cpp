@@ -140,6 +140,34 @@ namespace DirectShowCamera
 		}
 	}
 
+	/**
+	 * @brief Check whether resolution existed
+	 * 
+	 * @param width Width
+	 * @param height Height
+	 * @return Return true if existed.
+	*/
+	bool CameraDevice::containResolution(int width, int height)
+	{
+		for (int i=0;i< m_monoResolutions.size();i++)
+		{
+			if (m_monoResolutions[i].first == width && m_monoResolutions[i].second == height)
+			{
+				return true;
+			}
+		}
+
+		for (int i = 0; i < m_rgbResolutions.size(); i++)
+		{
+			if (m_rgbResolutions[i].first == width && m_rgbResolutions[i].second == height)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 #pragma endregion RGB
 
 #pragma region Camera Getter
