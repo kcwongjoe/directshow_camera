@@ -195,24 +195,29 @@ OpenCV version: 4.3.0 (Option)
     1. Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
     2. Go to *config* folder, Rename *window_sdk_path_example.txt* to *window_sdk_path.txt* and type your Window SDK path in the text file.
 
-2. Install vcpkg
+2. Clone this repository
+   ```
+   git clone --recurse-submodules https://github.com/kcwongjoe/directshow_camera.git
+   ```
+
+3. Install vcpkg in the project folder
     1. Clone the vcpkg repo from https://github.com/Microsoft/vcpkg
     2. Unzip and rename folder as *vcpkg*
     3. Place in the solution folder
     4. Run **bootstrap-vcpkg.bat** in the *vcpkg* folder
     5. If your vcpkg folder was not located in the solution folder, you have to specify the path in the *config* folder. Go to *config* folder, Rename *vcpkg_path_example.txt* to *vcpkg_path.txt* and type your vcpkg path in the text file.
 
-3. Install OpenCV by vcpkg
+4. Install OpenCV by vcpkg
     1. Go to *vcpkg* folder
     2. Type `vcpkg install opencv:x86-windows`
     3. Type `vcpkg install opencv:x64-windows`
 
-4. Run **build.bat** in Solution folder
+5. Run **build.bat** in Solution folder
 
    Type `build x86` or `build x64`
 
-5. Go to *build* folder and open visual studio solution.
-6. Build solution in visual studio. Executable file will be constructed but you may encounter a missing dll error. Then, go to Solution folder and run **copy_dll.bat** to copy dll from vcpkg folder.
+6. Go to *build* folder and open visual studio solution.
+7. Build solution in visual studio. Executable file will be constructed but you may encounter a missing dll error. Then, go to Solution folder and run **copy_dll.bat** to copy dll from vcpkg folder.
 
     Type `copy_dll x86` or `copy_dll x64`
 
