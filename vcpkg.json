@@ -1,0 +1,11 @@
+{
+    "name": "directshow-camera",
+    "version-string": "0.0.1",
+    "dependencies": [
+      {
+        "name": "opencv",
+        "platform": "(windows & x86) | (windows & x64)"
+      }
+    ],
+    "supports": "windows"
+  }

@@ -1,0 +1,19 @@
+@startuml {directshow_diagram.svg} "DirectShow Camera Diagram"
+    skinparam linetype polyline
+    skinparam linetype ortho
+    "Capture Graph Builder" .d.>[Manage] "Filter Graph Manager"
+    "Filter Graph Manager" .d.>[QueryInterface] "Media Control"
+    note left
+        Use to control the camera
+    end note
+    "Filter Graph Manager" .d.>[QueryInterface] "Media Event"
+    note right
+        Check the camera disconnection state
+    end note
+    "Filter Graph Manager" -r->[Contain] "Filters"
+    partition "Filters" #00b9a0 {
+        "Video Input Filter" .d.> "Sample Grabber Filter"
+        "Sample Grabber Filter" .d.> "Null Renderer Filter"
+    }
+    "Sample Grabber Filter" -r->[Set] "SampleGrabberCallback"
+@enduml

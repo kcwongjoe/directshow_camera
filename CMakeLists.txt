@@ -35,40 +35,46 @@ else()
 
     #******Set vcpkg as submodule******
 
-    # If the vcpkg folder is not located in current folder, change the path in the vcpkg_path.txt
-
-    #    vcpkg folder path txt file
-    set(VCPKG_PATH_FILE "config/vcpkg_path.txt")
-
-    #    try to load from that file
-    if (EXISTS ${VCPKG_PATH_FILE})
-        # Read path from file
-        file(READ ${VCPKG_PATH_FILE} VCPKG_PATH)
-    endif()
-
-    #    fail to load the path, use current folder as vcpkg path.
     if (NOT DEFINED VCPKG_PATH)
-        set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
-    endif()
+        # If the vcpkg folder is not located in current folder, change the path in the vcpkg_path.txt
 
-    set(CMAKE_TOOLCHAIN_FILE
-        ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
-        CACHE STRING "Vcpkg toolchain file")
+        #    vcpkg folder path txt file
+        set(VCPKG_PATH_FILE "config/vcpkg_path.txt")
+
+        #    try to load from that file
+        if (EXISTS ${VCPKG_PATH_FILE})
+            # Read path from file
+            file(READ ${VCPKG_PATH_FILE} VCPKG_PATH)
+        endif()
+
+        #    fail to load the path, use current folder as vcpkg path.
+        if (NOT DEFINED VCPKG_PATH)
+            set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
+        endif()
+
+        set(CMAKE_TOOLCHAIN_FILE
+            ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
+            CACHE STRING "Vcpkg toolchain file")
+    endif()
 
     #******Set Window SDK path******
 
-    #    Window SDK path txt file
-    set(WINDOW_SDK_PATH_FILE "config/window_sdk_path.txt")
+    if (NOT DEFINED ${CMAKE_SYSTEM_VERSION})
+        #    Window SDK path txt file
+        set(WINDOW_SDK_PATH_FILE "config/window_sdk_path.txt")
 
-    #    try to load path from file
-    if (EXISTS ${WINDOW_SDK_PATH_FILE})
-        # Read path from file
-        file(READ ${WINDOW_SDK_PATH_FILE} CMAKE_WINDOWS_KITS_10_DIR)
-    endif()
+        #    try to load path from file
+        if (EXISTS ${WINDOW_SDK_PATH_FILE})
+            # Read path from file
+            file(READ ${WINDOW_SDK_PATH_FILE} CMAKE_WINDOWS_KITS_10_DIR)
+        endif()
 
-    #    fail to load the path, use current folder as vcpkg path.
-    if (NOT DEFINED ${CMAKE_WINDOWS_KITS_10_DIR})
-        set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
+        #    fail to load the path, find in Program files.
+        if (NOT DEFINED ${CMAKE_WINDOWS_KITS_10_DIR})
+            if (EXISTS "C:/Program Files (x86)/Windows Kits/10")
+                set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
+            endif()
+        endif()
     endif()
 
     #******Packages******
@@ -95,7 +101,5 @@ else()
         enable_testing()
         add_subdirectory("./test")
     endif()
-
-    message(${CMAKE_BINARY_DIR})
 
 endif()

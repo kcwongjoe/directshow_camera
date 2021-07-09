@@ -16,222 +16,222 @@ namespace DirectShowCamera
      */
     class DirectShowCameraStubDefaultSetting
     {
-	private:
+    private:
 
-		// Video Format Setting
+        // Video Format Setting
 
-		/**
-		 * @brief Number of video format
-		 * @return 
-		*/
-		static int getVideFormatSize()
-		{
-			return 3;
-		}
+        /**
+         * @brief Number of video format
+         * @return 
+        */
+        static int getVideFormatSize()
+        {
+            return 3;
+        }
 
-		/**
-		 * @brief Video format
-		 * @param index Index
-		 * @return 
-		*/
-		static GUID getVideoFormatFormat(int index)
-		{
-			GUID videoFormatFormat[3] = { MEDIASUBTYPE_MJPG , MEDIASUBTYPE_YUY2, MEDIASUBTYPE_MJPG };
-			return videoFormatFormat[index];
-		}
+        /**
+         * @brief Video format
+         * @param index Index
+         * @return 
+        */
+        static GUID getVideoFormatFormat(int index)
+        {
+            GUID videoFormatFormat[3] = { MEDIASUBTYPE_MJPG , MEDIASUBTYPE_YUY2, MEDIASUBTYPE_MJPG };
+            return videoFormatFormat[index];
+        }
 
-		/**
-		 * @brief Video width
-		 * @param index Index
-		 * @return 
-		*/
-		static int getVideoFormatWidth(int index)
-		{
-			int videoFormatWidth[3] = { 320 , 640, 1280 };
-			return videoFormatWidth[index];
-		}		
+        /**
+         * @brief Video width
+         * @param index Index
+         * @return 
+        */
+        static int getVideoFormatWidth(int index)
+        {
+            int videoFormatWidth[3] = { 320 , 640, 1280 };
+            return videoFormatWidth[index];
+        }		
 
-		/**
-		 * @brief Video height
-		 * @param index Index
-		 * @return 
-		*/
-		static int getVideoFormatHeight(int index)
-		{
-			int videoFormatHeight[3] = { 240 , 480, 720 };
-			return videoFormatHeight[index];
-		}
+        /**
+         * @brief Video height
+         * @param index Index
+         * @return 
+        */
+        static int getVideoFormatHeight(int index)
+        {
+            int videoFormatHeight[3] = { 240 , 480, 720 };
+            return videoFormatHeight[index];
+        }
 
-		/**
-		 * @brief Video bit per pixel
-		 * @param index Index
-		 * @return 
-		*/
-		static int getVideoFormatBitPerPixel(int index)
-		{
-			int videoFormatBitPerPixel[3] = { 24 , 16, 24 };
-			return videoFormatBitPerPixel[index];
-		}
-		
+        /**
+         * @brief Video bit per pixel
+         * @param index Index
+         * @return 
+        */
+        static int getVideoFormatBitPerPixel(int index)
+        {
+            int videoFormatBitPerPixel[3] = { 24 , 16, 24 };
+            return videoFormatBitPerPixel[index];
+        }
+        
 
     public:
 
-		/**
-		 * @brief frame per second
-		 * @return 
-		*/
-		static double getFps()
-		{
-			return 0.5;
-		}
+        /**
+         * @brief frame per second
+         * @return 
+        */
+        static double getFps()
+        {
+            return 0.5;
+        }
 
         /**
          * @brief Get Direct show camera properties.
-		 * 
+         * 
          * @param[out] properties Properties
         */
         static void getProperties(DirectShowCameraProperties** properties)
         {
-			// Clear if necessary
-			if (*properties != nullptr) delete (*properties);
+            // Clear if necessary
+            if (*properties != nullptr) delete (*properties);
 
-			// Setting
-			*properties = new DirectShowCameraProperties();
-			(*properties)->getBrightness()->importProperty(true, 0, 255, 1, 128, false, 128, false, true);
-			(*properties)->getContrast()->importProperty(true, 0, 255, 1, 32, false, 32, false, true);
-			(*properties)->getHue()->importProperty(true, -180, 180, 1, 0, false, 0, false, true);
-			(*properties)->getSaturation()->importProperty(true, 0, 100, 1, 64, false, 64, false, true);
-			(*properties)->getSharpness()->importProperty(true, 0, 7, 1, 0, false, 0, false, true);
-			(*properties)->getGamma()->importProperty(true, 90, 150, 1, 120, false, 120, false, true);
-			(*properties)->getColorEnable()->importProperty(true, 0, 1, 1, 1, false, 1, false, true);
-			(*properties)->getWhiteBalance()->importProperty(true, 2800, 6500, 1, 4600, true, 4600, true, true);
-			(*properties)->getBacklightCompensation()->importProperty(true, 0, 2, 1, 1, false, 1, false, true);
-			(*properties)->getGain()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
-			(*properties)->getPan()->importProperty(true, -16, 16, 1, 0, false, 0, false, true);
-			(*properties)->getTilt()->importProperty(true, -16, 16, 1, 0, false, 0, false, true);
-			(*properties)->getRoll()->importProperty(true, 0, 3, 1, 0, false, 0, false, true);
-			(*properties)->getZoom()->importProperty(true, 100, 400, 10, 100, false, 100, false, true);
-			(*properties)->getExposure()->importProperty(true, -12, -3, 1, -6, true, -6, true, true);
-			(*properties)->getIris()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
-			(*properties)->getFocus()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
-			(*properties)->markAsInitialized();
+            // Setting
+            *properties = new DirectShowCameraProperties();
+            (*properties)->getBrightness()->importProperty(true, 0, 255, 1, 128, false, 128, false, true);
+            (*properties)->getContrast()->importProperty(true, 0, 255, 1, 32, false, 32, false, true);
+            (*properties)->getHue()->importProperty(true, -180, 180, 1, 0, false, 0, false, true);
+            (*properties)->getSaturation()->importProperty(true, 0, 100, 1, 64, false, 64, false, true);
+            (*properties)->getSharpness()->importProperty(true, 0, 7, 1, 0, false, 0, false, true);
+            (*properties)->getGamma()->importProperty(true, 90, 150, 1, 120, false, 120, false, true);
+            (*properties)->getColorEnable()->importProperty(true, 0, 1, 1, 1, false, 1, false, true);
+            (*properties)->getWhiteBalance()->importProperty(true, 2800, 6500, 1, 4600, true, 4600, true, true);
+            (*properties)->getBacklightCompensation()->importProperty(true, 0, 2, 1, 1, false, 1, false, true);
+            (*properties)->getGain()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
+            (*properties)->getPan()->importProperty(true, -16, 16, 1, 0, false, 0, false, true);
+            (*properties)->getTilt()->importProperty(true, -16, 16, 1, 0, false, 0, false, true);
+            (*properties)->getRoll()->importProperty(true, 0, 3, 1, 0, false, 0, false, true);
+            (*properties)->getZoom()->importProperty(true, 100, 400, 10, 100, false, 100, false, true);
+            (*properties)->getExposure()->importProperty(true, -12, -3, 1, -6, true, -6, true, true);
+            (*properties)->getIris()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
+            (*properties)->getFocus()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
+            (*properties)->markAsInitialized();
         }
 
-		/**
-		 * @brief Get Video formats
-		 * @param videoFormats 
-		*/
-		static void getVideoFormat(std::vector<DirectShowVideoFormat*>** videoFormats)
-		{
-			// Clear if necessary
-			DirectShowVideoFormat::release(*videoFormats);
-			*videoFormats = NULL;
+        /**
+         * @brief Get Video formats
+         * @param videoFormats 
+        */
+        static void getVideoFormat(std::vector<DirectShowVideoFormat*>** videoFormats)
+        {
+            // Clear if necessary
+            DirectShowVideoFormat::release(*videoFormats);
+            *videoFormats = NULL;
 
-			// Push data
-			*videoFormats = new std::vector<DirectShowVideoFormat*>();
-			for (int i=0;i< getVideFormatSize();i++)
-			{
-				int width = getVideoFormatWidth(i);
-				int height = getVideoFormatHeight(i);
-				int bitPerPixel = getVideoFormatBitPerPixel(i);
-				(*videoFormats)->push_back(new DirectShowVideoFormat(getVideoFormatFormat(i), width, height, bitPerPixel, width * height * bitPerPixel / 8));
-			}
-		}
+            // Push data
+            *videoFormats = new std::vector<DirectShowVideoFormat*>();
+            for (int i=0;i< getVideFormatSize();i++)
+            {
+                int width = getVideoFormatWidth(i);
+                int height = getVideoFormatHeight(i);
+                int bitPerPixel = getVideoFormatBitPerPixel(i);
+                (*videoFormats)->push_back(new DirectShowVideoFormat(getVideoFormatFormat(i), width, height, bitPerPixel, width * height * bitPerPixel / 8));
+            }
+        }
 
-		/**
-		 * @brief Get Camera
-		 * @param[out] cameraDevices Camera
-		*/
-		static void getCamera(std::vector<DirectShowCameraDevice>* cameraDevices)
-		{
-			// Initialize and clear
-			if (cameraDevices == nullptr) *cameraDevices = std::vector<DirectShowCameraDevice>();
-			cameraDevices->clear();
+        /**
+         * @brief Get Camera
+         * @param[out] cameraDevices Camera
+        */
+        static void getCamera(std::vector<DirectShowCameraDevice>* cameraDevices)
+        {
+            // Initialize and clear
+            if (cameraDevices == nullptr) *cameraDevices = std::vector<DirectShowCameraDevice>();
+            cameraDevices->clear();
 
-			// Get video format
-			std::vector<DirectShowVideoFormat> videoFormats;
-			for (int i = 0; i < getVideFormatSize(); i++)
-			{
-				int width = getVideoFormatWidth(i);
-				int height = getVideoFormatHeight(i);
-				int bitPerPixel = getVideoFormatBitPerPixel(i);
-				videoFormats.push_back(DirectShowVideoFormat(getVideoFormatFormat(i), width, height, bitPerPixel, width * height * bitPerPixel / 8));
-			}
+            // Get video format
+            std::vector<DirectShowVideoFormat> videoFormats;
+            for (int i = 0; i < getVideFormatSize(); i++)
+            {
+                int width = getVideoFormatWidth(i);
+                int height = getVideoFormatHeight(i);
+                int bitPerPixel = getVideoFormatBitPerPixel(i);
+                videoFormats.push_back(DirectShowVideoFormat(getVideoFormatFormat(i), width, height, bitPerPixel, width * height * bitPerPixel / 8));
+            }
 
-			// Add camera
-			cameraDevices->push_back(DirectShowCameraDevice("Integrated Camera", 
-				"A fake camera", 
-				"\\\\?\\usb#vid_0000&pid_0000&mi_0000&0000000&0&0000#{00000000-0000-0000-0000-000000000000}\\global",
-				videoFormats));
-		}
+            // Add camera
+            cameraDevices->push_back(DirectShowCameraDevice("Integrated Camera", 
+                "A fake camera", 
+                "\\\\?\\usb#vid_0000&pid_0000&mi_0000&0000000&0&0000#{00000000-0000-0000-0000-000000000000}\\global",
+                videoFormats));
+        }
 
-		/**
-		 * @brief Get default frame
-		 * @param width Frame width
-		 * @param height Frame height
-		 * @param frame Frame bytes
-		 * @param frameIndex Frame index
-		 * @param numOfBytes Number of bytes of this frame
-		 * @param previousFrameIndex Previous frame index
-		*/
-		static void getFrame(int width, int height, unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, unsigned long previousFrameIndex)
-		{
-			// Frame index
-			*frameIndex = ++previousFrameIndex;
+        /**
+         * @brief Get default frame
+         * @param width Frame width
+         * @param height Frame height
+         * @param frame Frame bytes
+         * @param frameIndex Frame index
+         * @param numOfBytes Number of bytes of this frame
+         * @param previousFrameIndex Previous frame index
+        */
+        static void getFrame(int width, int height, unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, unsigned long previousFrameIndex)
+        {
+            // Frame index
+            *frameIndex = ++previousFrameIndex;
 
-			// Size
-			int totalSize = width * height * 3;
-			if (numOfBytes)
-			{
-				*numOfBytes = totalSize;
-			}
+            // Size
+            int totalSize = width * height * 3;
+            if (numOfBytes)
+            {
+                *numOfBytes = totalSize;
+            }
 
-			// Allocate image memory
-			memset(frame, 0, totalSize * sizeof(unsigned char));
+            // Allocate image memory
+            memset(frame, 0, totalSize * sizeof(unsigned char));
 
-			// Calculate Box Size
-			double boxWidth = 0;
-			int boxCol = 0;
-			if (width % 4 == 0 && height % 3 == 0)
-			{
-				// 4:3
-				boxWidth = width / 12.0;
-				boxCol = 12;
-			}
-			else
-			{
-				// 16 : 9
-				boxWidth = width / 16.0;
-				boxCol = 16;
-			}
+            // Calculate Box Size
+            double boxWidth = 0;
+            int boxCol = 0;
+            if (width % 4 == 0 && height % 3 == 0)
+            {
+                // 4:3
+                boxWidth = width / 12.0;
+                boxCol = 12;
+            }
+            else
+            {
+                // 16 : 9
+                boxWidth = width / 16.0;
+                boxCol = 16;
+            }
 
-			int rColorArray[24] = {115,194,98,87,133,103,214,80,193,94,157,224,56,70,175,231,187,8,243,200,160,122,85,52};
-			int gColorArray[24] = {82,150,122,108,128,189,126,91,90,60,188,163,61,148,54,199,86,133,243,200,160,122,85,52};
-			int bColorArray[24] = {68,130,157,67,177,170,44,166,99,108,64,46,150,73,60,31,149,161,242,200,160,121,85,52};
+            int rColorArray[24] = {115,194,98,87,133,103,214,80,193,94,157,224,56,70,175,231,187,8,243,200,160,122,85,52};
+            int gColorArray[24] = {82,150,122,108,128,189,126,91,90,60,188,163,61,148,54,199,86,133,243,200,160,122,85,52};
+            int bColorArray[24] = {68,130,157,67,177,170,44,166,99,108,64,46,150,73,60,31,149,161,242,200,160,121,85,52};
 
-			// Draw
-			for (int i=0;i<width;i++)
-			{
-				for (int j = 0; j < height; j++)
-				{
-					int pixelIndex = (j * width + i) * 3;
+            // Draw
+            for (int i=0;i<width;i++)
+            {
+                for (int j = 0; j < height; j++)
+                {
+                    int pixelIndex = (j * width + i) * 3;
 
-					// Get color
-					int widthIndex = std::floor(i / boxWidth);
-					int heightIndex = std::floor(j / boxWidth);
-					int colorIndex = (widthIndex + heightIndex * boxCol + *frameIndex) % 24;
+                    // Get color
+                    int widthIndex = std::floor(i / boxWidth);
+                    int heightIndex = std::floor(j / boxWidth);
+                    int colorIndex = (widthIndex + heightIndex * boxCol + *frameIndex) % 24;
 
-					// Blue
-					frame[pixelIndex] = bColorArray[colorIndex];
+                    // Blue
+                    frame[pixelIndex] = bColorArray[colorIndex];
 
-					// Green
-					frame[pixelIndex+1] = gColorArray[colorIndex];
+                    // Green
+                    frame[pixelIndex+1] = gColorArray[colorIndex];
 
-					// Red
-					frame[pixelIndex+2] = rColorArray[colorIndex]; 
-				}
-			}
-		}
+                    // Red
+                    frame[pixelIndex+2] = rColorArray[colorIndex]; 
+                }
+            }
+        }
     };
 }
 

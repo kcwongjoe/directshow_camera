@@ -1,10 +1,17 @@
 @echo off
 
-:: Delete all files in build
+
+
+:: Delete all files in build except vcpkg_installed
 echo Delete all files in build......
-del /q ".\build\*"
-rmdir ".\build\.vs" /s /q
-for /D %%p in (".\build\*.*") do rmdir "%%p" /s /q
+pushd ".\build\" || exit /B 1
+for /D %%D in ("*") do (
+    if /I not "%%~nxD"=="vcpkg_installed" rd /S /Q "%%~D"
+)
+for %%F in ("*") do (
+    del "%%~F"
+)
+popd
 
 :: Get complier version
 set "SYSVERSION=X64"

@@ -2,11 +2,22 @@
 /build
 /*/build/
 
+# vcpkg
+vcpkg
+
 # PlantUML
 plantuml.jar
 /docs/plantuml.jar
 out
 /docs/*.pu
+
+# CMake
+CMakeCache.txt
+/CMakeFiles
+/Testing
+
+# Google Test
+/_deps
 
 # Docs
 /docs/html
