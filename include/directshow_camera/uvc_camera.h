@@ -39,8 +39,9 @@ namespace DirectShowCamera
 
     /**********************Public********************************/
     public:
-
+#ifdef HAS_OPENCV
         typedef std::function<void(cv::Mat image)> ExposureFusionAsyncResult;
+#endif
 
         // Constructor
         UVCCamera();
