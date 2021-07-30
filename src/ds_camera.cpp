@@ -986,34 +986,34 @@ namespace DirectShowCamera
                     // Get device path
                     devicePath = DirectShowCameraUtils::bstrToString(var.bstrVal);
                     VariantClear(&var);
-
-                    // Get all video format
-                    std::vector<DirectShowVideoFormat> videoFormats;
-                    DirectShowCameraUtils::iPinDecorator(
-                        moniker,
-                        [this, &videoFormats](IPin* iPin, PIN_INFO* pinInfo)
-                        {
-                            DirectShowCameraUtils::amMediaTypeDecorator(
-                                iPin,
-                                [this, &videoFormats](AM_MEDIA_TYPE* amMediaType)
-                                {
-                                    videoFormats.push_back(DirectShowVideoFormat(amMediaType, false));
-                                },
-                                &m_errorString
-                            );
-                        },
-                        &m_errorString
-                    );
-
-                    // Sort and erase duplicates
-                    if (videoFormats.size() > 0)
-                    {
-                        DirectShowVideoFormat::sortAndUnique(&videoFormats);
-                    }
-
-                    // Push into device
-                    cameraDevices->push_back(DirectShowCameraDevice(friendlyName, description, devicePath, videoFormats));
                 }
+
+                // Get all video format
+                std::vector<DirectShowVideoFormat> videoFormats;
+                DirectShowCameraUtils::iPinDecorator(
+                    moniker,
+                    [this, &videoFormats](IPin* iPin, PIN_INFO* pinInfo)
+                    {
+                        DirectShowCameraUtils::amMediaTypeDecorator(
+                            iPin,
+                            [this, &videoFormats](AM_MEDIA_TYPE* amMediaType)
+                            {
+                                videoFormats.push_back(DirectShowVideoFormat(amMediaType, false));
+                            },
+                            &m_errorString
+                        );
+                    },
+                    &m_errorString
+                );
+
+                // Sort and erase duplicates
+                if (videoFormats.size() > 0)
+                {
+                    DirectShowVideoFormat::sortAndUnique(&videoFormats);
+                }
+
+                // Push into device
+                cameraDevices->push_back(DirectShowCameraDevice(friendlyName, description, devicePath, videoFormats));
             },
             &m_errorString
         );
@@ -1030,15 +1030,16 @@ namespace DirectShowCamera
     bool DirectShowCamera::getCamera(int cameraIndex, IBaseFilter** videoInputFilter)
     {
         int count = 0;
-
+        bool found = false;
         bool success = DirectShowCameraUtils::iPropertyDecorator(
             CLSID_VideoInputDeviceCategory,
-            [&videoInputFilter, &cameraIndex, &count](IMoniker* moniker, IPropertyBag* propertyBag)
+            [&videoInputFilter, &cameraIndex, &count, &found](IMoniker* moniker, IPropertyBag* propertyBag)
             {
                 // Found, obtain the video input filter
                 if (count == cameraIndex)
                 {
                     moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+                    found = true;
                 }
 
                 // Move to next
@@ -1047,7 +1048,7 @@ namespace DirectShowCamera
             &m_errorString
         );
 
-        return success;
+        return success && found;
     }
 
     /**
@@ -1058,9 +1059,10 @@ namespace DirectShowCamera
     */
     bool DirectShowCamera::getCamera(std::string devicePath, IBaseFilter** videoInputFilter)
     {
+        bool found = false;
         bool success = DirectShowCameraUtils::iPropertyDecorator(
             CLSID_VideoInputDeviceCategory,
-            [&videoInputFilter, &devicePath](IMoniker* moniker, IPropertyBag* propertyBag)
+            [&videoInputFilter, &devicePath, &found](IMoniker* moniker, IPropertyBag* propertyBag)
             {
                 // Initialize variables
                 HRESULT hr;
@@ -1071,21 +1073,22 @@ namespace DirectShowCamera
                 hr = propertyBag->Read(L"DevicePath", &var, 0);
                 if (SUCCEEDED(hr))
                 {
-                    std::string devicePath = DirectShowCameraUtils::bstrToString(var.bstrVal);
+                    std::string dev_path = DirectShowCameraUtils::bstrToString(var.bstrVal);
                     VariantClear(&var);
 
                     // Found, obtain the video input filter
-                    if (devicePath == devicePath)
+                    if (dev_path == devicePath)
                     {
                         // Get device name
                         moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+                        found = true;
                     }
                 }
             },
             &m_errorString
         );
 
-        return success;
+        return success && found;
     }
 
     /**
@@ -1096,7 +1099,37 @@ namespace DirectShowCamera
     */
     bool DirectShowCamera::getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
     {
-        return getCamera(device.getDevicePath(), videoInputFilter);
+        // try to match via device path first, fallback to friendly name
+        bool found = getCamera(device.getDevicePath(), videoInputFilter);
+        if (!found)
+        {
+            DirectShowCameraUtils::iPropertyDecorator(
+                CLSID_VideoInputDeviceCategory,
+                [&videoInputFilter, &device, &found](IMoniker* moniker, IPropertyBag* propertyBag)
+                {
+                    // Initialize variables
+                    HRESULT hr;
+                    VARIANT var;
+                    VariantInit(&var);
+
+                    // Get friendly name
+                    hr = propertyBag->Read(L"FriendlyName", &var, 0);
+                    if (SUCCEEDED(hr))
+                    {
+                        std::string friendly_name = DirectShowCameraUtils::bstrToString(var.bstrVal);
+                        VariantClear(&var);
+
+                        if (friendly_name == device.getFriendlyName())
+                        {
+                            moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+                            found = true;
+                        }
+                    }
+                },
+                &m_errorString
+            );
+        }
+        return found;
     }
 
 #pragma endregion getCamera
