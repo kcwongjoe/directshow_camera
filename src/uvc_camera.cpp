@@ -2525,7 +2525,7 @@ namespace DirectShowCamera
     */
     DirectShowVideoFormat UVCCamera::getDirectShowVideoFormat()
     {
-        return m_directShowCamera->getCurrentVideoFormat();
+        return m_directShowCamera->getCurrentGrabberFormat();
     }
 
 #pragma endregion DirectShow Video Format

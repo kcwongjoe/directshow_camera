@@ -400,6 +400,15 @@ namespace DirectShowCamera
     }
 
     /**
+     * @brief Get current grabber format
+     * @return
+    */
+    DirectShowVideoFormat DirectShowCameraStub::getCurrentGrabberFormat()
+    {
+        return getCurrentVideoFormat();
+    }
+
+    /**
      * @brief Get current video format list of this opened camera.
      * @return
     */

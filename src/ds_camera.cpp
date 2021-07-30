@@ -271,6 +271,15 @@ namespace DirectShowCamera
                 result = DirectShowCameraUtils::checkICGB2RenderStreamResult(hr, &m_errorString, "Error on connecting filter (Video Input Filter - Grabber Filter - Null Renderer Filter)");
             }
 
+            // get video format of connected grabber filter
+            AM_MEDIA_TYPE grabberMediaType;
+            ZeroMemory(&grabberMediaType, sizeof(grabberMediaType));
+            hr = m_sampleGrabber->GetConnectedMediaType(&grabberMediaType);
+            if (SUCCEEDED(hr))
+            {
+                m_sampleGrabberVideoFormat.constructor(&grabberMediaType, false);
+            }
+
             // Try setting the sync source to null - and make it run as fast as possible
             bool syncSourceAsNull = false;
             if (result && syncSourceAsNull)
@@ -666,6 +675,13 @@ namespace DirectShowCamera
             {
                 m_grabberMediaSubType = mediaSubType;
 
+                // get video format of grabber filter - this can fail if the graph is not yet connected
+                hr = m_sampleGrabber->GetConnectedMediaType(&grabberMediaType);
+                if (SUCCEEDED(hr))
+                {
+                    m_sampleGrabberVideoFormat.constructor(&grabberMediaType, false);
+                }
+
                 // Set buffer size
                 m_sampleGrabberCallback->setBufferSize(frameTotalSize);
             }
@@ -797,6 +813,15 @@ namespace DirectShowCamera
             return DirectShowVideoFormat();
         }
         
+    }
+
+    /**
+    * @brief Get current grabber format
+    * @return
+    */
+    DirectShowVideoFormat DirectShowCamera::getCurrentGrabberFormat()
+    {
+        return m_sampleGrabberVideoFormat;
     }
 
     /**

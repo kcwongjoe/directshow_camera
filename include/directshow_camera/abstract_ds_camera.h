@@ -45,6 +45,7 @@ namespace DirectShowCamera
         virtual  std::vector<DirectShowVideoFormat> getVideoFormatList() = 0;
         virtual int getCurrentVideoFormatIndex() = 0;
         virtual DirectShowVideoFormat getCurrentVideoFormat() = 0;
+        virtual DirectShowVideoFormat getCurrentGrabberFormat() = 0;
 
         virtual bool setVideoFormat(DirectShowVideoFormat* videoFormat) = 0;
         virtual bool setVideoFormat(int videoFormatIndex) = 0;
