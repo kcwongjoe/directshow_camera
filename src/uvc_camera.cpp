@@ -199,8 +199,7 @@ namespace DirectShowCamera
         else
         {
             // Release device input filter
-            videoInputFilter->Release();
-            delete videoInputFilter;
+            DirectShowCameraUtils::SafeRelease(&videoInputFilter);
 
             copyError(result);
         }
