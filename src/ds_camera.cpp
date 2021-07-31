@@ -37,6 +37,9 @@ namespace DirectShowCamera
             m_videoFormats = NULL;
             m_currentVideoFormatIndex = -1;
 
+            // assigning a newly created DirectShowVideoFormat will reset m_isEmpty
+            m_sampleGrabberVideoFormat = DirectShowVideoFormat();
+
             // Release stream config
             DirectShowCameraUtils::SafeRelease(&m_streamConfig);
 
