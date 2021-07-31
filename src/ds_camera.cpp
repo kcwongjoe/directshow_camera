@@ -1101,11 +1101,11 @@ namespace DirectShowCamera
                 hr = propertyBag->Read(L"DevicePath", &var, 0);
                 if (SUCCEEDED(hr))
                 {
-                    std::string dev_path = DirectShowCameraUtils::bstrToString(var.bstrVal);
+                    std::string currentDevicePath = DirectShowCameraUtils::bstrToString(var.bstrVal);
                     VariantClear(&var);
 
                     // Found, obtain the video input filter
-                    if (dev_path == devicePath)
+                    if (currentDevicePath == devicePath)
                     {
                         // Get device name
                         moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
