@@ -44,6 +44,7 @@ namespace DirectShowCamera
         ISampleGrabber* m_sampleGrabber = NULL;
         SampleGrabberCallback* m_sampleGrabberCallback = new SampleGrabberCallback();
         GUID m_grabberMediaSubType = MEDIASUBTYPE_None;
+        DirectShowVideoFormat m_sampleGrabberVideoFormat;
 
         IMediaEventEx* m_mediaEvent = NULL;
         IMediaControl* m_mediaControl = NULL;
@@ -91,6 +92,7 @@ namespace DirectShowCamera
         std::vector<DirectShowVideoFormat> getVideoFormatList();
         int getCurrentVideoFormatIndex();
         DirectShowVideoFormat getCurrentVideoFormat();
+        DirectShowVideoFormat getCurrentGrabberFormat();
 
         bool setVideoFormat(DirectShowVideoFormat* videoFormat);
         bool setVideoFormat(int videoFormatIndex);
