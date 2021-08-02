@@ -156,11 +156,11 @@ namespace DirectShowCamera
                         result = false;
                         if (rgb)
                         {
-                            m_errorString == "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + " x 3).";
+                            m_errorString = "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + " x 3).";
                         }
                         else
                         {
-                            m_errorString == "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + " x 1).";
+                            m_errorString = "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + " x 1).";
                         }
 
                     }
@@ -169,7 +169,7 @@ namespace DirectShowCamera
                 {
                     // Not Found the size
                     result = false;
-                    m_errorString == "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + ").";
+                    m_errorString = "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + ").";
                 }
             }
         }

@@ -523,7 +523,7 @@ namespace DirectShowCameraUtils
     {
         auto seconds = std::chrono::time_point_cast<std::chrono::seconds>(time);
         auto fraction = time - seconds;
-        int ms = std::chrono::duration_cast<std::chrono::milliseconds>(fraction).count();
+        int ms = static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(fraction).count());
         return ms;
     }
 
