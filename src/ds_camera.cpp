@@ -125,6 +125,7 @@ namespace DirectShowCamera
         {
             m_videoInputFilter = *videoInputFilter;
 
+            m_sampleGrabberCallback = new SampleGrabberCallback();
             // Create the capture graph builder
             if (result)
             {
