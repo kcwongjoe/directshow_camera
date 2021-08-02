@@ -22,6 +22,7 @@ namespace DirectShowCamera
     class AbstractDirectShowCamera
     {
     public:
+        virtual ~AbstractDirectShowCamera() { }
 
         virtual void release() = 0;
 

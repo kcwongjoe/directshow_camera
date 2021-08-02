@@ -42,7 +42,7 @@ namespace DirectShowCamera
 
         // Callback
         ISampleGrabber* m_sampleGrabber = NULL;
-        SampleGrabberCallback* m_sampleGrabberCallback = new SampleGrabberCallback();
+        SampleGrabberCallback* m_sampleGrabberCallback = NULL;
         GUID m_grabberMediaSubType = MEDIASUBTYPE_None;
         DirectShowVideoFormat m_sampleGrabberVideoFormat;
 

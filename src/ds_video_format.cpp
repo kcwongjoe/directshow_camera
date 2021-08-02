@@ -113,10 +113,11 @@ namespace DirectShowCamera
             for (int i=0;i< videoFormats->size();i++)
             {
                 delete videoFormats->at(i);
-                videoFormats->assign(i, NULL);
+                videoFormats->at(i) = NULL;
             }
 
             videoFormats->clear();
+            delete videoFormats;
         }
     }
 

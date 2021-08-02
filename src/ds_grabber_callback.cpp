@@ -126,6 +126,23 @@ namespace DirectShowCamera
         return m_lastFrameTime;
     }
 
+    ULONG SampleGrabberCallback::AddRef()
+    {
+        m_refCount++;
+        return m_refCount;
+    }
+
+    ULONG SampleGrabberCallback::Release()
+    {
+        m_refCount--;
+        if (!m_refCount)
+        {
+            delete this;
+            return 0;
+        }
+        return m_refCount;
+    }
+
     STDMETHODIMP SampleGrabberCallback::QueryInterface(REFIID, void** ppvObject) {
         *ppvObject = static_cast<ISampleGrabberCB*>(this);
         return S_OK;

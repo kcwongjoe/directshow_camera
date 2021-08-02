@@ -48,6 +48,11 @@ namespace DirectShowCamera
             std::chrono::system_clock::time_point m_lastFrameTime;
             double m_fps = 0;
 
+            /**
+            * @brief Current reference count. If it reaches 0 we delete ourself
+            */
+            unsigned long m_refCount = 0;
+
         public:
 
             SampleGrabberCallback();
@@ -67,8 +72,8 @@ namespace DirectShowCamera
             double minimumFPS = 0.5;
 
             //------------------------------------------------
-            STDMETHODIMP_(ULONG) AddRef() { return 1; }
-            STDMETHODIMP_(ULONG) Release() { return 2; }
+            STDMETHODIMP_(ULONG) AddRef();
+            STDMETHODIMP_(ULONG) Release();
 
             //------------------------------------------------
             STDMETHODIMP QueryInterface(REFIID, void** ppvObject);
