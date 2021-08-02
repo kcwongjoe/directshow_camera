@@ -413,7 +413,7 @@ namespace DirectShowCamera
                             
                             // Check last frame time
                             auto lastFrameTime = m_sampleGrabberCallback->getLastFrameCaptureTime();
-                            double timeDiff = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastFrameTime)).count(); // in ms
+                            auto timeDiff = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - lastFrameTime)).count(); // in ms
                             double fps = m_sampleGrabberCallback->getFPS();
                             double fpsInTime = 1.0 / fps * 1000;
 

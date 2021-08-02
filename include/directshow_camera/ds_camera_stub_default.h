@@ -217,8 +217,8 @@ namespace DirectShowCamera
                     int pixelIndex = (j * width + i) * 3;
 
                     // Get color
-                    int widthIndex = std::floor(i / boxWidth);
-                    int heightIndex = std::floor(j / boxWidth);
+                    int widthIndex = static_cast<int>(std::floor(i / boxWidth));
+                    int heightIndex = static_cast<int>(std::floor(j / boxWidth));
                     int colorIndex = (widthIndex + heightIndex * boxCol + *frameIndex) % 24;
 
                     // Blue

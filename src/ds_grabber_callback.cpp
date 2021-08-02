@@ -201,8 +201,8 @@ namespace DirectShowCamera
     }
 
     STDMETHODIMP SampleGrabberCallback::BufferCB(double, BYTE*, long) {
-
-        std::chrono::system_clock::now();
+        // prevent nodiscard warning by casting to void
+        static_cast<void>(std::chrono::system_clock::now());
         return E_NOTIMPL;
     }
 }
