@@ -10,6 +10,7 @@ namespace DirectShowCamera
     {
         // initialize buffer
         m_pixelsBuffer = new unsigned char[m_bufferSize];
+        AddRef();
     }
 
     /**
