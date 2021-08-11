@@ -17,9 +17,14 @@ if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
     set(DIRECTSHOWCAMERA_AS_STATIC_LIBRARY TRUE)
 endif()
 
+# Get this CMakeLists location
+set(DIRECTSHOWCAMERA_ROOT_PATH ${CMAKE_SOURCE_DIR})
+
 # Add cmake module
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${DIRECTSHOWCAMERA_ROOT_PATH}/cmake")
 include(InstallVcpkgOpenCV)
+include(AddVcpkg)
+include(AddWin10SDK)
 
 #******Source******
 if (${DIRECTSHOWCAMERA_AS_STATIC_LIBRARY}) 
@@ -33,51 +38,11 @@ else()
 
     # ******OpenCV and Window SDK******
 
-    #******Set vcpkg as submodule******
+    #   Set vcpkg as submodule. See cmake/AddVcpkg.cmake
+    add_vcpkg()
 
-    if (NOT DEFINED VCPKG_PATH)
-        # If the vcpkg folder is not located in current folder, change the path in the vcpkg_path.txt
-
-        #    vcpkg folder path txt file
-        set(VCPKG_PATH_FILE "config/vcpkg_path.txt")
-
-        #    try to load from that file
-        if (EXISTS ${VCPKG_PATH_FILE})
-            # Read path from file
-            file(READ ${VCPKG_PATH_FILE} VCPKG_PATH)
-        endif()
-
-        #    fail to load the path, use current folder as vcpkg path.
-        if (NOT DEFINED VCPKG_PATH)
-            set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
-        endif()
-
-        set(CMAKE_TOOLCHAIN_FILE
-            ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
-            CACHE STRING "Vcpkg toolchain file")
-    endif()
-
-    #******Set Window SDK path******
-
-    if (NOT DEFINED ${CMAKE_SYSTEM_VERSION})
-        #    Window SDK path txt file
-        set(WINDOW_SDK_PATH_FILE "config/window_sdk_path.txt")
-
-        #    try to load path from file
-        if (EXISTS ${WINDOW_SDK_PATH_FILE})
-            # Read path from file
-            file(READ ${WINDOW_SDK_PATH_FILE} CMAKE_WINDOWS_KITS_10_DIR)
-        endif()
-
-        #    fail to load the path, find in Program files.
-        if (NOT DEFINED ${CMAKE_WINDOWS_KITS_10_DIR})
-            if (EXISTS "C:/Program Files (x86)/Windows Kits/10")
-                set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10")
-            endif()
-        endif()
-    endif()
-
-    #******Packages******
+    #   Set Window SDK path. See cmake/AddWin10SDK.cmake
+    add_window10_sdk()
 
     # OpenCV
 

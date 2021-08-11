@@ -15,10 +15,10 @@ class MyClass
 
         void doSomething(bool firstVriable)
         {
-            bool secondVariable = m_variable;
+            bool secondVariable = m_myVariable;
         }
 
-        // Getter and Setter for m_variable
+        // Getter and Setter for m_myVariable
         bool getVariable();
         void setVariable(bool);
 

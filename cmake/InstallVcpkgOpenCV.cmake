@@ -11,8 +11,8 @@ macro(install_vcpkg_opencv)
     endif()
 
     # Search vcpkg dependency in vcpkg manifest mode
-    if (EXISTS "${CMAKE_BINARY_DIR}/vcpkg_installed/${PLATFORM_FOLDER}/share/opencv")
-        set(MY_VCPKG_DEPENDENCIES_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed/${PLATFORM_FOLDER}")
+    if (EXISTS "${DIRECTSHOWCAMERA_ROOT_PATH}/vcpkg_installed/${PLATFORM_FOLDER}/share/opencv")
+        set(MY_VCPKG_DEPENDENCIES_DIR "${DIRECTSHOWCAMERA_ROOT_PATH}/vcpkg_installed/${PLATFORM_FOLDER}")
     endif()
 
     # Search vcpkg dependency in vcpkg root
