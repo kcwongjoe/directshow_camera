@@ -22,20 +22,29 @@ void eg2_properties()
     std::cout << "Width: " + std::to_string(resolutions[0].first) + ", Height: " + std::to_string(resolutions[0].second) << std::endl;
 
 
+
     // Open the first camera in the biggest resolution
     std::cout << "Open the first camera..." << std::endl;
     camera.open(cameraDeivceList[0], 
         resolutions[resolutions.size() - 1].first,
         resolutions[resolutions.size() - 1].second
     );
-
+    std::cout << "show DirectShow properties" << std::string(*camera.getDirectShowProperties()) << std::endl;
     // Get exposure in second
-    std::cout << "Exposure: " + std::to_string(camera.getExposure()) + "s" << std::endl;
+    double exposureTime = camera.getExposure();
+    if (exposureTime > 0.0)
+    {
+        std::cout << "Exposure: " + std::to_string(exposureTime) + "s" << std::endl;
+        // Set exposure as the largest value
+        std::vector<double> exposures = camera.getPossibleExposureValues();
+        camera.setExposure(exposures[exposures.size() - 1]);
+        std::cout << "Set exposure to " + std::to_string(exposures[exposures.size() - 1]) + "s" << std::endl;
 
-    // Set exposure as the largest value
-    std::vector<double> exposures = camera.getPossibleExposureValues();
-    camera.setExposure(exposures[exposures.size()-1]);
-    std::cout << "Set exposure to " + std::to_string(exposures[exposures.size() - 1]) + "s" << std::endl;
+    }else
+    {
+        std::cout << "This device doesn't support exposure time" << std::endl;
+    }
+
 
     // Reset all properties to default
     std::cout << "Reset properties to default..." << std::endl;
