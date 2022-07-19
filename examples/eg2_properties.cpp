@@ -29,12 +29,11 @@ void eg2_properties()
         resolutions[resolutions.size() - 1].first,
         resolutions[resolutions.size() - 1].second
     );
-    std::cout << "show DirectShow properties" << std::string(*camera.getDirectShowProperties()) << std::endl;
+
     // Get exposure in second
-    double exposureTime = camera.getExposure();
-    if (exposureTime > 0.0)
+    if (camera.supportExposure())
     {
-        std::cout << "Exposure: " + std::to_string(exposureTime) + "s" << std::endl;
+        std::cout << "Exposure: " + std::to_string(camera.getExposure()) + "s" << std::endl;
         // Set exposure as the largest value
         std::vector<double> exposures = camera.getPossibleExposureValues();
         camera.setExposure(exposures[exposures.size() - 1]);
