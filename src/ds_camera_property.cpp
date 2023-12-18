@@ -37,7 +37,7 @@ namespace DirectShowCamera
         m_min = 0;
         m_max = 0;
         m_step = 0;
-        m_default = 0;
+        m_defaultValue = 0;
         m_isAuto = true;
         m_value = 0;
 
@@ -236,7 +236,7 @@ namespace DirectShowCamera
     */
     long DirectShowCameraProperty::getDefault()
     {
-        return m_default;
+        return m_defaultValue;
     }
 
     /**
@@ -267,18 +267,18 @@ namespace DirectShowCamera
      * @param min Min value
      * @param max Max value
      * @param step Step
-     * @param default Default value
+     * @param defaultValue Default value
      * @param isAuto Is auto?
      * @param value Current value
      * @param supportAuto Support auto?
      * @param supportManual Support manual?
     */
-    void DirectShowCameraProperty::importProperty(bool supported, long min, long max, long step, long default, bool isAuto, long value, bool supportAuto, bool supportManual)
+    void DirectShowCameraProperty::importProperty(bool supported, long min, long max, long step, long defaultValue, bool isAuto, long value, bool supportAuto, bool supportManual)
     {
         m_min = min;
         m_max = max;
         m_step = step;
-        m_default = default;
+        m_defaultValue = defaultValue;
         m_isAuto = isAuto;
         m_value = value;
 
@@ -302,7 +302,7 @@ namespace DirectShowCamera
         bool isAutoMode = false;
         if (asAuto && m_supportAuto) isAutoMode = true;
 
-        bool result = setValue(videoInputFilter, m_default, isAutoMode, errorString);
+        bool result = setValue(videoInputFilter, m_defaultValue, isAutoMode, errorString);
 
         return result;
     }
