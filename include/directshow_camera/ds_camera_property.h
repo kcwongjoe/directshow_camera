@@ -40,7 +40,7 @@ namespace DirectShowCamera
         long m_min;
         long m_max;
         long m_step;
-        long m_default;
+        long m_defaultValue;
         bool m_isAuto;
         long m_value;
 
@@ -98,7 +98,7 @@ namespace DirectShowCamera
 
         // Import
 
-        void importProperty(bool supported, long min, long max, long step, long default, bool isAuto, long value, bool supportAuto, bool supportManual);
+        void importProperty(bool supported, long min, long max, long step, long defaultValue, bool isAuto, long value, bool supportAuto, bool supportManual);
 
         /**
          * @brief Import property from IAMVideoProcAmp/IAMCameraControl
@@ -128,7 +128,7 @@ namespace DirectShowCamera
                 m_min = min;
                 m_max = max;
                 m_step = step;
-                m_default = defaultValue;
+                m_defaultValue = defaultValue;
 
                 // Set current value
                 importPropertyValue(cameraControl);
