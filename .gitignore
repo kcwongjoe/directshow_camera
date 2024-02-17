@@ -4,6 +4,7 @@
 
 # vcpkg
 vcpkg
+vcpkg_installed
 
 # PlantUML
 plantuml.jar

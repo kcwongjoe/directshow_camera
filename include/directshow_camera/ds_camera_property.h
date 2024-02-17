@@ -209,7 +209,7 @@ namespace DirectShowCamera
                     supportMode += "Manual";
                 }
 
-                result = m_name + "(Value: " + std::to_string(m_value) + isAutoStr + ", Min: " + std::to_string(m_min) + ", Max: " + std::to_string(m_max) + ", Step: " + std::to_string(m_step) + ", Default: " + std::to_string(m_default) + ", Support mode: " + supportMode + ")";
+                result = m_name + "(Value: " + std::to_string(m_value) + isAutoStr + ", Min: " + std::to_string(m_min) + ", Max: " + std::to_string(m_max) + ", Step: " + std::to_string(m_step) + ", Default: " + std::to_string(m_defaultValue) + ", Support mode: " + supportMode + ")";
             }
             else
             {

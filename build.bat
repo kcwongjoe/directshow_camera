@@ -26,10 +26,10 @@ if "%~1" == "x64" (
 echo Start to build by cmake.....
 if "%SYSVERSION%" == "X86" (
     echo Building x86 MakeFile
-    cmake -B ./build -G "Visual Studio 16 2019" -A win32
+    cmake -B ./build -G "Visual Studio 17 2022" -A win32 --preset=default
 ) else (
     echo Building x64 MakeFile
-    cmake -B ./build -G "Visual Studio 16 2019" -A x64
+    cmake -B ./build -G "Visual Studio 17 2022" -A x64 --preset=default
 )
 
 :: Copy dll from vcpkg

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 #******Project******
-project(directshow_camera LANGUAGES CXX)
+project(directshow_camera LANGUAGES CXX VERSION 1.1.0)
 
 #******Setting******
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

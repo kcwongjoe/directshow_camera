@@ -120,9 +120,9 @@ camera.getFrame(&image, &size);
 
 Minimum C++ 17
 
-vcpkg commit version: #14121
+vcpkg commit version: #13bde2ff13192e1b2fdd37bd9b475c7665ae6ae5
 
-OpenCV version: 4.3.0 (Option)
+OpenCV version: 4.8.0 (Option)
 
 # Installation
 
@@ -173,15 +173,6 @@ OpenCV version: 4.3.0 (Option)
             PRIVATE
                 OpenCV_LIBS
         )
-        ```
-    2. Copy dll from vcpkg. You can use **copy_dll.bat** or **build-in CMake module** to copy necessary dll from vcpkg.
-
-       * Type `copy_dll.bat x86` or `copy_dll.bat x64`
-       * Add the code in your project CMakeLists.txt
-            ``` cmake
-            # dll will be copied when the target built.
-            prebuild_copy_vcpkg_opencv_dll("<YOUR_TARGET>" "<COPY TO, e.g. ${CMAKE_BINARY_DIR}/examples>")
-            ```
    
 
 ### 2.2 For dummy
@@ -208,18 +199,15 @@ OpenCV version: 4.3.0 (Option)
     5. If your vcpkg folder was not located in the solution folder, you have to specify the path in the *config* folder. Go to *config* folder, Rename *vcpkg_path_example.txt* to *vcpkg_path.txt* and type your vcpkg path in the text file.
 
 4. Install OpenCV by vcpkg
-    1. Go to *vcpkg* folder
-    2. Type `vcpkg install opencv:x86-windows`
-    3. Type `vcpkg install opencv:x64-windows`
+    1. Go to directshow_camera project folder
+    2. Type `vcpkg install`
 
-5. Run **build.bat** in Solution folder
+5. Create a **build** folder if not existed. Run **build.bat** in Solution folder
 
    Type `build x86` or `build x64`
 
 6. Go to *build* folder and open visual studio solution.
-7. Build solution in visual studio. Executable file will be constructed but you may encounter a missing dll error. Then, go to Solution folder and run **copy_dll.bat** to copy dll from vcpkg folder.
-
-    Type `copy_dll x86` or `copy_dll x64`
+7. Build solution in visual studio.
 
 # License
 This project is licensed under [MIT](LICENSE) license.
