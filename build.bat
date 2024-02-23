@@ -1,17 +1,23 @@
 @echo off
 
+:: Create dependencies
+if not exist ".\dependencies" mkdir dependencies
 
-
-:: Delete all files in build except vcpkg_installed
-echo Delete all files in build......
-pushd ".\build\" || exit /B 1
-for /D %%D in ("*") do (
-    if /I not "%%~nxD"=="vcpkg_installed" rd /S /Q "%%~D"
+:: Delete all files in build
+if exist ".\build" (
+    echo Delete all files in build......
+    pushd ".\build\" || exit /B 1
+    for /D %%D in ("*") do (
+        rd /S /Q "%%~D"
+    )
+    for %%F in ("*") do (
+        del "%%~F"
+    )
+    popd
+) else (
+    echo Create build directory......
+    mkdir build
 )
-for %%F in ("*") do (
-    del "%%~F"
-)
-popd
 
 :: Get complier version
 set "SYSVERSION=X64"
@@ -31,13 +37,5 @@ if "%SYSVERSION%" == "X86" (
     echo Building x64 MakeFile
     cmake -B ./build -G "Visual Studio 17 2022" -A x64 --preset=default
 )
-
-:: Copy dll from vcpkg
-:: if "%SYSVERSION%" == "X86" (
-::     call copy_dll.bat "x86"
-:: ) else (
-::     call copy_dll.bat "x64"
-::)
-
 
 echo Finished

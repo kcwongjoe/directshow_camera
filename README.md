@@ -132,7 +132,7 @@ OpenCV version: 4.8.0 (Option)
 
 ### 2.1 Cmake
 
-1. Create **libs** folder in you project
+1. Create **libs** folder in your project
 2. Clone this repository into the **libs** folder
    ```
    git clone https://github.com/kcwongjoe/directshow_camera.git
@@ -150,20 +150,18 @@ OpenCV version: 4.8.0 (Option)
     )
    ```
 
-4. Install OpenCV library in CMake from vcpgk (Option)
+4. Install OpenCV library in CMake
     1. Add the code in your project CMakeLists.txt
-        ```cmake
-        # Set vcpkg path. Change here if the vcpkg folder is not located in your solution folder.
-        set(VCPKG_PATH ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg)
-
-        set(CMAKE_TOOLCHAIN_FILE
-            ${VCPKG_PATH}/scripts/buildsystems/vcpkg.cmake
-            CACHE STRING "Vcpkg toolchain file")
-
         # OpenCV
-        
-        #   Install OpenCV from vcpkg. See cmake/InstallVcpkgOpenCV.cmake
-        install_vcpkg_opencv()
+        set( OpenCV_DIR "your_path/opencv/build/x64/vc16" )  # Opencv path
+
+        # Install
+        find_package(OpenCV REQUIRED
+            opencv_core
+            opencv_imgcodecs
+            opencv_imgproc
+            opencv_photo
+        )
 
         #   Link OpenCV
         include_directories( ${OpenCV_INCLUDE_DIRS} )
@@ -191,23 +189,22 @@ OpenCV version: 4.8.0 (Option)
    git clone --recurse-submodules https://github.com/kcwongjoe/directshow_camera.git
    ```
 
-3. Install vcpkg in the project folder
-    1. Clone the vcpkg repo from https://github.com/Microsoft/vcpkg
-    2. Unzip and rename folder as *vcpkg*
-    3. Place in the solution folder
-    4. Run **bootstrap-vcpkg.bat** in the *vcpkg* folder
-    5. If your vcpkg folder was not located in the solution folder, you have to specify the path in the *config* folder. Go to *config* folder, Rename *vcpkg_path_example.txt* to *vcpkg_path.txt* and type your vcpkg path in the text file.
 
-4. Install OpenCV by vcpkg
-    1. Go to directshow_camera project folder
-    2. Type `vcpkg install`
+3. Install OpenCV
+    1.  Create **dependencies** folder in the project
+    2.  Download opencv from https://github.com/opencv/opencv/releases/download/4.9.0/opencv-4.9.0-windows.exe into **dependencies** folder
+    3.  Run 
+        ```
+        "C:\Program Files\7-Zip\7z.exe" x opencv-4.9.0-windows.exe -y
+        ```
+        in the **dependencies** folder 
 
-5. Create a **build** folder if not existed. Run **build.bat** in Solution folder
+4. Create a **build** folder if not existed. Run **build.bat** in Solution folder
 
    Type `build x86` or `build x64`
 
-6. Go to *build* folder and open visual studio solution.
-7. Build solution in visual studio.
+5. Go to *build* folder and open visual studio solution.
+6. Build solution in visual studio.
 
 # License
 This project is licensed under [MIT](LICENSE) license.

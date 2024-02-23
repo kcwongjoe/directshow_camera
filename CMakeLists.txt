@@ -22,8 +22,7 @@ set(DIRECTSHOWCAMERA_ROOT_PATH ${CMAKE_SOURCE_DIR})
 
 # Add cmake module
 list(APPEND CMAKE_MODULE_PATH "${DIRECTSHOWCAMERA_ROOT_PATH}/cmake")
-include(InstallVcpkgOpenCV)
-include(AddVcpkg)
+include(InstallOpenCV)
 include(AddWin10SDK)
 
 #******Source******
@@ -38,16 +37,13 @@ else()
 
     # ******OpenCV and Window SDK******
 
-    #   Set vcpkg as submodule. See cmake/AddVcpkg.cmake
-    add_vcpkg()
-
     #   Set Window SDK path. See cmake/AddWin10SDK.cmake
     add_window10_sdk()
 
     # OpenCV
 
     #   Install OpenCV in vcpkg. See cmake/InstallVcpkgOpenCV.cmake
-    install_vcpkg_opencv()
+    install_opencv()
 
     #   Link OpenCV
     include_directories( ${OpenCV_INCLUDE_DIRS} )
