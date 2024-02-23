@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.22)
 
 #******Project******
 project(directshow_camera LANGUAGES CXX VERSION 1.1.0)
@@ -25,12 +25,15 @@ list(APPEND CMAKE_MODULE_PATH "${DIRECTSHOWCAMERA_ROOT_PATH}/cmake")
 include(InstallOpenCV)
 include(AddWin10SDK)
 
+# Path
+Set(DIRECTSHOWCAMERA_SOURCES_PATH "${DIRECTSHOWCAMERA_ROOT_PATH}/src/directshow_camera")
+
 #******Source******
 if (${DIRECTSHOWCAMERA_AS_STATIC_LIBRARY}) 
     # ---Static library---
 
     #******Source******
-    add_subdirectory("./src")
+    add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/src")
 
 else()
     # ---Build example and test---
@@ -42,7 +45,7 @@ else()
 
     # OpenCV
 
-    #   Install OpenCV in vcpkg. See cmake/InstallVcpkgOpenCV.cmake
+    #   Install OpenCV. See cmake/InstallOpenCV.cmake
     install_opencv()
 
     #   Link OpenCV
@@ -50,17 +53,17 @@ else()
     link_directories( ${OpenCV_LIB_DIR} )
 
     #******Source******
-    add_subdirectory("./src")
+    add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/src")
 
     #******Example******
-    add_subdirectory("./examples")
+    add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/examples")
 
     #******Test******
 
     include(CTest)
     if(BUILD_TESTING)
         enable_testing()
-        add_subdirectory("./test")
+        add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/test")
     endif()
 
 endif()

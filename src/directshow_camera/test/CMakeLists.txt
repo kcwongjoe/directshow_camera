@@ -32,6 +32,8 @@ target_link_libraries(${TEST_PROJECT_NAME}
         gtest_main
 )
 
+prebuild_copy_opencv_dll(${TEST_PROJECT_NAME} "${CMAKE_BINARY_DIR}/src/directshow_camera/test")
+
 # Google test
 include(GoogleTest)
 gtest_discover_tests(${TEST_PROJECT_NAME})
