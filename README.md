@@ -120,9 +120,7 @@ camera.getFrame(&image, &size);
 
 Minimum C++ 17
 
-vcpkg commit version: #13bde2ff13192e1b2fdd37bd9b475c7665ae6ae5
-
-OpenCV version: 4.8.0 (Option)
+OpenCV version: 4.9.0 (Option)
 
 # Installation
 

@@ -1,4 +1,4 @@
-# A Macro to install OpenCV from VCPKG
+# A Macro to install OpenCV
 macro(install_opencv)
 
     set(OpenCV_DIR "${DIRECTSHOWCAMERA_ROOT_PATH}/dependencies/opencv/build")  # Opencv path
@@ -11,6 +11,9 @@ macro(install_opencv)
             opencv_imgproc
             opencv_photo
         )
+
+        # Add define HAS_OPENCV
+        add_compile_definitions(HAS_OPENCV)
     else()
         message("Fail to install OpenCV. Library is not found in ${OpenCV_DIR}.")
     endif()

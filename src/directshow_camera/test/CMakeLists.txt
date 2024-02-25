@@ -5,8 +5,8 @@ set(TEST_PROJECT_NAME ${PROJECT_NAME}_test)
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  # Updated on 22/6/2021, Update the commit if latest is available
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+  # Updated on 25/2/2024, Update the commit if latest is available
+  URL https://github.com/google/googletest/archive/f8d7d77c06936315286eb55f8de22cd23c188571.zip
 )
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)

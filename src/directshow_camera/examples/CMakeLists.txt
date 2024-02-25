@@ -16,5 +16,5 @@ target_include_directories(${EXAMPLE_PROJECT_NAME}
 # Link source library
 target_link_libraries(${EXAMPLE_PROJECT_NAME} LINK_PUBLIC ${PROJECT_NAME} ${OpenCV_LIBS})
 
-# Post-build process to copy dll from vcpkg
+# Post-build process to copy dll
 prebuild_copy_opencv_dll(${EXAMPLE_PROJECT_NAME} "${CMAKE_BINARY_DIR}/src/directshow_camera/examples")
