@@ -22,28 +22,28 @@ namespace DirectShowCamera
     */
     class OpenCVMatConverter
     {
-        private:
-            std::vector<GUID> m_supportVideoType;
+    public:
 
-        public:
+        OpenCVMatConverter();
 
-            OpenCVMatConverter();
+        /**
+            * @brief Set it as true if the input byte is BGR order, otherwise the input byte is RGB order. Default as false.
+        */
+        bool isBGR = true;
 
-            /**
-             * @brief Set it as true if the input byte is BGR order, otherwise the input byte is RGB order. Default as false.
-            */
-            bool isBGR = true;
+        /**
+            * @brief Set it as true to flip iamge vertically. Default as true
+        */
+        bool isVerticalFlip = true;
 
-            /**
-             * @brief Set it as true to flip iamge vertically. Default as true
-            */
-            bool isVerticalFlip = true;
-
-            GUID videoType = MEDIASUBTYPE_None;
+        GUID videoType = MEDIASUBTYPE_None;
             
-            cv::Mat convert(unsigned char* data, int width, int height);
+        cv::Mat convert(unsigned char* data, int width, int height);
 
-            std::vector<GUID> getSupportVideoType();
+        std::vector<GUID> getSupportVideoType() const;
+    private:
+        std::vector<GUID> m_supportVideoType;
+
     };
 
 }

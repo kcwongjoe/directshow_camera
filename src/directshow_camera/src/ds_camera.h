@@ -24,6 +24,59 @@ namespace DirectShowCamera
      */
     class DirectShowCamera : public AbstractDirectShowCamera
     {
+    public:
+
+        DirectShowCamera();
+        ~DirectShowCamera();
+        void release();
+
+        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
+        void close();
+        bool isOpening() const;
+        bool checkDisconnection();
+        void setDisconnectionProcess(std::function<void()> func);
+
+        bool start();
+        bool stop();
+        bool isCapturing() const;
+
+        bool getFrame
+        (
+            unsigned char* pixels,
+            unsigned long* frameIndex = NULL,
+            int* numOfBytes = NULL,
+            bool copyNewFrameOnly = false,
+            unsigned long previousFrameIndex = 0
+        );
+        void setMinimumPFS(double minimumFPS);
+        double getFPS() const;
+        long getFrameTotalSize() const;
+        GUID getFrameType() const;
+
+        // Video Format
+        std::vector<DirectShowVideoFormat> getVideoFormatList() const;
+        int getCurrentVideoFormatIndex() const;
+        DirectShowVideoFormat getCurrentVideoFormat() const;
+        DirectShowVideoFormat getCurrentGrabberFormat() const;
+
+        bool setVideoFormat(DirectShowVideoFormat* videoFormat);
+        bool setVideoFormat(int videoFormatIndex);
+
+        // Property
+        void refreshProperties();
+        DirectShowCameraProperties* getProperties() const;
+
+        void resetDefault(bool asAuto = true);
+        bool setValue(DirectShowCameraProperty* property, long value, bool isAuto);
+
+        // Get camera
+        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices);
+        bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter);
+        bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter);
+        bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter);
+
+        std::string getLastError() const;
+
     private:
 
         // Graph and filter
@@ -63,55 +116,8 @@ namespace DirectShowCamera
         bool updateVideoFormatList();
         void updateVideoFormatIndex();
 
-        int getVideoFormatIndex(AM_MEDIA_TYPE* mediaType);
-        int getVideoFormatIndex(DirectShowVideoFormat* videoFormat);
-
-    public:
-
-        DirectShowCamera();
-        ~DirectShowCamera();
-        void release();
-
-        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
-        void close();
-        bool isOpening();
-        bool checkDisconnection();
-        void setDisconnectionProcess(std::function<void()> func);
-
-        bool start();
-        bool stop();
-        bool isCapturing();
-
-        bool getFrame(unsigned char* pixels, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
-        void setMinimumPFS(double minimumFPS);
-        double getFPS();
-        long getFrameTotalSize();
-        GUID getFrameType();
-
-        // Video Format
-        std::vector<DirectShowVideoFormat> getVideoFormatList();
-        int getCurrentVideoFormatIndex();
-        DirectShowVideoFormat getCurrentVideoFormat();
-        DirectShowVideoFormat getCurrentGrabberFormat();
-
-        bool setVideoFormat(DirectShowVideoFormat* videoFormat);
-        bool setVideoFormat(int videoFormatIndex);
-
-        // Property
-        void refreshProperties();
-        DirectShowCameraProperties* getProperties();
-
-        void resetDefault(bool asAuto = true);
-        bool setValue(DirectShowCameraProperty* property, long value, bool isAuto);
-
-        // Get camera
-        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices);
-        bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter);
-        bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter);
-        bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter);
-
-        std::string getLastError();
-
+        int getVideoFormatIndex(AM_MEDIA_TYPE* mediaType) const;
+        int getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const;
 
     };
 }

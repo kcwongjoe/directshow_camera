@@ -338,7 +338,7 @@ namespace DirectShowCamera
      * @brief Return true if camera was opened
      * @return Return true if camera was opened
     */
-    bool DirectShowCamera::isOpening()
+    bool DirectShowCamera::isOpening() const
     {
         return m_isOpening;
     }
@@ -541,7 +541,7 @@ namespace DirectShowCamera
      * @brief Return true if camera is capturing
      * @return Return true if camera is capturing 
     */
-    bool DirectShowCamera::isCapturing()
+    bool DirectShowCamera::isCapturing() const
     {
         return m_isCapturing;
     }
@@ -559,7 +559,14 @@ namespace DirectShowCamera
      * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
      * @return Return true if success.
     */
-    bool DirectShowCamera::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    bool DirectShowCamera::getFrame
+    (
+        unsigned char* frame,
+        unsigned long* frameIndex,
+        int* numOfBytes,
+        bool copyNewFrameOnly,
+        unsigned long previousFrameIndex
+    )
     {
         if (m_isCapturing && frame)
         {
@@ -589,7 +596,7 @@ namespace DirectShowCamera
      * @brief Get Frame per second.
      * @return Return fps.
     */
-    double DirectShowCamera::getFPS()
+    double DirectShowCamera::getFPS() const
     {
         if (isOpening())
         {
@@ -605,7 +612,7 @@ namespace DirectShowCamera
      * @brief Get frame size in bytes.
      * @return 
     */
-    long DirectShowCamera::getFrameTotalSize()
+    long DirectShowCamera::getFrameTotalSize() const
     {
 
         if (m_isCapturing)
@@ -623,7 +630,7 @@ namespace DirectShowCamera
      * @brief Get frame type. Such as MEDIASUBTYPE_RGB24
      * @return 
     */
-    GUID DirectShowCamera::getFrameType()
+    GUID DirectShowCamera::getFrameType() const
     {
         return m_grabberMediaSubType;
     }
@@ -754,7 +761,7 @@ namespace DirectShowCamera
      * @param mediaType 
      * @return Return -1 if not found
     */
-    int DirectShowCamera::getVideoFormatIndex(AM_MEDIA_TYPE* mediaType)
+    int DirectShowCamera::getVideoFormatIndex(AM_MEDIA_TYPE* mediaType) const
     {
         int result = -1;
         for (int i = 0; i < m_videoFormats->size(); i++)
@@ -774,7 +781,7 @@ namespace DirectShowCamera
      * @param videoFormat 
      * @return Return -1 if not found
     */
-    int DirectShowCamera::getVideoFormatIndex(DirectShowVideoFormat* videoFormat)
+    int DirectShowCamera::getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const
     {
         int result = -1;
         if (m_videoFormats)
@@ -797,7 +804,7 @@ namespace DirectShowCamera
      * @brief Get current video format index.
      * @return 
     */
-    int DirectShowCamera::getCurrentVideoFormatIndex()
+    int DirectShowCamera::getCurrentVideoFormatIndex() const
     {
         return m_currentVideoFormatIndex;
     }
@@ -806,7 +813,7 @@ namespace DirectShowCamera
      * @brief Get current video format
      * @return 
     */
-    DirectShowVideoFormat DirectShowCamera::getCurrentVideoFormat()
+    DirectShowVideoFormat DirectShowCamera::getCurrentVideoFormat() const
     {
         if (m_currentVideoFormatIndex >= 0)
         {
@@ -823,7 +830,7 @@ namespace DirectShowCamera
     * @brief Get current grabber format
     * @return
     */
-    DirectShowVideoFormat DirectShowCamera::getCurrentGrabberFormat()
+    DirectShowVideoFormat DirectShowCamera::getCurrentGrabberFormat() const
     {
         return m_sampleGrabberVideoFormat;
     }
@@ -832,7 +839,7 @@ namespace DirectShowCamera
      * @brief Get current video format list of this opened camera.
      * @return 
     */
-    std::vector<DirectShowVideoFormat> DirectShowCamera::getVideoFormatList()
+    std::vector<DirectShowVideoFormat> DirectShowCamera::getVideoFormatList() const
     {
         if (m_videoFormats)
         {
@@ -926,7 +933,7 @@ namespace DirectShowCamera
      * @brief Get properties
      * @return Return properties
     */
-    DirectShowCameraProperties* DirectShowCamera::getProperties()
+    DirectShowCameraProperties* DirectShowCamera::getProperties() const
     {
         return m_property;
     }
@@ -1167,7 +1174,7 @@ namespace DirectShowCamera
      * @brief Get the last error
      * @return Return the last error
     */
-    std::string DirectShowCamera::getLastError()
+    std::string DirectShowCamera::getLastError() const
     {
         return m_errorString;
     }

@@ -19,29 +19,6 @@ namespace DirectShowCamera
      */
     class DirectShowCameraProperties
     {
-    private:
-
-        // Properties
-        DirectShowCameraProperty* m_brightness = new DirectShowCameraProperty("Brightness", VideoProcAmp_Brightness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_contrast = new DirectShowCameraProperty("Contrast", VideoProcAmp_Contrast, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_hue = new DirectShowCameraProperty("Hue", VideoProcAmp_Hue, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_saturation = new DirectShowCameraProperty("Saturation", VideoProcAmp_Saturation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_sharpness = new DirectShowCameraProperty("Sharpness", VideoProcAmp_Sharpness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_gamma = new DirectShowCameraProperty("Gamma", VideoProcAmp_Gamma, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_colorEnable = new DirectShowCameraProperty("Color Enable", VideoProcAmp_ColorEnable, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP); // 0(off), 1(on)
-        DirectShowCameraProperty* m_whiteBalance = new DirectShowCameraProperty("White Balance", VideoProcAmp_WhiteBalance, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_backlightCompensation = new DirectShowCameraProperty("Backlight Compensation", VideoProcAmp_BacklightCompensation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);  // 0(off), 1(on)
-        DirectShowCameraProperty* m_gain = new DirectShowCameraProperty("Gain", VideoProcAmp_Gain, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_pan = new DirectShowCameraProperty("Pan", CameraControl_Pan, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_tilt = new DirectShowCameraProperty("Tilt", CameraControl_Tilt, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_roll = new DirectShowCameraProperty("Roll", CameraControl_Roll, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_zoom = new  DirectShowCameraProperty("Zoom", CameraControl_Zoom, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_exposure = new DirectShowCameraProperty("Exposure", CameraControl_Exposure, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_iris = new DirectShowCameraProperty("Iris", CameraControl_Iris, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_focus = new DirectShowCameraProperty("Focus", CameraControl_Focus, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-
-        bool m_isinitialized = false;
-
     public:
 
         // Constructor
@@ -55,23 +32,23 @@ namespace DirectShowCamera
         void markAsInitialized();
 
         // Getter
-        DirectShowCameraProperty* getBrightness();
-        DirectShowCameraProperty* getContrast();
-        DirectShowCameraProperty* getHue();
-        DirectShowCameraProperty* getSaturation();
-        DirectShowCameraProperty* getSharpness();
-        DirectShowCameraProperty* getGamma();
-        DirectShowCameraProperty* getColorEnable();
-        DirectShowCameraProperty* getWhiteBalance();
-        DirectShowCameraProperty* getBacklightCompensation();
-        DirectShowCameraProperty* getGain();
-        DirectShowCameraProperty* getPan();
-        DirectShowCameraProperty* getTilt();
-        DirectShowCameraProperty* getRoll();
-        DirectShowCameraProperty* getZoom();
-        DirectShowCameraProperty* getExposure();
-        DirectShowCameraProperty* getIris();
-        DirectShowCameraProperty* getFocus();
+        DirectShowCameraProperty* getBrightness() const;
+        DirectShowCameraProperty* getContrast() const;
+        DirectShowCameraProperty* getHue() const;
+        DirectShowCameraProperty* getSaturation() const;
+        DirectShowCameraProperty* getSharpness() const;
+        DirectShowCameraProperty* getGamma() const;
+        DirectShowCameraProperty* getColorEnable() const;
+        DirectShowCameraProperty* getWhiteBalance() const;
+        DirectShowCameraProperty* getBacklightCompensation() const;
+        DirectShowCameraProperty* getGain() const;
+        DirectShowCameraProperty* getPan() const;
+        DirectShowCameraProperty* getTilt() const;
+        DirectShowCameraProperty* getRoll() const;
+        DirectShowCameraProperty* getZoom() const;
+        DirectShowCameraProperty* getExposure() const;
+        DirectShowCameraProperty* getIris() const;
+        DirectShowCameraProperty* getFocus() const;
 
         // Class to string
 
@@ -110,6 +87,29 @@ namespace DirectShowCamera
         friend std::ostream& operator << (std::ostream& out, const DirectShowCameraProperties& obj) {
             return out << (std::string)obj;
         }
+    private:
+
+        // Properties
+        DirectShowCameraProperty* m_brightness = new DirectShowCameraProperty("Brightness", VideoProcAmp_Brightness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_contrast = new DirectShowCameraProperty("Contrast", VideoProcAmp_Contrast, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_hue = new DirectShowCameraProperty("Hue", VideoProcAmp_Hue, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_saturation = new DirectShowCameraProperty("Saturation", VideoProcAmp_Saturation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_sharpness = new DirectShowCameraProperty("Sharpness", VideoProcAmp_Sharpness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_gamma = new DirectShowCameraProperty("Gamma", VideoProcAmp_Gamma, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_colorEnable = new DirectShowCameraProperty("Color Enable", VideoProcAmp_ColorEnable, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP); // 0(off), 1(on)
+        DirectShowCameraProperty* m_whiteBalance = new DirectShowCameraProperty("White Balance", VideoProcAmp_WhiteBalance, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_backlightCompensation = new DirectShowCameraProperty("Backlight Compensation", VideoProcAmp_BacklightCompensation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);  // 0(off), 1(on)
+        DirectShowCameraProperty* m_gain = new DirectShowCameraProperty("Gain", VideoProcAmp_Gain, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
+        DirectShowCameraProperty* m_pan = new DirectShowCameraProperty("Pan", CameraControl_Pan, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        DirectShowCameraProperty* m_tilt = new DirectShowCameraProperty("Tilt", CameraControl_Tilt, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        DirectShowCameraProperty* m_roll = new DirectShowCameraProperty("Roll", CameraControl_Roll, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        DirectShowCameraProperty* m_zoom = new  DirectShowCameraProperty("Zoom", CameraControl_Zoom, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        DirectShowCameraProperty* m_exposure = new DirectShowCameraProperty("Exposure", CameraControl_Exposure, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        DirectShowCameraProperty* m_iris = new DirectShowCameraProperty("Iris", CameraControl_Iris, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        DirectShowCameraProperty* m_focus = new DirectShowCameraProperty("Focus", CameraControl_Focus, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+
+        bool m_isinitialized = false;
+
     };
 }
 

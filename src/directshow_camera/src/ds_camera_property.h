@@ -22,67 +22,6 @@ namespace DirectShowCamera
         static const int USE_AM_VIDEO_PROC_AMP = 0;
         static const int USE_AM_CAMERA_CONTROL = 1;
 
-    private:
-
-        /**
-         * @brief Property Name, use for casting to string
-        */
-        std::string m_name;
-        /**
-         * @brief Property Enumeration in directshow
-        */
-        long m_enum = 0;
-        /**
-         * @brief USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
-        */
-        int m_queryInterface = -1;
-
-        long m_min;
-        long m_max;
-        long m_step;
-        long m_defaultValue;
-        bool m_isAuto;
-        long m_value;
-
-        bool m_supported;
-        bool m_supportAuto;
-        bool m_supportManual;
-
-        /**
-         * @brief Set value to IAMVideoProcAmp or IAMCameraControl
-         * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-         * @param cameraControl 
-         * @param value 
-         * @param isAutoMode 
-         * @return 
-        */
-        template<class CameraControl> bool setValueTemplate(CameraControl* cameraControl, long value, bool isAutoMode)
-        {
-            bool result = true;
-
-            // Set
-            HRESULT hr = cameraControl->Set(m_enum, value, isAutoToCapsFlag(isAutoMode));
-            if (SUCCEEDED(hr))
-            {
-                // Success, update variable
-                m_value = value;
-                m_isAuto = isAutoMode;
-                result = true;
-            }
-            else
-            {
-                // Fail
-                result = false;
-            }
-
-            return result;
-        }
-
-        // Utils
-        bool capsFlagIsAuto(long capsFlags);
-        bool capsFlagIsManual(long capsFlags);
-        long isAutoToCapsFlag(bool isAuto);
-
     public:
 
         // Constuctor
@@ -92,9 +31,9 @@ namespace DirectShowCamera
         void reset();
 
         // Support
-        bool isSupported();
-        bool supportAutoMode();
-        bool supportManualMode();
+        bool isSupported() const;
+        bool supportAutoMode() const;
+        bool supportManualMode() const;
 
         // Import
 
@@ -178,15 +117,15 @@ namespace DirectShowCamera
         bool setValue(IBaseFilter* videoInputFilter, long value, bool isAutoMode, std::string* errorString = NULL);
 
         // Getter
-        std::string getName();
-        long getDSEnum();
-        std::pair<long, long> getRange();
-        long getMin();
-        long getMax();
-        long getStep();
-        long getDefault();
-        long getValue();
-        bool isAuto();
+        std::string getName() const;
+        long getDSEnum() const;
+        std::pair<long, long> getRange() const;
+        long getMin() const;
+        long getMax() const;
+        long getStep() const;
+        long getDefault() const;
+        long getValue() const;
+        bool isAuto() const;
 
         // Class to string
 
@@ -222,6 +161,66 @@ namespace DirectShowCamera
         friend std::ostream& operator << (std::ostream& out, const DirectShowCameraProperty& obj) {
             return out << (std::string)obj;
         }
+    private:
+
+        /**
+         * @brief Property Name, use for casting to string
+        */
+        std::string m_name;
+        /**
+         * @brief Property Enumeration in directshow
+        */
+        long m_enum = 0;
+        /**
+         * @brief USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
+        */
+        int m_queryInterface = -1;
+
+        long m_min;
+        long m_max;
+        long m_step;
+        long m_defaultValue;
+        bool m_isAuto;
+        long m_value;
+
+        bool m_supported;
+        bool m_supportAuto;
+        bool m_supportManual;
+
+        /**
+         * @brief Set value to IAMVideoProcAmp or IAMCameraControl
+         * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
+         * @param cameraControl
+         * @param value
+         * @param isAutoMode
+         * @return
+        */
+        template<class CameraControl> bool setValueTemplate(CameraControl* cameraControl, long value, bool isAutoMode)
+        {
+            bool result = true;
+
+            // Set
+            HRESULT hr = cameraControl->Set(m_enum, value, isAutoToCapsFlag(isAutoMode));
+            if (SUCCEEDED(hr))
+            {
+                // Success, update variable
+                m_value = value;
+                m_isAuto = isAutoMode;
+                result = true;
+            }
+            else
+            {
+                // Fail
+                result = false;
+            }
+
+            return result;
+        }
+
+        // Utils
+        bool capsFlagIsAuto(long capsFlags) const;
+        bool capsFlagIsManual(long capsFlags) const;
+        long isAutoToCapsFlag(bool isAuto) const;
     };
 }
 

@@ -81,7 +81,7 @@ namespace DirectShowCamera
      * @brief Return true if camera was opened
      * @return Return true if camera was opened
     */
-    bool DirectShowCameraStub::isOpening()
+    bool DirectShowCameraStub::isOpening() const
     {
         return m_isOpening;
     }
@@ -230,7 +230,7 @@ namespace DirectShowCamera
      * @brief Return true if camera is capturing
      * @return Return true if camera is capturing
     */
-    bool DirectShowCameraStub::isCapturing()
+    bool DirectShowCameraStub::isCapturing() const
     {
         return m_isCapturing;
     }
@@ -296,7 +296,7 @@ namespace DirectShowCamera
      * @brief Get Frame per second.
      * @return Return fps.
     */
-    double DirectShowCameraStub::getFPS()
+    double DirectShowCameraStub::getFPS() const
     {
         if (isOpening())
         {
@@ -312,7 +312,7 @@ namespace DirectShowCamera
      * @brief Get frame size in bytes.
      * @return
     */
-    long DirectShowCameraStub::getFrameTotalSize()
+    long DirectShowCameraStub::getFrameTotalSize() const
     {
 
         if (m_isCapturing)
@@ -330,7 +330,7 @@ namespace DirectShowCamera
      * @brief Get frame type. Such as MEDIASUBTYPE_RGB24
      * @return
     */
-    GUID DirectShowCameraStub::getFrameType()
+    GUID DirectShowCameraStub::getFrameType() const
     {
         return MEDIASUBTYPE_RGB24;
     }
@@ -355,7 +355,7 @@ namespace DirectShowCamera
      * @param videoFormat
      * @return Return -1 if not found
     */
-    int DirectShowCameraStub::getVideoFormatIndex(DirectShowVideoFormat* videoFormat)
+    int DirectShowCameraStub::getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const
     {
         int result = -1;
         if (m_videoFormats)
@@ -377,7 +377,7 @@ namespace DirectShowCamera
      * @brief Get current video format index.
      * @return
     */
-    int DirectShowCameraStub::getCurrentVideoFormatIndex()
+    int DirectShowCameraStub::getCurrentVideoFormatIndex() const
     {
         return m_currentVideoFormatIndex;
     }
@@ -386,7 +386,7 @@ namespace DirectShowCamera
      * @brief Get current video format
      * @return
     */
-    DirectShowVideoFormat DirectShowCameraStub::getCurrentVideoFormat()
+    DirectShowVideoFormat DirectShowCameraStub::getCurrentVideoFormat() const
     {
         if (m_currentVideoFormatIndex >= 0)
         {
@@ -403,7 +403,7 @@ namespace DirectShowCamera
      * @brief Get current grabber format
      * @return
     */
-    DirectShowVideoFormat DirectShowCameraStub::getCurrentGrabberFormat()
+    DirectShowVideoFormat DirectShowCameraStub::getCurrentGrabberFormat() const
     {
         return getCurrentVideoFormat();
     }
@@ -412,7 +412,7 @@ namespace DirectShowCamera
      * @brief Get current video format list of this opened camera.
      * @return
     */
-    std::vector<DirectShowVideoFormat> DirectShowCameraStub::getVideoFormatList()
+    std::vector<DirectShowVideoFormat> DirectShowCameraStub::getVideoFormatList() const
     {
         if (m_videoFormats)
         {
@@ -496,7 +496,7 @@ namespace DirectShowCamera
      * @brief Get properties
      * @return Return properties
     */
-    DirectShowCameraProperties* DirectShowCameraStub::getProperties()
+    DirectShowCameraProperties* DirectShowCameraStub::getProperties() const
     {
         return m_properties;
     }
@@ -590,7 +590,7 @@ namespace DirectShowCamera
      * @brief Get the last error
      * @return Return the last error
     */
-    std::string DirectShowCameraStub::getLastError()
+    std::string DirectShowCameraStub::getLastError() const
     {
         return m_errorString;
     }

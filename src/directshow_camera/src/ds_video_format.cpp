@@ -705,7 +705,7 @@ namespace DirectShowCamera
      * @brief Return true if this is empty.
      * @return Return true if this is empty. 
     */
-    bool DirectShowVideoFormat::isEmpty()
+    bool DirectShowVideoFormat::isEmpty() const
     {
         return m_isEmpty;
     }
@@ -714,7 +714,7 @@ namespace DirectShowCamera
      * @brief Return the frame width
      * @return Return the frame width
     */
-    int DirectShowVideoFormat::getWidth()
+    int DirectShowVideoFormat::getWidth() const
     {
         return m_width;
     }
@@ -723,7 +723,7 @@ namespace DirectShowCamera
      * @brief Return the frame height
      * @return Return the frame height
     */
-    int DirectShowVideoFormat::getHeight()
+    int DirectShowVideoFormat::getHeight() const
     {
         return m_height;
     }
@@ -732,7 +732,7 @@ namespace DirectShowCamera
      * @brief Return the bit per pixel
      * @return Return the bit per pixel
     */
-    int DirectShowVideoFormat::getBitPerPixel()
+    int DirectShowVideoFormat::getBitPerPixel() const
     {
         return m_bitPerPixel;
     }
@@ -741,7 +741,7 @@ namespace DirectShowCamera
      * @brief Return the frame size in byte
      * @return Return the frame size in byte
     */
-    long DirectShowVideoFormat::getTotalSize()
+    long DirectShowVideoFormat::getTotalSize() const
     {
         return m_totalSize;
     }
@@ -750,7 +750,7 @@ namespace DirectShowCamera
      * @brief Return the video type.
      * @return Return the video type.
     */
-    GUID DirectShowVideoFormat::getVideoType()
+    GUID DirectShowVideoFormat::getVideoType() const
     {
         return m_videoType;
     }
@@ -759,7 +759,7 @@ namespace DirectShowCamera
      * @brief Return the AM_MediaType pointer. 
      * @return Return the AM_MediaType pointer.
     */
-    AM_MEDIA_TYPE* DirectShowVideoFormat::getAMMediaType()
+    AM_MEDIA_TYPE* DirectShowVideoFormat::getAMMediaType() const
     {
         return m_AmMediaType;
     }

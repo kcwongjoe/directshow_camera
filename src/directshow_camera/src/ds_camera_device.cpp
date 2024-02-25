@@ -26,7 +26,7 @@ namespace DirectShowCamera
      * 
      * @return Return the the supported DirectShowVideoFormats 
      */
-    std::vector<DirectShowVideoFormat> DirectShowCameraDevice::getDirectShowVideoFormats()
+    std::vector<DirectShowVideoFormat> DirectShowCameraDevice::getDirectShowVideoFormats() const
     {
         return m_videoFormats;
     }
@@ -36,7 +36,7 @@ namespace DirectShowCamera
      * 
      * @return Return the camera friendly name
      */
-    std::string DirectShowCameraDevice::getFriendlyName()
+    std::string DirectShowCameraDevice::getFriendlyName() const
     {
         return this->m_friendlyName;
     }
@@ -46,7 +46,7 @@ namespace DirectShowCamera
      * 
      * @return Return the camera description
      */
-    std::string DirectShowCameraDevice::getDescription()
+    std::string DirectShowCameraDevice::getDescription() const
     {
         return this->m_description;
     }
@@ -56,7 +56,7 @@ namespace DirectShowCamera
      * 
      * @return Return the device path
      */
-    std::string DirectShowCameraDevice::getDevicePath()
+    std::string DirectShowCameraDevice::getDevicePath() const
     {
         return this->m_devicePath;
     }

@@ -16,64 +16,6 @@ namespace DirectShowCamera
      */
     class DirectShowCameraStubDefaultSetting
     {
-    private:
-
-        // Video Format Setting
-
-        /**
-         * @brief Number of video format
-         * @return 
-        */
-        static int getVideFormatSize()
-        {
-            return 3;
-        }
-
-        /**
-         * @brief Video format
-         * @param index Index
-         * @return 
-        */
-        static GUID getVideoFormatFormat(int index)
-        {
-            GUID videoFormatFormat[3] = { MEDIASUBTYPE_MJPG , MEDIASUBTYPE_YUY2, MEDIASUBTYPE_MJPG };
-            return videoFormatFormat[index];
-        }
-
-        /**
-         * @brief Video width
-         * @param index Index
-         * @return 
-        */
-        static int getVideoFormatWidth(int index)
-        {
-            int videoFormatWidth[3] = { 320 , 640, 1280 };
-            return videoFormatWidth[index];
-        }		
-
-        /**
-         * @brief Video height
-         * @param index Index
-         * @return 
-        */
-        static int getVideoFormatHeight(int index)
-        {
-            int videoFormatHeight[3] = { 240 , 480, 720 };
-            return videoFormatHeight[index];
-        }
-
-        /**
-         * @brief Video bit per pixel
-         * @param index Index
-         * @return 
-        */
-        static int getVideoFormatBitPerPixel(int index)
-        {
-            int videoFormatBitPerPixel[3] = { 24 , 16, 24 };
-            return videoFormatBitPerPixel[index];
-        }
-        
-
     public:
 
         /**
@@ -231,6 +173,62 @@ namespace DirectShowCamera
                     frame[pixelIndex+2] = rColorArray[colorIndex]; 
                 }
             }
+        }
+    private:
+
+        // Video Format Setting
+
+        /**
+         * @brief Number of video format
+         * @return
+        */
+        static int getVideFormatSize()
+        {
+            return 3;
+        }
+
+        /**
+         * @brief Video format
+         * @param index Index
+         * @return
+        */
+        static GUID getVideoFormatFormat(int index)
+        {
+            GUID videoFormatFormat[3] = { MEDIASUBTYPE_MJPG , MEDIASUBTYPE_YUY2, MEDIASUBTYPE_MJPG };
+            return videoFormatFormat[index];
+        }
+
+        /**
+         * @brief Video width
+         * @param index Index
+         * @return
+        */
+        static int getVideoFormatWidth(int index)
+        {
+            int videoFormatWidth[3] = { 320 , 640, 1280 };
+            return videoFormatWidth[index];
+        }
+
+        /**
+         * @brief Video height
+         * @param index Index
+         * @return
+        */
+        static int getVideoFormatHeight(int index)
+        {
+            int videoFormatHeight[3] = { 240 , 480, 720 };
+            return videoFormatHeight[index];
+        }
+
+        /**
+         * @brief Video bit per pixel
+         * @param index Index
+         * @return
+        */
+        static int getVideoFormatBitPerPixel(int index)
+        {
+            int videoFormatBitPerPixel[3] = { 24 , 16, 24 };
+            return videoFormatBitPerPixel[index];
         }
     };
 }

@@ -17,75 +17,75 @@ namespace DirectShowCamera
      */
     class CameraDevice
     {
+    public:
+        CameraDevice(DirectShowCameraDevice* directShowCameraDevice);
+        CameraDevice(const CameraDevice& cameraDevice);
 
-        private:
-            std::vector<std::pair<int, int>> m_monoResolutions;
-            std::vector<std::pair<int, int>> m_rgbResolutions;
-            std::string m_friendlyName;
-            std::string m_description;
-            std::string m_devicePath;
+        bool supportMonochrome() const;
+        std::vector<std::pair<int, int>> getMonoResolutions();
 
-        public:
-            CameraDevice(DirectShowCameraDevice* directShowCameraDevice);
-            CameraDevice(const CameraDevice& cameraDevice);
+        bool supportRGB() const;
+        std::vector<std::pair<int,int>> getRGBResolutions();
 
-            bool supportMonochrome();
-            std::vector<std::pair<int, int>> getMonoResolutions();
+        std::vector<std::pair<int,int>> getResolutions();
+        bool containResolution(int width, int height) const;
 
-            bool supportRGB();
-            std::vector<std::pair<int,int>> getRGBResolutions();
+        std::string getFriendlyName();
+        std::string getDescription();
+        std::string getDevicePath();
 
-            std::vector<std::pair<int,int>> getResolutions();
-            bool containResolution(int width, int height);
+        // Operator
 
-            std::string getFriendlyName();
-            std::string getDescription();
-            std::string getDevicePath();
+        CameraDevice& operator=(const CameraDevice& cameraDevice);
 
-            // Operator
+        // To string
 
-            CameraDevice& operator=(const CameraDevice& cameraDevice);
+        operator std::string() const
+        {
+            std::string result = "Friend Name: " + m_friendlyName + "\n";
+            result += "Description: " + m_description + "\n";
+            result += "Device Path: " + m_devicePath + "\n";
 
-            // To string
-
-            operator std::string() const
+            // Monochrome
+            if (m_monoResolutions.size() > 0)
             {
-                std::string result = "Friend Name: " + m_friendlyName + "\n";
-                result += "Description: " + m_description + "\n";
-                result += "Device Path: " + m_devicePath + "\n";
-
-                // Monochrome
-                if (m_monoResolutions.size() > 0)
-                {
-                    result += "---Support Monochrome Resolutions---\n";
-                    for (int i = 0; i < m_monoResolutions.size(); i++) {
-                        result += std::to_string(m_monoResolutions[i].first) + " x " + std::to_string(m_monoResolutions[i].second) + "\n";
-                    }
+                result += "---Support Monochrome Resolutions---\n";
+                for (int i = 0; i < m_monoResolutions.size(); i++) {
+                    result += std::to_string(m_monoResolutions[i].first) + " x " + std::to_string(m_monoResolutions[i].second) + "\n";
                 }
-                else
-                {
-                    result += "Support Monochrome: False\n";
-                }
-
-                // RGB
-                if (m_rgbResolutions.size() > 0)
-                {
-                    result += "---Support RGB Resolutions---\n";
-                    for (int i = 0; i < m_rgbResolutions.size(); i++) {
-                        result += std::to_string(m_rgbResolutions[i].first) + " x " + std::to_string(m_rgbResolutions[i].second) + "\n";
-                    }
-                }
-                else
-                {
-                    result += "Support RGB: False\n";
-                }
-
-                return result;
+            }
+            else
+            {
+                result += "Support Monochrome: False\n";
             }
 
-            friend std::ostream& operator << (std::ostream& out, const CameraDevice& obj) {
-                return out << (std::string)obj;
+            // RGB
+            if (m_rgbResolutions.size() > 0)
+            {
+                result += "---Support RGB Resolutions---\n";
+                for (int i = 0; i < m_rgbResolutions.size(); i++) {
+                    result += std::to_string(m_rgbResolutions[i].first) + " x " + std::to_string(m_rgbResolutions[i].second) + "\n";
+                }
             }
+            else
+            {
+                result += "Support RGB: False\n";
+            }
+
+            return result;
+        }
+
+        friend std::ostream& operator << (std::ostream& out, const CameraDevice& obj) {
+            return out << (std::string)obj;
+        }
+
+    private:
+        std::vector<std::pair<int, int>> m_monoResolutions;
+        std::vector<std::pair<int, int>> m_rgbResolutions;
+        std::string m_friendlyName;
+        std::string m_description;
+        std::string m_devicePath;
+
     };
 }
 

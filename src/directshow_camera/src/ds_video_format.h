@@ -35,15 +35,6 @@ namespace DirectShowCamera
         static std::vector<GUID> getSupportRGBSubType();
         static bool supportRGBConvertion(GUID guid);
 
-    private:
-        AM_MEDIA_TYPE* m_AmMediaType = NULL;
-        GUID m_videoType = MEDIASUBTYPE_None;
-        int m_bitPerPixel = 0;
-        long m_totalSize = 0;
-        int m_width = 0;
-        int m_height = 0;
-        bool m_isEmpty = true;
-
     public:
 
         // Constuctor
@@ -60,13 +51,13 @@ namespace DirectShowCamera
         DirectShowVideoFormat clone(bool keepAmMediaType);
 
         // Getter
-        bool isEmpty();
-        int getWidth();
-        int getHeight();
-        int getBitPerPixel();
-        long getTotalSize();
-        GUID getVideoType();
-        AM_MEDIA_TYPE* getAMMediaType();
+        bool isEmpty() const;
+        int getWidth() const;
+        int getHeight() const;
+        int getBitPerPixel() const;
+        long getTotalSize() const;
+        GUID getVideoType() const;
+        AM_MEDIA_TYPE* getAMMediaType() const;
 
         // Operator
 
@@ -101,6 +92,16 @@ namespace DirectShowCamera
         friend std::ostream& operator << (std::ostream& out, const DirectShowVideoFormat& obj) {
             return out << (std::string)obj;
         }
+
+    private:
+        AM_MEDIA_TYPE* m_AmMediaType = NULL;
+        GUID m_videoType = MEDIASUBTYPE_None;
+        int m_bitPerPixel = 0;
+        long m_totalSize = 0;
+        int m_width = 0;
+        int m_height = 0;
+        bool m_isEmpty = true;
+
     };
 }
 

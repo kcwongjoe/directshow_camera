@@ -160,7 +160,7 @@ namespace DirectShowCamera
      * 
      * @return std::vector<GUID> 
      */
-    std::vector<GUID> OpenCVMatConverter::getSupportVideoType()
+    std::vector<GUID> OpenCVMatConverter::getSupportVideoType() const
     {
         return m_supportVideoType;
     }

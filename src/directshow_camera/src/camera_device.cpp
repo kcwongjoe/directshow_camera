@@ -88,7 +88,7 @@ namespace DirectShowCamera
      * @brief Return true if camera supported monochrome image
      * @return Return true if camera supported monochrome image
     */
-    bool CameraDevice::supportMonochrome()
+    bool CameraDevice::supportMonochrome() const
     {
         return m_monoResolutions.size() > 0 ? true : false;
     }
@@ -110,7 +110,7 @@ namespace DirectShowCamera
      * @brief Return true if camera supported rgb image.
      * @return Return true if camera supported rgb image.
     */
-    bool CameraDevice::supportRGB()
+    bool CameraDevice::supportRGB() const
     {
         return m_rgbResolutions.size() > 0 ? true : false;
     }
@@ -147,7 +147,7 @@ namespace DirectShowCamera
      * @param height Height
      * @return Return true if existed.
     */
-    bool CameraDevice::containResolution(int width, int height)
+    bool CameraDevice::containResolution(int width, int height) const
     {
         for (int i=0;i< m_monoResolutions.size();i++)
         {

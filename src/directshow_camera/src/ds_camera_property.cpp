@@ -53,7 +53,7 @@ namespace DirectShowCamera
      * @param capsFlags CapsFlag
      * @return Return true if the Capsflags contains auto mode.
     */
-    bool DirectShowCameraProperty::capsFlagIsAuto(long capsFlags)
+    bool DirectShowCameraProperty::capsFlagIsAuto(long capsFlags) const
     {
         bool result = false;
 
@@ -83,7 +83,7 @@ namespace DirectShowCamera
      * @param capsFlags CapsFlag
      * @return Return true if the Capsflags contains manual mode.
     */
-    bool DirectShowCameraProperty::capsFlagIsManual(long capsFlags)
+    bool DirectShowCameraProperty::capsFlagIsManual(long capsFlags) const
     {
         bool result = false;
 
@@ -108,7 +108,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    long DirectShowCameraProperty::isAutoToCapsFlag(bool isAuto)
+    long DirectShowCameraProperty::isAutoToCapsFlag(bool isAuto) const
     {
         if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
         {
@@ -152,7 +152,7 @@ namespace DirectShowCamera
      * @brief Return true if camera supported this property
      * @return Return true if camera supported this property 
     */
-    bool DirectShowCameraProperty::isSupported()
+    bool DirectShowCameraProperty::isSupported() const
     {
         return m_supported;
     }
@@ -161,7 +161,7 @@ namespace DirectShowCamera
      * @brief Return true if property support auto mode.
      * @return Return true if property support auto mode.
     */
-    bool DirectShowCameraProperty::supportAutoMode()
+    bool DirectShowCameraProperty::supportAutoMode() const
     {
         return m_supportAuto;
     }
@@ -170,7 +170,7 @@ namespace DirectShowCamera
      * @brief Return true if property support manual mode.
      * @return Return true if property support manual mode.
     */
-    bool DirectShowCameraProperty::supportManualMode()
+    bool DirectShowCameraProperty::supportManualMode() const
     {
         return m_supportManual;
     }
@@ -179,7 +179,7 @@ namespace DirectShowCamera
      * @brief Get the property name
      * @return Return the property name
     */
-    std::string DirectShowCameraProperty::getName()
+    std::string DirectShowCameraProperty::getName() const
     {
         return m_name;
     }
@@ -188,7 +188,7 @@ namespace DirectShowCamera
      * @brief Get the property Enumeration in DirectShow 
      * @return Return the property Enumeration in DirectShow 
     */
-    long DirectShowCameraProperty::getDSEnum()
+    long DirectShowCameraProperty::getDSEnum() const
     {
         return m_enum;
     }
@@ -197,7 +197,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property
      * @return Return the range of the property
     */
-    std::pair<long, long> DirectShowCameraProperty::getRange()
+    std::pair<long, long> DirectShowCameraProperty::getRange() const
     {
         std::pair<long, long> result(m_min, m_max);
         return result;
@@ -207,7 +207,7 @@ namespace DirectShowCamera
      * @brief Get the bottom limit of the property
      * @return Return the bottom limit of the property
     */
-    long DirectShowCameraProperty::getMin()
+    long DirectShowCameraProperty::getMin() const
     {
         return m_min;
     }
@@ -216,7 +216,7 @@ namespace DirectShowCamera
      * @brief Get the upper limit of the property
      * @return Return the upper limit of the property
     */
-    long DirectShowCameraProperty::getMax()
+    long DirectShowCameraProperty::getMax() const
     {
         return m_max;
     }
@@ -225,7 +225,7 @@ namespace DirectShowCamera
      * @brief Get the step value of the property
      * @return Return the step value of the property
     */
-    long DirectShowCameraProperty::getStep()
+    long DirectShowCameraProperty::getStep() const
     {
         return m_step;
     }
@@ -234,7 +234,7 @@ namespace DirectShowCamera
      * @brief Get the default value of the property
      * @return Return the default value of the property
     */
-    long DirectShowCameraProperty::getDefault()
+    long DirectShowCameraProperty::getDefault() const
     {
         return m_defaultValue;
     }
@@ -243,7 +243,7 @@ namespace DirectShowCamera
      * @brief Get the current value of the property
      * @return Return the current value of the property
     */
-    long DirectShowCameraProperty::getValue()
+    long DirectShowCameraProperty::getValue() const
     {
         return m_value;
     }
@@ -252,7 +252,7 @@ namespace DirectShowCamera
      * @brief Return true if the current mode is auto, otherise manual mode is enabled.
      * @return Return true if the current mode is auto, otherise manual mode is enabled.
     */
-    bool DirectShowCameraProperty::isAuto()
+    bool DirectShowCameraProperty::isAuto() const
     {
         return m_isAuto;
     }
@@ -412,7 +412,7 @@ namespace DirectShowCamera
                 }				
 
                 // Combine result
-                result = result & success;
+                result = result && success;
             }
         }
         else

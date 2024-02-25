@@ -159,7 +159,7 @@ namespace DirectShowCamera
      * @brief Get brightness, from blanking(small value) to pure white(large value)
      * @return Return brightness
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getBrightness()
+    DirectShowCameraProperty* DirectShowCameraProperties::getBrightness() const
     {
         return m_brightness;
     }
@@ -168,7 +168,7 @@ namespace DirectShowCamera
      * @brief Get contrast
      * @return Return contrast
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getContrast()
+    DirectShowCameraProperty* DirectShowCameraProperties::getContrast() const
     {
         return m_contrast;
     }
@@ -178,7 +178,7 @@ namespace DirectShowCamera
      * 
      * @return Return hue
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getHue()
+    DirectShowCameraProperty* DirectShowCameraProperties::getHue() const
     {
         return m_hue;
     }
@@ -187,7 +187,7 @@ namespace DirectShowCamera
      * @brief Get saturation
      * @return Return saturation
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getSaturation()
+    DirectShowCameraProperty* DirectShowCameraProperties::getSaturation() const
     {
         return m_saturation;
     }
@@ -196,7 +196,7 @@ namespace DirectShowCamera
      * @brief Get sharpness
      * @return Return sharpness
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getSharpness()
+    DirectShowCameraProperty* DirectShowCameraProperties::getSharpness() const
     {
         return m_sharpness;
     }
@@ -205,7 +205,7 @@ namespace DirectShowCamera
      * @brief Get gamma
      * @return Return gamma
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getGamma()
+    DirectShowCameraProperty* DirectShowCameraProperties::getGamma() const
     {
         return m_gamma;
     }
@@ -214,7 +214,7 @@ namespace DirectShowCamera
      * @brief Get color enable, 0(off) or 1(on)
      * @return 
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getColorEnable()
+    DirectShowCameraProperty* DirectShowCameraProperties::getColorEnable() const
     {
         return m_colorEnable;
     }
@@ -223,7 +223,7 @@ namespace DirectShowCamera
      * @brief Get white balance
      * @return Return white balance
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getWhiteBalance()
+    DirectShowCameraProperty* DirectShowCameraProperties::getWhiteBalance() const
     {
         return m_whiteBalance;
     }
@@ -232,7 +232,7 @@ namespace DirectShowCamera
      * @brief Get backlight compensation, 0(off) or 1(on)
      * @return Return backlight compensation
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getBacklightCompensation()
+    DirectShowCameraProperty* DirectShowCameraProperties::getBacklightCompensation() const
     {
         return m_backlightCompensation;
     }
@@ -241,7 +241,7 @@ namespace DirectShowCamera
      * @brief Get gain, +ve are brighter and -ve are darker
      * @return Get gain
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getGain()
+    DirectShowCameraProperty* DirectShowCameraProperties::getGain() const
     {
         return m_gain;
     }
@@ -250,7 +250,7 @@ namespace DirectShowCamera
      * @brief Get pan, in degree?
      * @return Return pan
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getPan()
+    DirectShowCameraProperty* DirectShowCameraProperties::getPan() const
     {
         return m_pan;
     }
@@ -259,7 +259,7 @@ namespace DirectShowCamera
      * @brief Get tilt, in degree?
      * @return Return tilt
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getTilt()
+    DirectShowCameraProperty* DirectShowCameraProperties::getTilt() const
     {
         return m_tilt;
     }
@@ -268,7 +268,7 @@ namespace DirectShowCamera
      * @brief Get roll, in degree?
      * @return Return roll
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getRoll()
+    DirectShowCameraProperty* DirectShowCameraProperties::getRoll() const
     {
         return m_roll;
     }
@@ -277,7 +277,7 @@ namespace DirectShowCamera
      * @brief Get zoom, in millimeters
      * @return Return zoom
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getZoom()
+    DirectShowCameraProperty* DirectShowCameraProperties::getZoom() const
     {
         return m_zoom;
     }
@@ -286,7 +286,7 @@ namespace DirectShowCamera
      * @brief Get exposure, value = log2(sec) which means sec = 0.5^value(value < 0) or 2^value(value > 0) , eg. value = -3 sec = 0.125s, value = 2 sec = 4
      * @return Return exposure
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getExposure()
+    DirectShowCameraProperty* DirectShowCameraProperties::getExposure() const
     {
         return m_exposure;
     }
@@ -295,7 +295,7 @@ namespace DirectShowCamera
      * @brief Get iris, fstop * 10
      * @return Return iris
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getIris()
+    DirectShowCameraProperty* DirectShowCameraProperties::getIris() const
     {
         return m_iris;
     }
@@ -304,7 +304,7 @@ namespace DirectShowCamera
      * @brief Get focus, in millimeters
      * @return Return focus
     */
-    DirectShowCameraProperty* DirectShowCameraProperties::getFocus()
+    DirectShowCameraProperty* DirectShowCameraProperties::getFocus() const
     {
         return m_focus;
     }
