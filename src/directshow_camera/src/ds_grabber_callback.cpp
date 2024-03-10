@@ -48,16 +48,13 @@ namespace DirectShowCamera
         return m_bufferSize;
     }
 
-    /**
-     * @brief Get the current frame
-     * @param[out] frame Frame in bytes
-     * @param[out] frameIndex (Option) A frame index,such as a frame id. It can be use to identify whether it is a new frame. Default as NULL.
-     * @param[out] numOfBytes (Option) Number of the byte of the frame. It will change if the size is change in 5 frame. Default as NULL.
-     * @param[in] copyNewFrameOnly (Option) Set as true if only interesting on new frame and it will not copy the frame. It should be used with previousFrameIndex. Default as false.
-     * @param[in] previousFrameIndex (Option) The previous frame index. It use to identify whether the current frame is a new frame. Default as 0.
-     * @return Return true if the current is copied. If a new frame is required and the frame doesn't change, it will returns false. If eroor occurred, it return false.
-    */
-    bool SampleGrabberCallback::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    bool SampleGrabberCallback::getFrame(
+        unsigned char* frame,
+        int& numOfBytes,
+        unsigned long& frameIndex,
+        const bool copyNewFrameOnly,
+        const unsigned long previousFrameIndex
+    )
     {
         int currentframeIndex = m_frameIndex;
         bool result = false;
@@ -73,11 +70,8 @@ namespace DirectShowCamera
                 // Copy
                 memcpy(frame, m_pixelsBuffer, m_bufferSize);
                     
-                // Get frame size
-                if (numOfBytes)
-                {
-                    *numOfBytes = m_bufferSize;
-                }
+                // Return frame size
+                numOfBytes = m_bufferSize;
 
                 // Unlock mutex
                 m_bufferMutex.unlock();
@@ -86,11 +80,8 @@ namespace DirectShowCamera
                 result = true;
             }
 
-            // Get frame index
-            if (frameIndex)
-            {
-                *frameIndex = currentframeIndex;
-            }
+            // Return frame index
+            frameIndex = currentframeIndex;
         }
 
         return result;

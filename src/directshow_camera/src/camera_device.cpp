@@ -176,7 +176,7 @@ namespace DirectShowCamera
      * @brief Get camera friendly name
      * @return Return the camera friendly name
     */
-    std::string CameraDevice::getFriendlyName()
+    std::string CameraDevice::getFriendlyName() const
     {
         return m_friendlyName;
     }
@@ -185,7 +185,7 @@ namespace DirectShowCamera
      * @brief Get the camera description
      * @return Return camera description
     */
-    std::string CameraDevice::getDescription()
+    std::string CameraDevice::getDescription() const
     {
         return m_description;
     }
@@ -194,7 +194,7 @@ namespace DirectShowCamera
      * @brief Get the camera device path. It is the camera id.
      * @return Return the camera device path.
     */
-    std::string CameraDevice::getDevicePath()
+    std::string CameraDevice::getDevicePath() const
     {
         return m_devicePath;
     }

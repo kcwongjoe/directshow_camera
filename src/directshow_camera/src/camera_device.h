@@ -30,9 +30,9 @@ namespace DirectShowCamera
         std::vector<std::pair<int,int>> getResolutions();
         bool containResolution(int width, int height) const;
 
-        std::string getFriendlyName();
-        std::string getDescription();
-        std::string getDevicePath();
+        std::string getFriendlyName() const;
+        std::string getDescription() const;
+        std::string getDevicePath() const;
 
         // Operator
 

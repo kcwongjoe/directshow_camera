@@ -5,32 +5,23 @@ namespace DirectShowCamera
 
 #pragma region Constructor and Destructor
 
-    /**
-     * @brief Constructor
-    */
-    UVCCamera::UVCCamera()
+    UVCCamera::UVCCamera() : 
+        m_directShowCamera(std::make_shared<DirectShowCamera>())
     {
-        constructor(new DirectShowCamera());
+        constructor();
     }
 
-    /**
-     * @brief Constructor
-     * @param abstractDirectShowCamera DirectShowCamera or DirectShowCameraStub.
-    */
-    UVCCamera::UVCCamera(AbstractDirectShowCamera* abstractDirectShowCamera)
+    UVCCamera::UVCCamera(
+        const std::shared_ptr<AbstractDirectShowCamera>& abstractDirectShowCamera
+    ) :
+        m_directShowCamera(abstractDirectShowCamera)
     {
-        constructor(abstractDirectShowCamera);
+        constructor();
     }
 
-    /**
-     * @brief Constructor
-     * @param abstractDirectShowCamera Abstract DirectShow Camera
-    */
-    void UVCCamera::constructor(AbstractDirectShowCamera* abstractDirectShowCamera)
+    void UVCCamera::constructor()
     {
         DirectShowCameraUtils::initCOMLib();
-
-        m_directShowCamera = abstractDirectShowCamera;
 
 #ifdef HAS_OPENCV
         m_matConvertor = OpenCVMatConverter();
@@ -39,20 +30,9 @@ namespace DirectShowCamera
 #endif
     }
 
-
-
-    /**
-     * @brief Destructor
-    */
     UVCCamera::~UVCCamera()
     {
         close();
-
-        if (this && m_directShowCamera)
-        {
-            m_directShowCamera->release();
-            delete m_directShowCamera;
-        }
         
         // Uninitialize COM Library
         DirectShowCameraUtils::uninitCOMLib();
@@ -62,15 +42,12 @@ namespace DirectShowCamera
 
 #pragma region Connection
 
-    /**
-     * @brief Open camera with the specific resolution. The support resolution can be retrieved from CameraDevice. If the frame width and height is not specified, the default resolution will be used.
-     * @param device The camera to be opened. You can use getCameras() to extract the available cameras.
-     * @param width (Option) The frame width in pixel. 
-     * @param height (Option) The frame height in pixel.
-     * @param rgb (Option) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
-     * @return Return true if success.
-    */
-    bool UVCCamera::open(CameraDevice device, int width, int height, bool rgb)
+    bool UVCCamera::open(
+        const CameraDevice& device,
+        const int width,
+        const int height,
+        const bool rgb
+    )
     {
         bool result = false;
 
@@ -177,13 +154,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Open camera with the specific DirectShowVideoFormat.
-     * @param device The camera to be opened.
-     * @param videoFormat (Option) Video format. Default as NULL which use the default video format.
-     * @return Return true if success.
-    */
-    bool UVCCamera::open(DirectShowCameraDevice device, DirectShowVideoFormat* videoFormat)
+    bool UVCCamera::open(const DirectShowCameraDevice& device, DirectShowVideoFormat* videoFormat)
     {
         bool result = false;
 
@@ -207,12 +178,6 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Open the camera
-     * @param videoInputFilter Video filter
-     * @param videoFormat Video format
-     * @return Return true if success.
-    */
     bool UVCCamera::open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat)
     {
         bool result = false;
@@ -232,11 +197,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Return true if the camera is opened.
-     * @return Return true if the camera is opened.
-    */
-    bool UVCCamera::isOpened()
+    bool UVCCamera::isOpened() const
     {
         if (m_directShowCamera)
             return m_directShowCamera->isOpening();
@@ -244,9 +205,6 @@ namespace DirectShowCamera
             return false;
     }
 
-    /**
-     * @brief Close
-    */
     bool UVCCamera::close()
     {
         bool result = true;
@@ -267,33 +225,20 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Return true if camera is disconnected.
-     * @return Return true if camera is disconnected.
-     */
     bool UVCCamera::checkDisconnection()
     {
         return m_directShowCamera->checkDisconnection();
     }
 
-    /**
-     * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run.
-     * @param func void()
-     */
     void UVCCamera::setDisconnectionProcess(std::function<void()> func)
     {
         m_directShowCamera->setDisconnectionProcess(func);
     }
 
-
 #pragma endregion Connection
 
 #pragma region Capture
 
-    /**
-     * @brief Start capture
-     * @return Return true if success
-    */
     bool UVCCamera::startCapture()
     {
         if (m_directShowCamera->isOpening())
@@ -311,10 +256,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Stop capture
-     * @return Return true if success
-    */
     bool UVCCamera::stopCapture()
     {
         if (m_directShowCamera->isOpening())
@@ -332,11 +273,7 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Return true if camera is capturing.
-     * @return Return true if camera is capturing.
-    */
-    bool UVCCamera::isCapturing()
+    bool UVCCamera::isCapturing() const
     {
         if (m_directShowCamera)
         {
@@ -353,20 +290,12 @@ namespace DirectShowCamera
 
 #pragma region Properties
 
-    /**
-     * @brief Reset camera properties as default value.
-     * @param asAuto Set as true if you want to use auto mode as default value.
-    */
-    void UVCCamera::resetProperties(bool asAuto)
+    void UVCCamera::resetProperties(const bool asAuto)
     {
         m_directShowCamera->resetDefault(asAuto);
     }
 
-    /**
-     * @brief Get directshow properties pointer. It is a advance option.
-     * @return Return the directshow properties pointer
-    */
-    DirectShowCameraProperties* UVCCamera::getDirectShowProperties()
+    DirectShowCameraProperties* UVCCamera::getDirectShowProperties() const
     {
         return m_directShowCamera->getProperties();
     }
@@ -2420,21 +2349,13 @@ namespace DirectShowCamera
 
 #pragma endregion Properties
 
-    /**
-     * @brief Get the last error message.
-     * @return Return the last error message.
-    */
-    std::string UVCCamera::getLastError()
+    std::string UVCCamera::getLastError() const
     {
         return m_errorString;
     }
 
 #pragma region Cameras
 
-    /**
-     * @brief Get the available DirectShowCameraDevice list. It is a advance option. Suggest to use getCameras().
-     * @return Return the available DirectShowCameraDevice list
-    */
     std::vector<DirectShowCameraDevice> UVCCamera::getDirectShowCameras()
     {
         std::vector<DirectShowCameraDevice> result;
@@ -2445,10 +2366,6 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Get the available camera.
-     * @return Return the available camera.
-    */
     std::vector<CameraDevice> UVCCamera::getCameras()
     {
         // Get DirectShowCameraDevice
@@ -2468,20 +2385,11 @@ namespace DirectShowCamera
 
 #pragma region DirectShow Video Format
 
-    /**
-     * @brief Get support DirectShowVideoFormat list. It is a advance option. Suggest to acquire the resolution from CameraDevice (Use getCameras() to get CameraDevice).
-     * @return Return the support DirectShowVideoFormat list.
-    */
-    std::vector<DirectShowVideoFormat> UVCCamera::getSupportDirectShowVideoFormats()
+    std::vector<DirectShowVideoFormat> UVCCamera::getSupportDirectShowVideoFormats() const
     {
         return m_directShowCamera->getVideoFormatList();
     }
 
-    /**
-     * @brief Set DirectShowVideoFormat to the camera. Problam may caused when camera was opened. It is suggest to set DirectShowVideoFormat by open() fucntion.
-     * @param videoFormat DirectShowVideoFormat
-     * @return Return true if success.
-    */
     bool UVCCamera::setDirectShowVideoFormat(DirectShowVideoFormat* videoFormat)
     {
         if (m_directShowCamera->isOpening())
@@ -2518,11 +2426,7 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get the current DirectShowVideoFormat
-     * @return Return the current DirectShowVideoFormat
-    */
-    DirectShowVideoFormat UVCCamera::getDirectShowVideoFormat()
+    DirectShowVideoFormat UVCCamera::getDirectShowVideoFormat() const
     {
         return m_directShowCamera->getCurrentGrabberFormat();
     }
@@ -2531,22 +2435,14 @@ namespace DirectShowCamera
 
 #pragma region Frame
 
-
-    /**
-     * @brief Get frame
-     * @param[out] frame Frame bytes (BGR)
-     * @param[out] numOfBytes (Option) Number of bytes of the frame. Default as NULL
-     * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame. Default as false
-     * @return Return true if success
-    */
-    bool UVCCamera::getFrame(unsigned char* frame, int* numOfBytes, bool onlyGetNewFrame)
+    bool UVCCamera::getFrame(unsigned char* frame, int& numOfBytes, const bool onlyGetNewFrame)
     {
         bool result = false;
 
         if (m_directShowCamera->isCapturing())
         {
             unsigned long frameIndex;
-            bool success = m_directShowCamera->getFrame(frame, &frameIndex, numOfBytes, onlyGetNewFrame, m_lastFrameIndex);
+            bool success = m_directShowCamera->getFrame(frame, numOfBytes, frameIndex, onlyGetNewFrame, m_lastFrameIndex);
 
 
             if (onlyGetNewFrame && frameIndex == m_lastFrameIndex)
@@ -2574,20 +2470,12 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Return the last frame index. It use to identify whether a new frame. Index will only be updated when you call getFrame() or gatMat();
-     * @return Return the last frame index.
-    */
-    long UVCCamera::getFrameIndex()
+    long UVCCamera::getFrameIndex() const
     {
         return m_lastFrameIndex;
     }
 
-    /**
-     * @brief Get frame per second
-     * @return
-    */
-    double UVCCamera::getFPS()
+    double UVCCamera::getFPS() const
     {
         return m_directShowCamera->getFPS();
     }
@@ -2596,28 +2484,16 @@ namespace DirectShowCamera
 
 #ifdef HAS_OPENCV
 
-    /**
-     * @brief Set as true to return a BGR cv::Mat. Default as false which return a RGB Mat.
-     * @param asBGR Set as true to return a BGR cv::Mat.
-    */
-    void UVCCamera::setMatAsBGR(bool asBGR)
+    void UVCCamera::setMatAsBGR(const bool asBGR)
     {
         m_matConvertor.isBGR = asBGR;
     }
 
-    /**
-     * @brief Set as true to return a vertical flip cv::Mat. Default as true.
-     * @param verticalFlip Set as true to return a vertical flip cv::Mat.
-    */
-    void UVCCamera::vecticalFlipMat(bool verticalFlip)
+    void UVCCamera::vecticalFlipMat(const bool verticalFlip)
     {
         m_matConvertor.isVerticalFlip = verticalFlip;
     }
 
-    /**
-     * @brief Allocate frame buffer
-     * @return Return true if success
-    */
     bool UVCCamera::allocateMatBuffer()
     {
         bool result = false;
@@ -2632,7 +2508,7 @@ namespace DirectShowCamera
                 // Allocate buffer
                 if (m_matBuffer != NULL)
                 {
-                    delete m_matBuffer;
+                    delete[] m_matBuffer;
                     m_matBuffer = NULL;
                 }
 
@@ -2649,13 +2525,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Get cv::Mat of the current frame
-     * 
-     * @param[in] onlyGetNewMat (Option) Set it as true if you only want to get the new Mat. Default as false
-     * @return Return cv::Mat
-    */
-    cv::Mat UVCCamera::getMat(bool onlyGetNewMat)
+    cv::Mat UVCCamera::getMat(const bool onlyGetNewMat)
     {
         // Reallocate frame buffer size if changed
         if (m_matBufferSize != m_directShowCamera->getFrameTotalSize())
@@ -2664,7 +2534,8 @@ namespace DirectShowCamera
         }
 
         // Get frame
-        bool success = getFrame(m_matBuffer, NULL, onlyGetNewMat);
+        int numOfBytes;
+        bool success = getFrame(m_matBuffer, numOfBytes, onlyGetNewMat);
 
         if (success)
         {
@@ -2677,23 +2548,12 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get cv::Mat from the Mat buffer. Buffer will not be updated if you have not to call getMat();
-     * @return Return the cv::Mat
-    */
     cv::Mat UVCCamera::getLastMat()
     {
         return m_matConvertor.convert(m_matBuffer, getWidth(), getHeight());
     }
 
-    /**
-     * @brief Get new cv::Mat in sync mode.
-     * @param[in] step (Option) Step for checking new frame in ms. Default as 50ms
-     * @param[in] timeout (Option) Timeout in ms. Default as 3000ms
-     * @param[in] skip (Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
-     * @return Return the cv::Mat. Empty mat return if timeout.
-    */
-    cv::Mat UVCCamera::getNewMat(int step, int timeout, int skip)
+    cv::Mat UVCCamera::getNewMat(const int step, const int timeout, const int skip)
     {
         auto lastFrameIndex = m_lastFrameIndex;
         int pastTime = 0;
@@ -2733,29 +2593,23 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Exposure fusion
-     * @param[in] exposureFusionAsyncResult void(cv::Mat) async processing the exposure fusion and return the result.  Default is NULL. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
-     * @param[out] exposureImages Images captured in different exposures. Default as NULL
-     * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
-     * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
-    */
-    cv::Mat UVCCamera::exposureFusion(ExposureFusionAsyncResult exposureFusionAsyncResult, std::vector<cv::Mat>* exposureImages, int minSetExposureDelay)
+    cv::Mat UVCCamera::exposureFusion(
+        const ExposureFusionAsyncResult exposureFusionAsyncResult,
+        std::vector<cv::Mat>* exposureImages,
+        const int minSetExposureDelay
+    )
     {
         std::vector<double> exposures = getPossibleExposureValues();
         
         return exposureFusion(exposures, exposureFusionAsyncResult, exposureImages, minSetExposureDelay);
     }
 
-    /**
-     * @brief Exposure fusion
-     * @param[in] exposures Exposures time to be captured
-     * @param[in] exposureFusionAsyncResult void(cv::Mat) async processing the exposure fusion and return the result.  Default is NULL. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
-     * @param[out] exposureImages Images captured in different exposures. Default as NULL
-     * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
-     * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
-    */
-    cv::Mat UVCCamera::exposureFusion(std::vector<double> exposures, ExposureFusionAsyncResult exposureFusionAsyncResult, std::vector<cv::Mat>* exposureImages, int minSetExposureDelay)
+    cv::Mat UVCCamera::exposureFusion(
+        const std::vector<double> exposures,
+        const ExposureFusionAsyncResult exposureFusionAsyncResult,
+        std::vector<cv::Mat>* exposureImages,
+        const int minSetExposureDelay
+    )
     {
         // Save current exposure
         double currentExposure = getExposure();
@@ -2845,47 +2699,27 @@ namespace DirectShowCamera
 
 #pragma endregion Opencv Function
 
-    /**
-     * @brief Get the frame width in pixel
-     * @return Return the frame width
-    */
-    int UVCCamera::getWidth()
+    int UVCCamera::getWidth() const
     {
         return getDirectShowVideoFormat().getWidth();
     }
 
-    /**
-     * @brief Get the frame height in pixel
-     * @return Return the frame height
-    */
-    int UVCCamera::getHeight()
+    int UVCCamera::getHeight() const
     {
         return getDirectShowVideoFormat().getHeight();
     }
 
-    /**
-     * @brief Get frame size in bytes
-     * @return Return the the frame size in bytes
-    */
-    int UVCCamera::getFrameSize()
+    int UVCCamera::getFrameSize() const
     {
         return getDirectShowVideoFormat().getTotalSize();
     }
 
-    /**
-     * @brief Get the number of bytes per pixel
-     * @return Return the number of bytes per pixel
-    */
-    int UVCCamera::getNumOfBytePerPixel()
+    int UVCCamera::getNumOfBytePerPixel() const
     {
         return getDirectShowVideoFormat().getBitPerPixel() / 8;
     }
 
-    /**
-     * @brief Get the number of pixel per frame.
-     * @return Return the number of pixel per frame.
-    */
-    int UVCCamera::getNumOfPixel()
+    int UVCCamera::getNumOfPixel() const
     {
         return getDirectShowVideoFormat().getWidth() * getDirectShowVideoFormat().getHeight();
     }

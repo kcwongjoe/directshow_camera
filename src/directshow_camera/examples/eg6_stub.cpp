@@ -18,7 +18,8 @@ void eg6_stub()
     // Stub or directshow camera
 #ifdef USE_STUB
     // Create Stub
-    DirectShowCameraStub* stub = new DirectShowCameraStub();
+    const std::shared_ptr<AbstractDirectShowCamera> stub = std::make_shared<DirectShowCameraStub>();
+    DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCameraStub*>(stub.get());
 
     // Open
     UVCCamera camera = UVCCamera(stub);
@@ -82,17 +83,14 @@ void eg6_stub()
     // User define a image
     int width = camera.getWidth();
     int height = camera.getHeight();
-    stub->setGetFrameFunction([width, height](unsigned char* pixels, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    cameraStub->setGetFrameFunction([width, height](unsigned char* pixels, int& numOfBytes, unsigned long& frameIndex, const bool copyNewFrameOnly, const unsigned long previousFrameIndex)
         {
             // Frame index
-            *frameIndex = ++previousFrameIndex;
+            frameIndex = previousFrameIndex + 1;
 
             // Size
             int totalSize = width * height * 3;
-            if (numOfBytes)
-            {
-                *numOfBytes = totalSize;
-            }
+            numOfBytes = totalSize;
 
             // Allocate image memory
             memset(pixels, 0, totalSize * sizeof(unsigned char));
@@ -126,7 +124,7 @@ void eg6_stub()
 #ifdef USE_STUB
     // ******Disconnect process******
     std::cout << "The fake camera is disconnected accidently now..." << std::endl;
-    stub->disconnetCamera();
+    cameraStub->disconnetCamera();
 
     // Wait for 2 second
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));

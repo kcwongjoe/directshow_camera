@@ -244,34 +244,32 @@ namespace DirectShowCamera
         m_getFrameFunc = func;
     }
 
-    /**
-     * @brief Get current frame
-     * @param[out] frame Frame bytes
-     * @param[out] frameIndex Index of frame, use to indicate whether a new frame. Default is NULL
-     * @param[out] numOfBytes Number of bytes of the frames. Default is NULL
-     * @param[in] copyNewFrameOnly Set it as true if only want to collect new frame. Default is false
-     * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
-     * @return Return true if success.
-    */
-    bool DirectShowCameraStub::getFrame(unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, bool copyNewFrameOnly, unsigned long previousFrameIndex)
+    bool DirectShowCameraStub::getFrame(
+        unsigned char* frame,
+        int& numOfBytes,
+        unsigned long& frameIndex,
+        const bool copyNewFrameOnly,
+        const unsigned long previousFrameIndex
+    )
     {
         if (m_isCapturing && frame)
         {
             if (m_getFrameFunc)
             {
                 // Return the user define image
-                m_getFrameFunc(frame, frameIndex, numOfBytes, copyNewFrameOnly, previousFrameIndex);
+                m_getFrameFunc(frame, numOfBytes, frameIndex, copyNewFrameOnly, previousFrameIndex);
             }
             else
             {
                 // Return the default image
                 DirectShowCameraStubDefaultSetting::getFrame(
+                    frame,
+                    numOfBytes,
+                    frameIndex,
                     m_videoFormats->at(m_currentVideoFormatIndex)->getWidth(),
                     m_videoFormats->at(m_currentVideoFormatIndex)->getHeight(),
-                    frame,
-                    frameIndex,
-                    numOfBytes,
-                    previousFrameIndex);
+                    previousFrameIndex
+                );
             }
 
             return true;

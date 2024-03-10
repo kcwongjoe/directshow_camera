@@ -43,67 +43,272 @@ namespace DirectShowCamera
         typedef std::function<void(cv::Mat image)> ExposureFusionAsyncResult;
 #endif
 
-        // Constructor
-        UVCCamera();
-        UVCCamera(AbstractDirectShowCamera* abstractDirectShowCamera);
-        void constructor(AbstractDirectShowCamera* abstractDirectShowCamera);
+        //-----------------Constructor-----------------
 
+        /**
+         * @brief Constructor
+        */
+        UVCCamera();
+
+        /**
+         * @brief Constructor
+         * @param abstractDirectShowCamera DirectShowCamera or DirectShowCameraStub.
+        */
+        UVCCamera(const std::shared_ptr<AbstractDirectShowCamera>& abstractDirectShowCamera);
+
+        /**
+         * @brief Constructor
+         * @param abstractDirectShowCamera Abstract DirectShow Camera
+        */
+        void constructor();
+
+        /**
+         * @brief Destructor
+        */
         ~UVCCamera();
 
-        // Connection
-        bool open(CameraDevice device, int width = -1, int height = -1, bool rgb = true);
-        bool open(DirectShowCameraDevice device, DirectShowVideoFormat* videoFormat = NULL);
-        bool isOpened();
+        //-----------------Connection-----------------
+
+        /**
+         * @brief Open camera with the specific resolution. The support resolution can be retrieved from CameraDevice. If the frame width and height is not specified, the default resolution will be used.
+         * @param device The camera to be opened. You can use getCameras() to extract the available cameras.
+         * @param width (Option) The frame width in pixel.
+         * @param height (Option) The frame height in pixel.
+         * @param rgb (Option) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
+         * @return Return true if success.
+        */
+        bool open(const CameraDevice& device, const int width = -1, const int height = -1, const bool rgb = true);
+
+        /**
+         * @brief Open camera with the specific DirectShowVideoFormat.
+         * @param device The camera to be opened.
+         * @param videoFormat (Option) Video format. Default as NULL which use the default video format.
+         * @return Return true if success.
+        */
+        bool open(const DirectShowCameraDevice& device, DirectShowVideoFormat* videoFormat = NULL);
+
+        /**
+         * @brief Return true if the camera is opened.
+         * @return Return true if the camera is opened.
+        */
+        bool isOpened() const;
+
+        /**
+         * @brief Close
+        */
         bool close();
+
+        /**
+         * @brief Return true if camera is disconnected.
+         * @return Return true if camera is disconnected.
+         */
         bool checkDisconnection();
+
+        /**
+         * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run.
+         * @param func void()
+         */
         void setDisconnectionProcess(std::function<void()> func);
 
-        // Capture
-        bool startCapture();
-        bool stopCapture();
-        bool isCapturing();
+        //-----------------Capture-----------------
 
-        std::string getLastError();
+        /**
+         * @brief Start capture
+         * @return Return true if success
+        */
+        bool startCapture();
+
+        /**
+         * @brief Stop capture
+         * @return Return true if success
+        */
+        bool stopCapture();
+
+        /**
+         * @brief Return true if camera is capturing.
+         * @return Return true if camera is capturing.
+        */
+        bool isCapturing() const;
+
+        /**
+         * @brief Get the last error message.
+         * @return Return the last error message.
+        */
+        std::string getLastError() const;
 
         // ------DirectShow Video Format------
-        std::vector<DirectShowVideoFormat> getSupportDirectShowVideoFormats();
-        DirectShowVideoFormat getDirectShowVideoFormat();
 
+        /**
+         * @brief Get support DirectShowVideoFormat list. It is a advance option. Suggest to acquire the resolution from CameraDevice (Use getCameras() to get CameraDevice).
+         * @return Return the support DirectShowVideoFormat list.
+        */
+        std::vector<DirectShowVideoFormat> getSupportDirectShowVideoFormats() const;
+
+        /**
+         * @brief Get the current DirectShowVideoFormat
+         * @return Return the current DirectShowVideoFormat
+        */
+        DirectShowVideoFormat getDirectShowVideoFormat() const;
+
+        /**
+         * @brief Set DirectShowVideoFormat to the camera. Problam may caused when camera was opened. It is suggest to set DirectShowVideoFormat by open() fucntion.
+         * @param videoFormat DirectShowVideoFormat
+         * @return Return true if success.
+        */
         bool setDirectShowVideoFormat(DirectShowVideoFormat* videoFormat);
 
         // ------Frame------
 
-        bool getFrame(unsigned char* frame, int* numOfBytes = NULL, bool onlyGetNewFrame = false);
-        long getFrameIndex();
+        /**
+         * @brief Get frame
+         * @param[out] frame Frame bytes (BGR)
+         * @param[out] numOfBytes Number of bytes of the frame.
+         * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame. Default as false
+         * @return Return true if success
+        */
+        bool getFrame(unsigned char* frame, int& numOfBytes, const bool onlyGetNewFrame = false);
 
-        double getFPS();
-        int getWidth();
-        int getHeight();
-        int getFrameSize();
-        int getNumOfBytePerPixel();
-        int getNumOfPixel();
+        /**
+         * @brief Return the last frame index. It use to identify whether a new frame. Index will only be updated when you call getFrame() or gatMat();
+         * @return Return the last frame index.
+        */
+        long getFrameIndex() const;
+
+        /**
+         * @brief Get frame per second
+         * @return
+        */
+        double getFPS() const;
+
+        /**
+         * @brief Get the frame width in pixel
+         * @return Return the frame width
+        */
+        int getWidth() const;
+
+        /**
+         * @brief Get the frame height in pixel
+         * @return Return the frame height
+        */
+        int getHeight() const;
+
+        /**
+         * @brief Get frame size in bytes
+         * @return Return the the frame size in bytes
+        */
+        int getFrameSize() const;
+
+        /**
+         * @brief Get the number of bytes per pixel
+         * @return Return the number of bytes per pixel
+        */
+        int getNumOfBytePerPixel() const;
+
+        /**
+         * @brief Get the number of pixel per frame.
+         * @return Return the number of pixel per frame.
+        */
+        int getNumOfPixel() const;
 
     #ifdef HAS_OPENCV
-        void vecticalFlipMat(bool verticalFlip);
-        void setMatAsBGR(bool asBGR);
-        bool allocateMatBuffer();
-        cv::Mat getMat(bool onlyGetNewMat = false);
-        cv::Mat getLastMat();
-        cv::Mat getNewMat(int step = 50, int timeout = 3000, int skip = 0);
 
-        cv::Mat exposureFusion(ExposureFusionAsyncResult exposureFusionAsyncResult = NULL,std::vector<cv::Mat>* exposureImages = NULL, int minSetExposureDelay = 200);
-        cv::Mat exposureFusion(std::vector<double> exposures, ExposureFusionAsyncResult exposureFusionAsyncResult = NULL, std::vector<cv::Mat>* exposureImages = NULL, int minSetExposureDelay = 200);
+        /**
+         * @brief Set as true to return a vertical flip cv::Mat. Default as true.
+         * @param verticalFlip Set it as true to return a vertical flip cv::Mat.
+        */
+        void vecticalFlipMat(const bool verticalFlip);
+
+        /**
+         * @brief Set as true to return a BGR cv::Mat. Default as false which return a RGB Mat.
+         * @param asBGR Set as true to return a BGR cv::Mat.
+        */
+        void setMatAsBGR(const bool asBGR);
+
+        /**
+         * @brief Allocate frame buffer
+         * @return Return true if success
+        */
+        bool allocateMatBuffer();
+
+        /**
+         * @brief Get cv::Mat of the current frame
+         *
+         * @param[in] onlyGetNewMat (Option) Set it as true if you only want to get the new Mat. Default as false
+         * @return Return cv::Mat
+        */
+        cv::Mat getMat(const bool onlyGetNewMat = false);
+
+        /**
+         * @brief Get cv::Mat from the Mat buffer. Buffer will not be updated if you have not to call getMat();
+         * @return Return the cv::Mat
+        */
+        cv::Mat getLastMat();
+
+        /**
+         * @brief Get new cv::Mat in sync mode.
+         * @param[in] step (Option) Step for checking new frame in ms. Default as 50ms
+         * @param[in] timeout (Option) Timeout in ms. Default as 3000ms
+         * @param[in] skip (Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
+         * @return Return the cv::Mat. Empty mat return if timeout.
+        */
+        cv::Mat getNewMat(const int step = 50, const int timeout = 3000, const int skip = 0);
+
+        /**
+         * @brief Exposure fusion
+         * @param[out] exposureImages Images captured in different exposures.
+         * @param[in] exposureFusionAsyncResult void(cv::Mat) async processing the exposure fusion and return the result.  Default is NULL. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
+         * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
+         * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
+        */
+        cv::Mat exposureFusion(
+            const ExposureFusionAsyncResult exposureFusionAsyncResult = nullptr,
+            std::vector<cv::Mat>* exposureImages = NULL,
+            const int minSetExposureDelay = 200
+        );
+
+        /**
+         * @brief Exposure fusion
+         * @param[in] exposures Exposures time to be captured
+         * @param[out] exposureImages Images captured in different exposures.
+         * @param[in] exposureFusionAsyncResult void(cv::Mat) async processing the exposure fusion and return the result.  Default is NULL. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
+         * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
+         * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
+        */
+        cv::Mat exposureFusion(
+            const std::vector<double> exposures,
+            const ExposureFusionAsyncResult exposureFusionAsyncResult = nullptr,
+            std::vector<cv::Mat>* exposureImages = NULL,
+            const int minSetExposureDelay = 200
+        );
     #endif
 
         // ------Camera------
 
+        /**
+         * @brief Get the available DirectShowCameraDevice list. It is a advance option. Suggest to use getCameras().
+         * @return Return the available DirectShowCameraDevice list
+        */
         std::vector<DirectShowCameraDevice> getDirectShowCameras();
+
+        /**
+         * @brief Get the available camera.
+         * @return Return the available camera.
+        */
         std::vector<CameraDevice> getCameras();
 
         //------Properties------
 
-        void resetProperties(bool asAuto = true);
-        DirectShowCameraProperties* getDirectShowProperties();
+        /**
+         * @brief Reset camera properties as default value.
+         * @param asAuto Set as true if you want to use auto mode as default value.
+        */
+        void resetProperties(const bool asAuto = true);
+
+        /**
+         * @brief Get directshow properties pointer. It is a advance option.
+         * @return Return the directshow properties pointer
+        */
+        DirectShowCameraProperties* getDirectShowProperties() const;
 
         // Brightness
         bool supportBrightness();
@@ -231,7 +436,7 @@ namespace DirectShowCamera
 
     /**********************Private********************************/
     private:
-        AbstractDirectShowCamera* m_directShowCamera = NULL;
+        std::shared_ptr<AbstractDirectShowCamera> m_directShowCamera;
 
         unsigned long m_lastFrameIndex = 0;
         std::string m_errorString;
@@ -241,6 +446,13 @@ namespace DirectShowCamera
         int m_matBufferSize = 0;
         OpenCVMatConverter m_matConvertor;
     #endif
+
+        /**
+         * @brief Open the camera
+         * @param videoInputFilter Video filter
+         * @param videoFormat Video format
+         * @return Return true if success.
+        */
         bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
 
         // Utils

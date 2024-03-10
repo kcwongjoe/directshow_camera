@@ -28,7 +28,22 @@ namespace DirectShowCamera
         void setBufferSize(int numOfBytes);
         int getBufferSize();
 
-        bool getFrame(unsigned char* frame, unsigned long* frameIndex = NULL, int* numOfBytes = NULL, bool copyNewFrameOnly = false, unsigned long previousFrameIndex = 0);
+        /**
+         * @brief Get the current frame
+         * @param[out] frame Frame in bytes
+         * @param[out] numOfBytes Number of the byte of the frame. It will change if the size is change in 5 frame.
+         * @param[out] frameIndex (Option) A frame index,such as a frame id. It can be use to identify whether it is a new frame.
+         * @param[in] copyNewFrameOnly (Option) Set as true if only interesting on new frame and it will not copy the frame. It should be used with previousFrameIndex. Default as false.
+         * @param[in] previousFrameIndex (Option) The previous frame index. It use to identify whether the current frame is a new frame. Default as 0.
+         * @return Return true if the current is copied. If a new frame is required and the frame doesn't change, it will returns false. If eroor occurred, it return false.
+        */
+        bool getFrame(
+            unsigned char* frame,
+            int& numOfBytes,
+            unsigned long& frameIndex,
+            const bool copyNewFrameOnly = false,
+            const unsigned long previousFrameIndex = 0
+        );
         double getFPS();
         std::chrono::system_clock::time_point getLastFrameCaptureTime();
 

@@ -109,24 +109,28 @@ namespace DirectShowCamera
 
         /**
          * @brief Get default frame
-         * @param width Frame width
-         * @param height Frame height
-         * @param frame Frame bytes
-         * @param frameIndex Frame index
-         * @param numOfBytes Number of bytes of this frame
-         * @param previousFrameIndex Previous frame index
+         * @param frame[out] Frame bytes
+         * @param frameIndex[out] Frame index
+         * @param numOfBytes[out] Number of bytes of this frame
+         * @param width[in] Frame width
+         * @param height[in] Frame height
+         * @param previousFrameIndex[in] Previous frame index
         */
-        static void getFrame(int width, int height, unsigned char* frame, unsigned long* frameIndex, int* numOfBytes, unsigned long previousFrameIndex)
+        static void getFrame(
+            unsigned char* frame,
+            int& numOfBytes,
+            unsigned long& frameIndex,
+            const int width,
+            const int height,
+            const unsigned long previousFrameIndex
+        )
         {
             // Frame index
-            *frameIndex = ++previousFrameIndex;
+            frameIndex = previousFrameIndex + 1;
 
             // Size
             int totalSize = width * height * 3;
-            if (numOfBytes)
-            {
-                *numOfBytes = totalSize;
-            }
+            numOfBytes = totalSize;
 
             // Allocate image memory
             memset(frame, 0, totalSize * sizeof(unsigned char));
@@ -161,7 +165,7 @@ namespace DirectShowCamera
                     // Get color
                     int widthIndex = static_cast<int>(std::floor(i / boxWidth));
                     int heightIndex = static_cast<int>(std::floor(j / boxWidth));
-                    int colorIndex = (widthIndex + heightIndex * boxCol + *frameIndex) % 24;
+                    int colorIndex = (widthIndex + heightIndex * boxCol + frameIndex) % 24;
 
                     // Blue
                     frame[pixelIndex] = bColorArray[colorIndex];

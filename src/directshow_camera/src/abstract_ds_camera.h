@@ -39,10 +39,10 @@ namespace DirectShowCamera
         virtual bool getFrame
         (
             unsigned char* pixels,
-            unsigned long* frameIndex,
-            int* numOfBytes,
-            bool copyNewFrameOnly,
-            unsigned long previousFrameIndex
+            int& numOfBytes,
+            unsigned long& frameIndex,
+            const bool copyNewFrameOnly,
+            const unsigned long previousFrameIndex
         ) = 0;
         virtual void setMinimumPFS(double minimumFPS) = 0;
         virtual double getFPS() const = 0;

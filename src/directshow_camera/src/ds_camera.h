@@ -28,54 +28,64 @@ namespace DirectShowCamera
 
         DirectShowCamera();
         ~DirectShowCamera();
-        void release();
+        void release() override;
 
-        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
-        void close();
-        bool isOpening() const;
-        bool checkDisconnection();
-        void setDisconnectionProcess(std::function<void()> func);
+        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL) override;
+        void close() override;
+        bool isOpening() const override;
+        bool checkDisconnection() override;
+        void setDisconnectionProcess(std::function<void()> func) override;
 
-        bool start();
-        bool stop();
-        bool isCapturing() const;
+        bool start() override;
+        bool stop() override;
+        bool isCapturing() const override;
 
+        /**
+         * @brief Get current frame
+         * @param[out] frame Frame bytes
+         * @param[out] numOfBytes Number of bytes of the frames.
+         * @param[out] frameIndex Index of frame, use to indicate whether a new frame.
+         * @param[in] copyNewFrameOnly Set it as true if only want to collect new frame. Default is false
+         * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
+         * @return Return true if success.
+        */
         bool getFrame
         (
             unsigned char* pixels,
-            unsigned long* frameIndex = NULL,
-            int* numOfBytes = NULL,
-            bool copyNewFrameOnly = false,
-            unsigned long previousFrameIndex = 0
-        );
-        void setMinimumPFS(double minimumFPS);
-        double getFPS() const;
-        long getFrameTotalSize() const;
-        GUID getFrameType() const;
+            int& numOfBytes,
+            unsigned long& frameIndex,
+            const bool copyNewFrameOnly = false,
+            const unsigned long previousFrameIndex = 0
+        ) override;
+
+        void setMinimumPFS(double minimumFPS) override;
+        double getFPS() const override;
+        long getFrameTotalSize() const override;
+        GUID getFrameType() const override;
 
         // Video Format
-        std::vector<DirectShowVideoFormat> getVideoFormatList() const;
-        int getCurrentVideoFormatIndex() const;
-        DirectShowVideoFormat getCurrentVideoFormat() const;
-        DirectShowVideoFormat getCurrentGrabberFormat() const;
+        std::vector<DirectShowVideoFormat> getVideoFormatList() const override;
+        int getCurrentVideoFormatIndex() const override;
+        DirectShowVideoFormat getCurrentVideoFormat() const override;
+        DirectShowVideoFormat getCurrentGrabberFormat() const override;
 
-        bool setVideoFormat(DirectShowVideoFormat* videoFormat);
-        bool setVideoFormat(int videoFormatIndex);
+        bool setVideoFormat(DirectShowVideoFormat* videoFormat) override;
+        bool setVideoFormat(int videoFormatIndex) override;
 
         // Property
-        void refreshProperties();
-        DirectShowCameraProperties* getProperties() const;
+        void refreshProperties() override;
+        DirectShowCameraProperties* getProperties() const override;
 
-        void resetDefault(bool asAuto = true);
-        bool setValue(DirectShowCameraProperty* property, long value, bool isAuto);
+        void resetDefault(bool asAuto = true) override;
+        bool setValue(DirectShowCameraProperty* property, long value, bool isAuto) override;
 
         // Get camera
-        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices);
-        bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter);
-        bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter);
-        bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter);
+        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices) override;
+        bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter) override;
+        bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter) override;
+        bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter) override;
 
-        std::string getLastError() const;
+        std::string getLastError() const override;
 
     private:
 

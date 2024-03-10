@@ -20,7 +20,8 @@ protected:
 
     }
 
-    DirectShowCameraStub* stub = new DirectShowCameraStub();
+    const std::shared_ptr<AbstractDirectShowCamera> stub = std::make_shared<DirectShowCameraStub>();
+    DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCameraStub*>(stub.get());
     UVCCamera camera = UVCCamera(stub);
 };
 
@@ -99,7 +100,8 @@ TEST_F(TestUVCCameraStubF, TestGetCamera)
 TEST(TestUVCCameraStub, TestCapture)
 {
     // Create camera
-    DirectShowCameraStub* stub = new DirectShowCameraStub();
+    const std::shared_ptr<AbstractDirectShowCamera> stub = std::make_shared<DirectShowCameraStub>();
+    DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCameraStub*>(stub.get());
     UVCCamera camera = UVCCamera(stub);
 
     // Get cameras from UVCCamera
@@ -124,18 +126,18 @@ TEST(TestUVCCameraStub, TestCapture)
     int byteSize = width * height * 3;
     std::unique_ptr<unsigned char[]> byteBuffer(new unsigned char[byteSize]);
     int size = 0;
-    EXPECT_TRUE(camera.getFrame(byteBuffer.get(), &size)) << "Fail: camera.getFrame()";
+    EXPECT_TRUE(camera.getFrame(byteBuffer.get(), size)) << "Fail: camera.getFrame()";
 
     // Get Expect frame
     std::unique_ptr<unsigned char[]> expectByteBuffer(new unsigned char[byteSize]);
     int expectSize = 0;
     unsigned long frameIndex = 0;
     DirectShowCameraStubDefaultSetting::getFrame(
+        expectByteBuffer.get(),
+        expectSize,
+        frameIndex,
         width,
         height,
-        expectByteBuffer.get(),
-        &frameIndex,
-        &expectSize,
         0
     );
 

@@ -550,27 +550,19 @@ namespace DirectShowCamera
 
 #pragma region Frame
 
-    /**
-     * @brief Get current frame
-     * @param[out] frame Frame bytes
-     * @param[out] frameIndex Index of frame, use to indicate whether a new frame. Default is NULL
-     * @param[out] numOfBytes Number of bytes of the frames. Default is NULL
-     * @param[in] copyNewFrameOnly Set it as true if only want to collect new frame. Default is false
-     * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
-     * @return Return true if success.
-    */
+
     bool DirectShowCamera::getFrame
     (
         unsigned char* frame,
-        unsigned long* frameIndex,
-        int* numOfBytes,
-        bool copyNewFrameOnly,
-        unsigned long previousFrameIndex
+        int& numOfBytes,
+        unsigned long& frameIndex,
+        const bool copyNewFrameOnly,
+        const unsigned long previousFrameIndex
     )
     {
         if (m_isCapturing && frame)
         {
-            m_sampleGrabberCallback->getFrame(frame, frameIndex, numOfBytes, copyNewFrameOnly, previousFrameIndex);
+            m_sampleGrabberCallback->getFrame(frame, numOfBytes, frameIndex, copyNewFrameOnly, previousFrameIndex);
             return true;
         }
         else
