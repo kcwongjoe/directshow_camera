@@ -11,3 +11,8 @@ target_include_directories (${PROJECT_NAME}
     PUBLIC
         ./
 )
+
+# Group source files
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES ${DIRECTSHOW_CAMERA_SOURCE_FILES}
+)

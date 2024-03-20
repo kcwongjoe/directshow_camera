@@ -21,7 +21,7 @@ macro(install_opencv)
 endmacro()
 
 # Pre-build process: Copy opencv dll
-macro(prebuild_copy_opencv_dll PreBuildTarget CopyLocation)
+macro(prebuild_copy_opencv_dll PREBUILD_TARGET COPY_LOCATION)
 
     # Platform folder name
     if (CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -33,8 +33,8 @@ macro(prebuild_copy_opencv_dll PreBuildTarget CopyLocation)
     endif()
 
         # Copy opencv dll
-        add_custom_command(TARGET ${PreBuildTarget} PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OpenCV_DIR}/${PLATFORM_FOLDER}/vc16/bin/opencv_world490d.dll "${CopyLocation}/Debug/opencv_world490d.dll"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OpenCV_DIR}/${PLATFORM_FOLDER}/vc16/bin/opencv_world490.dll "${CopyLocation}/Release/opencv_world490.dll"
+        add_custom_command(TARGET ${PREBUILD_TARGET} PRE_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OpenCV_DIR}/${PLATFORM_FOLDER}/vc16/bin/opencv_world490d.dll "${COPY_LOCATION}/Debug/opencv_world490d.dll"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OpenCV_DIR}/${PLATFORM_FOLDER}/vc16/bin/opencv_world490.dll "${COPY_LOCATION}/Release/opencv_world490.dll"
         )
 endmacro()
