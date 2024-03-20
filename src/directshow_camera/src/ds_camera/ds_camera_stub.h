@@ -3,12 +3,12 @@
 #define DIRECTSHOW_CAMERA_STUB_H
 
 //************Content************
-#include <abstract_ds_camera.h>
-#include <ds_camera_properties.h>
-#include <ds_camera_stub_default.h>
-#include <ds_video_format.h>
+#include "ds_camera/abstract_ds_camera.h"
+#include "ds_camera/ds_camera_properties.h"
+#include "ds_camera/ds_camera_stub_default.h"
+#include "ds_camera/ds_video_format.h"
 
-#include <camera_device.h>
+#include "camera_device.h"
 
 #include <string>
 #include <vector>
@@ -79,7 +79,7 @@ namespace DirectShowCamera
 
         // Property
         void refreshProperties() override;
-        DirectShowCameraProperties* getProperties() const override;
+        std::shared_ptr<DirectShowCameraProperties> getProperties() const override;
 
         void resetDefault(bool asAuto = true) override;
         bool setValue(DirectShowCameraProperty* property, long value, bool isAuto) override;
@@ -94,7 +94,7 @@ namespace DirectShowCamera
 
     private:
         // Config
-        DirectShowCameraProperties* m_properties = NULL;
+        std::shared_ptr<DirectShowCameraProperties> m_properties = nullptr;
 
         std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;
         int m_currentVideoFormatIndex = -1;

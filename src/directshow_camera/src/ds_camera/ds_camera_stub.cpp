@@ -1,4 +1,4 @@
-#include<ds_camera_stub.h>
+#include "ds_camera/ds_camera_stub.h"
 
 namespace DirectShowCamera
 {
@@ -38,8 +38,7 @@ namespace DirectShowCamera
             m_currentVideoFormatIndex = -1;
 
             //Release Properties
-            delete m_properties;
-            m_properties = NULL;
+            m_properties.reset();
 
             m_isOpening = false;
         }
@@ -60,7 +59,7 @@ namespace DirectShowCamera
         m_isOpening = true;
 
         // Create camera properties
-        DirectShowCameraStubDefaultSetting::getProperties(&m_properties);
+        DirectShowCameraStubDefaultSetting::getProperties(m_properties);
 
         // Update video format
         updateVideoFormatList();
@@ -494,7 +493,7 @@ namespace DirectShowCamera
      * @brief Get properties
      * @return Return properties
     */
-    DirectShowCameraProperties* DirectShowCameraStub::getProperties() const
+    std::shared_ptr<DirectShowCameraProperties> DirectShowCameraStub::getProperties() const
     {
         return m_properties;
     }
@@ -506,7 +505,7 @@ namespace DirectShowCamera
      */
     void DirectShowCameraStub::resetDefault(bool asAuto)
     {
-        if (m_isOpening)
+        if (m_isOpening && m_properties != nullptr)
         {
             m_properties->resetDefault(NULL, asAuto);
         }

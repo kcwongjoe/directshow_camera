@@ -4,9 +4,9 @@
 
 //************Content************
 
-#include <ds_camera_utils.h>
+#include "ds_camera/ds_camera_utils.h"
 
-#include <ds_camera_property.h>
+#include "ds_camera/ds_camera_property.h"
 
 #include <string>
 #include <iostream>

@@ -2,7 +2,7 @@
 
 #include <uvc_camera.h>
 #include <iostream>
-#include <ds_camera_stub.h>
+#include "ds_camera/ds_camera_stub.h"
 
 using namespace DirectShowCamera;
 

@@ -3,10 +3,10 @@
 #define DIRECTSHOW_CAMERA_ABSTRACT_H
 
 //************Content************
-#include <ds_camera_properties.h>
-#include <ds_video_format.h>
+#include "ds_camera/ds_camera_properties.h"
+#include "ds_camera/ds_video_format.h"
 
-#include <camera_device.h>
+#include "camera_device.h"
 
 #include <string>
 #include <vector>
@@ -60,7 +60,7 @@ namespace DirectShowCamera
 
         // Property
         virtual void refreshProperties() = 0;
-        virtual DirectShowCameraProperties* getProperties() const = 0;
+        virtual std::shared_ptr<DirectShowCameraProperties> getProperties() const = 0;
 
         virtual void resetDefault(bool asAuto = true) = 0;
         virtual bool setValue(DirectShowCameraProperty* property, long value, bool isAuto) = 0;

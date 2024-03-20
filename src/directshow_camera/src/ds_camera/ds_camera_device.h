@@ -3,7 +3,7 @@
 #define DS_CAMERA_DEVICE_H
 
 //************Content************
-#include <ds_video_format.h>
+#include "ds_camera/ds_video_format.h"
 
 #include <string>
 #include <vector>

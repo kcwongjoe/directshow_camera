@@ -5,15 +5,18 @@
 //************Content************
 
 // Include
-#include <ds_camera_utils.h>
-#include <camera_device.h>
-#include <ds_camera.h>
-#include<abstract_ds_camera.h>
-#include <ds_libs_setting.h>
+#include "ds_camera/ds_camera_utils.h"
+#include "camera_device.h"
+#include "ds_camera/ds_camera.h"
+#include "ds_camera/abstract_ds_camera.h"
+#include "ds_camera/ds_libs_setting.h"
+
+#include "exceptions/camera_not_opened_exception.h"
+#include "exceptions/property_not_support_exception.h"
 
 // Include Opencv
 #ifdef HAS_OPENCV
-#include <cv_mat_convertor.h>
+#include "opencv_utils/cv_mat_convertor.h"
 #endif
 
 #include <string>
@@ -308,131 +311,157 @@ namespace DirectShowCamera
          * @brief Get directshow properties pointer. It is a advance option.
          * @return Return the directshow properties pointer
         */
-        DirectShowCameraProperties* getDirectShowProperties() const;
+        std::shared_ptr<DirectShowCameraProperties> getDirectShowProperties() const;
 
-        // Brightness
-        bool supportBrightness();
-        std::pair<long, long> getBrightnessRange();
-        long getBrightnessStep();
-        long getBrightness();
-        bool setBrightness(long value);
+        // ---Brightness---
+
+        /**
+         * @brief Retrun true if property brightness is supported.
+         * @return Retrun true if property brightness is supported.
+        */
+        bool supportBrightness() const;
+
+        /**
+         * @brief Get the range of the property - brightness
+         * @return Return (min,max). (0,0) return if error occurred.
+        */
+        std::pair<long, long> getBrightnessRange() const;
+
+        /**
+         * @brief Get the step of the property - Brightness.
+         * @return Return the step of the Brightness. -1 return if error occurred.
+        */
+        long getBrightnessStep() const;
+
+        /**
+         * @brief Get current brightness, from blanking(small value) to pure white(large value)
+         * @return Return current brightness. -1 return if error occurred.
+        */
+        long getBrightness() const;
+
+        /**
+         * @brief Set brightness
+         * @param value Value to be set
+         * @return Return true if success.
+        */
+        bool setBrightness(const long value);
 
         // Contrast
-        bool supportContrast();
-        std::pair<long, long> getContrastRange();
-        long getContrastStep();
-        long getContrast();
-        bool setContrast(long value);
+        bool supportContrast() const;
+        std::pair<long, long> getContrastRange() const;
+        long getContrastStep() const;
+        long getContrast() const;
+        bool setContrast(const long value);
 
         // Hue
-        bool supportHue();
-        std::pair<long, long> getHueRange();
-        long getHueStep();
-        long getHue();
-        bool setHue(long degree);
+        bool supportHue() const;
+        std::pair<long, long> getHueRange() const;
+        long getHueStep() const;
+        long getHue() const;
+        bool setHue(const long degree);
 
         // Saturation
-        bool supportSaturation();
-        std::pair<long, long> getSaturationRange();
-        long getSaturationStep();
-        long getSaturation();
-        bool setSaturation(long value);
+        bool supportSaturation() const;
+        std::pair<long, long> getSaturationRange() const;
+        long getSaturationStep() const;
+        long getSaturation() const;
+        bool setSaturation(const long value);
 
         // Sharpness
-        bool supportSharpness();
-        std::pair<long, long> getSharpnessRange();
-        long getSharpnessStep();
-        long getSharpness();
-        bool setSharpness(long value);
+        bool supportSharpness() const;
+        std::pair<long, long> getSharpnessRange() const;
+        long getSharpnessStep() const;
+        long getSharpness() const;
+        bool setSharpness(const long value);
 
         // Gamma
-        bool supportGamma();
-        std::pair<long, long> getGammaRange();
-        long getGammaStep();
-        long getGamma();
-        bool setGamma(long value);
+        bool supportGamma() const;
+        std::pair<long, long> getGammaRange() const;
+        long getGammaStep() const;
+        long getGamma() const;
+        bool setGamma(const long value);
 
         // Color Enable
-        bool supportColorEnable();
-        bool isColorEnable();
-        bool setColorEnable(bool isOn);
+        bool supportColorEnable() const;
+        bool isColorEnable() const;
+        bool setColorEnable(const bool isOn);
 
         // WhiteBalance
-        bool supportWhiteBalance();
-        std::pair<long, long> getWhiteBalanceRange();
-        long getWhiteBalanceStep();
-        long getWhiteBalance();
-        bool setWhiteBalance(long kelvin);
-        bool isAutoWhiteBalance();
-        bool setAutoWhiteBalance(bool setToAuto);
+        bool supportWhiteBalance() const;
+        std::pair<long, long> getWhiteBalanceRange() const;
+        long getWhiteBalanceStep() const;
+        long getWhiteBalance() const;
+        bool setWhiteBalance(const long kelvin);
+        bool isAutoWhiteBalance() const;
+        bool setAutoWhiteBalance(const bool setToAuto);
 
         // Backlight Compensation
-        bool supportBacklightCompensation();
-        bool isBacklightCompensation();
-        bool setBacklightCompensation(bool isOn);
+        bool supportBacklightCompensation() const;
+        bool isBacklightCompensation() const;
+        bool setBacklightCompensation(const bool isOn);
 
         // Gain
-        bool supportGain();
-        std::pair<long, long> getGainRange();
-        long getGainStep();
-        long getGain();
-        bool setGain(long value);
+        bool supportGain() const;
+        std::pair<long, long> getGainRange() const;
+        long getGainStep() const;
+        long getGain() const;
+        bool setGain(const long value);
 
         // Pan
-        bool supportPan();
-        std::pair<long, long> getPanRange();
-        long getPanStep();
-        long getPan();
-        bool setPan(long value);
+        bool supportPan() const;
+        std::pair<long, long> getPanRange() const;
+        long getPanStep() const;
+        long getPan() const;
+        bool setPan(const long value);
 
         // Tilt
-        bool supportTilt();
-        std::pair<long, long> getTiltRange();
-        long getTiltStep();
-        long getTilt();
-        bool setTilt(long degree);
+        bool supportTilt() const;
+        std::pair<long, long> getTiltRange() const;
+        long getTiltStep() const;
+        long getTilt() const;
+        bool setTilt(const long degree);
 
         // Roll
-        bool supportRoll();
-        std::pair<long, long> getRollRange();
-        long getRollStep();
-        long getRoll();
-        bool setRoll(long value);
+        bool supportRoll() const;
+        std::pair<long, long> getRollRange() const;
+        long getRollStep() const;
+        long getRoll() const;
+        bool setRoll(const long value);
 
         // Zoom
-        bool supportZoom();
-        std::pair<long, long> getZoomRange();
-        long getZoomStep();
-        long getZoom();
-        bool setZoom(long millimeter);
+        bool supportZoom() const;
+        std::pair<long, long> getZoomRange() const;
+        long getZoomStep() const;
+        long getZoom() const;
+        bool setZoom(const long millimeter);
 
         // Exposure
-        bool supportExposure();
-        std::pair<double, double> getExposureRange();
-        double getExposure();
-        bool setExposure(double value);
-        std::vector<double> getPossibleExposureValues();
-        int getExposureIndex();
-        bool isAutoExposure();
-        bool setAutoExposure(bool setToAuto);
+        bool supportExposure() const;
+        std::pair<double, double> getExposureRange() const;
+        double getExposure() const;
+        bool setExposure(const double value);
+        std::vector<double> getPossibleExposureValues() const;
+        int getExposureIndex() const;
+        bool isAutoExposure() const;
+        bool setAutoExposure(const bool setToAuto);
 
         // Iris
-        bool supportIris();
-        std::pair<long, long> getIrisRange();
-        long getIrisStep();
-        long getIris();
-        bool setIris(long value);
-        bool isAutoIris();
-        bool setAutoIris(bool setToAuto);
+        bool supportIris() const;
+        std::pair<long, long> getIrisRange() const;
+        long getIrisStep() const;
+        long getIris() const;
+        bool setIris(const long value);
+        bool isAutoIris() const;
+        bool setAutoIris(const bool setToAuto);
 
         // Focus
-        bool supportFocus();
-        std::pair<long, long> getFocusRange();
-        long getFocusStep();
-        long getFocus();
-        bool setFocus(long value);
-        bool isAutoFocus();
-        bool setAutoFocus(bool setToAuto);
+        bool supportFocus() const;
+        std::pair<long, long> getFocusRange() const;
+        long getFocusStep() const;
+        long getFocus() const;
+        bool setFocus(const long value);
+        bool isAutoFocus() const;
+        bool setAutoFocus(const bool setToAuto);
 
     /**********************Private********************************/
     private:
@@ -458,90 +487,63 @@ namespace DirectShowCamera
         // Utils
         void copyError(bool success);
         int confirmDegreeRange(int degree);
-        double exposureConvertion(long dsValue);
-        long exposureConvertion(double second);
+        double exposureConvertion(const long dsValue) const;
+        long exposureConvertion(const double second) const;
 
         /**
          * @brief A template to return property whether support.
          * @tparam Func bool()
-         * @param func Lambda function to return the property whether support.
-         * @param errorDescription Error description, e.g. "Error on supportExposure()"
+         * @param func[in] Lambda function to return the property whether support.
+         * @param errorDescription[in] Error description, e.g. "Error on supportExposure()"
          * @return Return true if property support.
         */
-        template <typename Func> bool supportPropertyTemplate(Func func, std::string errorDescription)
+        bool supportPropertyTemplate(
+            const DirectShowCameraProperty& property
+        ) const
         {
-            bool result = checkOpenDecorator(
-                [func]()
-                {
-                    return func();				
-                },
-                errorDescription
-            );
+            // Throw if camera is not opened
+            if (!isOpened()) throw CameraNotOpenedException();
 
-            return result;
+            // Get property support
+            return property.isSupported();
         }
 
         /**
          * @brief A template for getPropertyRange()
          * @tparam Func bool()
-         * @param func Lambda function to return the property or property range or state. Note that ds_error will not be copied if return false, so do copyError() in the lambda function.
-         * @param supportProperty Support property?
-         * @param errorDescription Error description, e.g. "Error on getExposure()"
-         * @param notSupportErrorString Not support error string, e.g. "Exposure is not support."
-         * @return Return (min, max). (0,0) return if error occurred.
+         * @param func[in] Lambda function to return the property or property range or state. Note that ds_error will not be copied if return false, so do copyError() in the lambda function.
+         * @param property[in] property
+         * @param propertyName[in] (Option) Property name for error description. Default as "".
+         * @return Return false if error occurred.
         */
-        template <typename Func> bool handlePropertyTemplate(Func func, bool supportProperty, std::string errorDescription, std::string notSupportErrorString)
+        template <typename Func> bool getPropertyTemplate(
+            const Func func,
+            const DirectShowCameraProperty& property,
+            const std::string propertyName= ""
+        ) const
         {
-            bool success = checkOpenDecorator(
-                [this, func, supportProperty, notSupportErrorString]()
-                {
-                    if (supportProperty)
-                    {
-                        func();
-                        return true;					
-                    }
-                    else
-                    {
-                        m_errorString = notSupportErrorString;
-                        return false;
-                    }
-                },
-                errorDescription
-            );
+            // Throw if camera is not opened
+            if (!isOpened()) throw CameraNotOpenedException();
 
-            return success;
-        }
-
-        /**
-         * @brief A decorator to check whether opening
-         * @tparam Func bool()
-         * @param func Lambda function to be processed if opened. Note that ds_error will not be copied if return false, so do copyError() in the lambda function.
-         * @param errorDescription Error description, e.g. "Error on getExposure()"
-         * @return Return true if success
-        */
-        template <typename Func> bool checkOpenDecorator(Func func, std::string errorDescription = "")
-        {
-            if (isOpened())
+            // Throw if property is not support
+            if (!property.isSupported())
             {
-                bool success = func();
-                return success;
-            }
-            else
-            {
-                if (!errorDescription.empty())
+                if (propertyName.empty())
                 {
-                    m_errorString = errorDescription + " : ";
+                    throw PropertyNotSupportException(property.getName());
                 }
                 else
                 {
-                    m_errorString = "";
+                    throw PropertyNotSupportException(propertyName);
                 }
-                m_errorString += "Camera is not opened.";
-                return false;
+
             }
+
+            // Get property
+            func();
+
+            return true;
         }
-
-
     };
 }
 

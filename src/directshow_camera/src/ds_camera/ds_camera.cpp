@@ -1,4 +1,4 @@
-#include <ds_camera.h>
+#include "ds_camera/ds_camera.h"
 
 namespace DirectShowCamera
 {
@@ -76,8 +76,7 @@ namespace DirectShowCamera
             DirectShowCameraUtils::SafeRelease(&m_captureGraphBuilder);
 
             //Release Properties
-            delete m_property;
-            m_property = NULL;
+            m_property.reset();
 
             m_grabberMediaSubType = MEDIASUBTYPE_None;
 
@@ -309,8 +308,8 @@ namespace DirectShowCamera
                 m_isOpening = true;
 
                 // Get property
-                if (m_property != NULL) delete m_property;
-                m_property = new DirectShowCameraProperties(m_videoInputFilter, &m_errorString);
+                if (m_property != nullptr) m_property.reset();
+                m_property = std::make_shared<DirectShowCameraProperties>(m_videoInputFilter, &m_errorString);
 
                 // Update video format
                 updateVideoFormatList();
@@ -915,7 +914,7 @@ namespace DirectShowCamera
      */
     void DirectShowCamera::refreshProperties()
     {
-        if (m_isOpening && m_property != NULL)
+        if (m_isOpening && m_property != nullptr)
         {
             m_property->refresh(m_videoInputFilter, &m_errorString);
         }
@@ -925,7 +924,7 @@ namespace DirectShowCamera
      * @brief Get properties
      * @return Return properties
     */
-    DirectShowCameraProperties* DirectShowCamera::getProperties() const
+    std::shared_ptr<DirectShowCameraProperties> DirectShowCamera::getProperties() const
     {
         return m_property;
     }
@@ -937,7 +936,7 @@ namespace DirectShowCamera
      */
     void DirectShowCamera::resetDefault(bool asAuto)
     {
-        if (m_videoInputFilter != NULL)
+        if (m_videoInputFilter != NULL && m_property != nullptr)
         {
             m_property->resetDefault(m_videoInputFilter, asAuto);
         }

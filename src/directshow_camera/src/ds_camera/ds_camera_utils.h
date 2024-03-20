@@ -11,7 +11,7 @@
 #include <windows.h>
 #include <windef.h>
 
-#include <ds_guid.h>
+#include "ds_camera/ds_guid.h"
 #include <atlconv.h>
 
 // Direct show is native code, complier it in unmanaged

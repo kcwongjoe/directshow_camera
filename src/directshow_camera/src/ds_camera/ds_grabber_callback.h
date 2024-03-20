@@ -9,7 +9,7 @@
 #include <chrono>
 
 #include <windows.h>
-#include <ds_guid.h>
+#include "ds_camera/ds_guid.h"
 
 namespace DirectShowCamera
 {

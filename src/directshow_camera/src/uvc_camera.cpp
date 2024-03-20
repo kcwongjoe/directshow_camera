@@ -295,109 +295,84 @@ namespace DirectShowCamera
         m_directShowCamera->resetDefault(asAuto);
     }
 
-    DirectShowCameraProperties* UVCCamera::getDirectShowProperties() const
+    std::shared_ptr<DirectShowCameraProperties> UVCCamera::getDirectShowProperties() const
     {
         return m_directShowCamera->getProperties();
     }
 
 #pragma region Brightness
 
-    /**
-     * @brief Retrun true if property brightness is supported.
-     * @return Retrun true if property brightness is supported.
-    */
-    bool UVCCamera::supportBrightness()
+    bool UVCCamera::supportBrightness() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getBrightness()->isSupported();
-            },
-            "Error on supportBrightness()"
-                );
+        const auto brightness = m_directShowCamera->getProperties()->getBrightness();
+        return supportPropertyTemplate(*brightness);
     }
 
-    /**
-     * @brief Get the range of the property - brightness
-     * @return Return (min,max). (0,0) return if error occurred.
-    */
-    std::pair<long, long> UVCCamera::getBrightnessRange()
+    std::pair<long, long> UVCCamera::getBrightnessRange() const
     {
+        const auto brightness = m_directShowCamera->getProperties()->getBrightness();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &brightness]()
             {
-                result = m_directShowCamera->getProperties()->getBrightness()->getRange();
+                result = brightness->getRange();
             },
-            supportBrightness(),
-                "Error on getBrightnessRange()",
-                "Brightness is not supported."
-                );
+            *brightness
+        );
 
         return result;
     }
 
-    /**
-     * @brief Get the step of the property - Brightness.
-     * @return Return the step of the Brightness. -1 return if error occurred.
-    */
-    long UVCCamera::getBrightnessStep()
+    long UVCCamera::getBrightnessStep() const
     {
+        const auto brightness = m_directShowCamera->getProperties()->getBrightness();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &brightness]()
             {
-                result = m_directShowCamera->getProperties()->getBrightness()->getStep();
+                result = brightness->getStep();
             },
-            supportBrightness(),
-                "Error on getBrightnessStep()",
-                "Brightness is not supported."
-                );
+            *brightness
+        );
 
         return result;
     }
 
-    /**
-     * @brief Get current brightness, from blanking(small value) to pure white(large value)
-     * @return Return current brightness. -1 return if error occurred.
-    */
-    long UVCCamera::getBrightness()
+    long UVCCamera::getBrightness() const
     {
+        const auto brightness = m_directShowCamera->getProperties()->getBrightness();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &brightness]()
             {
-                result = m_directShowCamera->getProperties()->getBrightness()->getValue();
+                result = brightness->getValue();
             },
-            supportBrightness(),
-                "Error on getBrightness()",
-                "Brightness is not supported."
-                );
+            *brightness
+        );
 
         if (!success) result = -1;
 
         return result;
     }
 
-    /**
-     * @brief Set brightness
-     * @param value Value to be set
-     * @return Return true if success.
-    */
-    bool UVCCamera::setBrightness(long value)
+    bool UVCCamera::setBrightness(const long value)
     {
+        const auto brightness = m_directShowCamera->getProperties()->getBrightness();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &brightness]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getBrightness(), value, false);
+                result = m_directShowCamera->setValue(brightness, value, false);
 
                 copyError(result);
             },
-            supportBrightness(),
-                "Error on setBrightness()",
-                "Brightness is not supported."
-                );
+            *brightness
+        );
+
         success = success && result;
 
         return success;
@@ -411,33 +386,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property contrast is supported.
      * @return Retrun true if property contrast is supported.
     */
-    bool UVCCamera::supportContrast()
+    bool UVCCamera::supportContrast() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getContrast()->isSupported();
-            },
-            "Error on supportContrast()"
-                );
+        const auto contrast = m_directShowCamera->getProperties()->getContrast();
+
+        return supportPropertyTemplate(*contrast);
     }
 
     /**
      * @brief Get the range of the property - contrast
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getContrastRange()
+    std::pair<long, long> UVCCamera::getContrastRange() const
     {
+        const auto contrast = m_directShowCamera->getProperties()->getContrast();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &contrast]()
             {
-                result = m_directShowCamera->getProperties()->getContrast()->getRange();
+                result = contrast->getRange();
             },
-            supportContrast(),
-                "Error on getContrastRange()",
-                "Contrast is not supported."
-                );
+            *contrast
+        );
 
         return result;
     }
@@ -446,18 +417,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Contrast.
      * @return Return the step of the Contrast. -1 return if error occurred.
     */
-    long UVCCamera::getContrastStep()
+    long UVCCamera::getContrastStep() const
     {
+        const auto contrast = m_directShowCamera->getProperties()->getContrast();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &contrast]()
             {
-                result = m_directShowCamera->getProperties()->getContrast()->getStep();
+                result = contrast->getStep();
             },
-            supportContrast(),
-                "Error on getContrastStep()",
-                "Contrast is not supported."
-                );
+            *contrast
+        );
 
         return result;
     }
@@ -466,18 +437,18 @@ namespace DirectShowCamera
      * @brief Get current contrast
      * @return Return current contrast. -1 return if error occurred.
     */
-    long UVCCamera::getContrast()
+    long UVCCamera::getContrast() const
     {
+        const auto contrast = m_directShowCamera->getProperties()->getContrast();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &contrast]()
             {
-                result = m_directShowCamera->getProperties()->getContrast()->getValue();
+                result = contrast->getValue();
             },
-            supportContrast(),
-                "Error on getContrast()",
-                "Contrast is not supported."
-                );
+            * contrast
+        );
 
         if (!success) result = -1;
 
@@ -489,20 +460,20 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setContrast(long value)
+    bool UVCCamera::setContrast(const long value)
     {
+        const auto contrast = m_directShowCamera->getProperties()->getContrast();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &contrast]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getContrast(), value, false);
+                result = m_directShowCamera->setValue(contrast, value, false);
 
                 copyError(result);
-            },
-            supportContrast(),
-                "Error on setContrast()",
-                "Contrast is not supported."
-                );
+            }, 
+            *contrast
+        );
         success = success && result;
 
         return success;
@@ -516,33 +487,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property hue is supported.
      * @return Retrun true if property hue is supported.
     */
-    bool UVCCamera::supportHue()
+    bool UVCCamera::supportHue() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getHue()->isSupported();
-            },
-            "Error on supportHue()"
-                );
+        const auto hue = m_directShowCamera->getProperties()->getHue();
+
+        return supportPropertyTemplate(*hue);
     }
 
     /**
      * @brief Get the range of the property - hue
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getHueRange()
+    std::pair<long, long> UVCCamera::getHueRange() const
     {
+        const auto hue = m_directShowCamera->getProperties()->getHue();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &hue]()
             {
-                result = m_directShowCamera->getProperties()->getHue()->getRange();
+                result = hue->getRange();
             },
-            supportHue(),
-                "Error on getHueRange()",
-                "Hue is not supported."
-                );
+            *hue
+        );
 
         return result;
     }
@@ -551,18 +518,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Hue.
      * @return Return the step of the Hue. -1 return if error occurred.
     */
-    long UVCCamera::getHueStep()
+    long UVCCamera::getHueStep() const
     {
+        const auto hue = m_directShowCamera->getProperties()->getHue();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &hue]()
             {
-                result = m_directShowCamera->getProperties()->getHue()->getStep();
+                result = hue->getStep();
             },
-            supportHue(),
-                "Error on getHueStep()",
-                "Hue is not supported."
-                );
+            *hue
+        );
 
         return result;
     }
@@ -571,18 +538,18 @@ namespace DirectShowCamera
      * @brief Get current hue
      * @return Return current hue.
     */
-    long UVCCamera::getHue()
+    long UVCCamera::getHue() const
     {
+        const auto hue = m_directShowCamera->getProperties()->getHue();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &hue]()
             {
-                result = m_directShowCamera->getProperties()->getHue()->getValue();
+                result = hue->getValue();
             },
-            supportHue(),
-                "Error on getHue()",
-                "Hue is not supported."
-                );
+            *hue
+        );
 
         return result;
     }
@@ -592,21 +559,21 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setHue(long degree)
+    bool UVCCamera::setHue(const long degree)
     {
+        const auto hue = m_directShowCamera->getProperties()->getHue();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, degree, &result]()
+        bool success = getPropertyTemplate(
+            [this, degree, &result, &hue]()
             {
                 long value = confirmDegreeRange(degree);
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getHue(), value, false);
+                result = m_directShowCamera->setValue(hue, value, false);
 
                 copyError(result);
             },
-            supportHue(),
-                "Error on setHue()",
-                "Hue is not supported."
-                );
+            *hue
+        );
         success = success && result;
 
         return success;
@@ -620,33 +587,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property saturation is supported.
      * @return Retrun true if property saturation is supported.
     */
-    bool UVCCamera::supportSaturation()
+    bool UVCCamera::supportSaturation() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getSaturation()->isSupported();
-            },
-            "Error on supportSaturation()"
-                );
+        const auto saturation = m_directShowCamera->getProperties()->getSaturation();
+
+        return supportPropertyTemplate(*saturation);
     }
 
     /**
      * @brief Get the range of the property - saturation
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getSaturationRange()
+    std::pair<long, long> UVCCamera::getSaturationRange() const
     {
+        const auto saturation = m_directShowCamera->getProperties()->getSaturation();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &saturation]()
             {
-                result = m_directShowCamera->getProperties()->getSaturation()->getRange();
+                result = saturation->getRange();
             },
-            supportSaturation(),
-                "Error on getSaturationRange()",
-                "Saturation is not supported."
-                );
+            *saturation
+        );
 
         return result;
     }
@@ -655,18 +618,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Saturation.
      * @return Return the step of the Saturation. -1 return if error occurred.
     */
-    long UVCCamera::getSaturationStep()
+    long UVCCamera::getSaturationStep() const
     {
+        const auto saturation = m_directShowCamera->getProperties()->getSaturation();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &saturation]()
             {
-                result = m_directShowCamera->getProperties()->getSaturation()->getStep();
+                result = saturation->getStep();
             },
-            supportSaturation(),
-                "Error on getSaturationStep()",
-                "Saturation is not supported."
-                );
+            *saturation
+        );
 
         return result;
     }
@@ -675,18 +638,18 @@ namespace DirectShowCamera
      * @brief Get current saturation
      * @return Return current saturation. -1 return if error occurred.
     */
-    long UVCCamera::getSaturation()
+    long UVCCamera::getSaturation() const
     {
+        const auto saturation = m_directShowCamera->getProperties()->getSaturation();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &saturation]()
             {
-                result = m_directShowCamera->getProperties()->getSaturation()->getValue();
+                result = saturation->getValue();
             },
-            supportSaturation(),
-                "Error on getSaturation()",
-                "Saturation is not supported."
-                );
+            *saturation
+        );
 
         if (!success) result = -1;
 
@@ -698,20 +661,20 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setSaturation(long value)
+    bool UVCCamera::setSaturation(const long value)
     {
+        const auto saturation = m_directShowCamera->getProperties()->getSaturation();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &saturation]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getSaturation(), value, false);
+                result = m_directShowCamera->setValue(saturation, value, false);
 
                 copyError(result);
             },
-            supportSaturation(),
-                "Error on setSaturation()",
-                "Saturation is not supported."
-                );
+            *saturation
+        );
         success = success && result;
 
         return success;
@@ -725,33 +688,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property sharpness is supported.
      * @return Retrun true if property sharpness is supported.
     */
-    bool UVCCamera::supportSharpness()
+    bool UVCCamera::supportSharpness() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getSharpness()->isSupported();
-            },
-            "Error on supportSharpness()"
-                );
+        const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
+
+        return supportPropertyTemplate(*sharpness);
     }
 
     /**
      * @brief Get the range of the property - sharpness
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getSharpnessRange()
+    std::pair<long, long> UVCCamera::getSharpnessRange() const
     {
+        const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &sharpness]()
             {
-                result = m_directShowCamera->getProperties()->getSharpness()->getRange();
+                result = sharpness->getRange();
             },
-            supportSharpness(),
-                "Error on getSharpnessRange()",
-                "Sharpness is not supported."
-                );
+            *sharpness
+        );
 
         return result;
     }
@@ -760,18 +719,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Sharpness.
      * @return Return the step of the Sharpness. -1 return if error occurred.
     */
-    long UVCCamera::getSharpnessStep()
+    long UVCCamera::getSharpnessStep() const
     {
+        const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &sharpness]()
             {
-                result = m_directShowCamera->getProperties()->getSharpness()->getStep();
+                result = sharpness->getStep();
             },
-            supportSharpness(),
-                "Error on getSharpnessStep()",
-                "Sharpness is not supported."
-                );
+            *sharpness
+        );
 
         return result;
     }
@@ -780,18 +739,18 @@ namespace DirectShowCamera
      * @brief Get current sharpness
      * @return Return current sharpness. -1 return if error occurred.
     */
-    long UVCCamera::getSharpness()
+    long UVCCamera::getSharpness() const
     {
+        const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &sharpness]()
             {
-                result = m_directShowCamera->getProperties()->getSharpness()->getValue();
+                result = sharpness->getValue();
             },
-            supportSharpness(),
-                "Error on getSharpness()",
-                "Sharpness is not supported."
-                );
+            *sharpness
+        );
 
         if (!success) result = -1;
 
@@ -803,20 +762,20 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setSharpness(long value)
+    bool UVCCamera::setSharpness(const long value)
     {
+        const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &sharpness]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getSharpness(), value, false);
+                result = m_directShowCamera->setValue(sharpness, value, false);
 
                 copyError(result);
             },
-            supportSharpness(),
-                "Error on setSharpness()",
-                "Sharpness is not supported."
-                );
+            *sharpness
+        );
         success = success && result;
 
         return success;
@@ -830,33 +789,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property gamma is supported.
      * @return Retrun true if property gamma is supported.
     */
-    bool UVCCamera::supportGamma()
+    bool UVCCamera::supportGamma() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getGamma()->isSupported();
-            },
-            "Error on supportGamma()"
-                );
+        const auto gamma = m_directShowCamera->getProperties()->getGamma();
+
+        return supportPropertyTemplate(*gamma);
     }
 
     /**
      * @brief Get the range of the property - gamma
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getGammaRange()
+    std::pair<long, long> UVCCamera::getGammaRange() const
     {
+        const auto gamma = m_directShowCamera->getProperties()->getGamma();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &gamma]()
             {
-                result = m_directShowCamera->getProperties()->getGamma()->getRange();
+                result = gamma->getRange();
             },
-            supportGamma(),
-                "Error on getGammaRange()",
-                "Gamma is not supported."
-                );
+            *gamma
+        );
 
         return result;
     }
@@ -865,18 +820,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Gamma.
      * @return Return the step of the Gamma. -1 return if error occurred.
     */
-    long UVCCamera::getGammaStep()
+    long UVCCamera::getGammaStep() const
     {
+        const auto gamma = m_directShowCamera->getProperties()->getGamma();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &gamma]()
             {
-                result = m_directShowCamera->getProperties()->getGamma()->getStep();
+                result = gamma->getStep();
             },
-            supportGamma(),
-                "Error on getGammaStep()",
-                "Gamma is not supported."
-                );
+            *gamma
+        );
 
         return result;
     }
@@ -885,18 +840,18 @@ namespace DirectShowCamera
      * @brief Get current gamma
      * @return Return current gamma. -1 return if error occurred.
     */
-    long UVCCamera::getGamma()
+    long UVCCamera::getGamma() const
     {
+        const auto gamma = m_directShowCamera->getProperties()->getGamma();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &gamma]()
             {
-                result = m_directShowCamera->getProperties()->getGamma()->getValue();
+                result = gamma->getValue();
             },
-            supportGamma(),
-                "Error on getGamma()",
-                "Gamma is not supported."
-                );
+            *gamma
+        );
 
         if (!success) result = -1;
 
@@ -908,22 +863,23 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setGamma(long value)
+    bool UVCCamera::setGamma(const long value)
     {
+        const auto gamma = m_directShowCamera->getProperties()->getGamma();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &gamma]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getGamma(), value, false);
+                result = m_directShowCamera->setValue(gamma, value, false);
 
                 copyError(result);
 
                 return result;
             },
-            supportGamma(),
-                "Error on setGamma()",
-                "Gamma is not supported."
-                );
+            *gamma
+        );
+
         success = success && result;
 
         return success;
@@ -937,33 +893,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property Color Enable is supported.
      * @return Retrun true if property Color Enable is supported.
     */
-    bool UVCCamera::supportColorEnable()
+    bool UVCCamera::supportColorEnable() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getColorEnable()->isSupported();
-            },
-            "Error on supportColorEnable()"
-                );
+        const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
+
+        return supportPropertyTemplate(*colorEnable);
     }
 
     /**
      * @brief Get current color enable
      * @return Return current color enable. -1 return if error occurred.
     */
-    bool UVCCamera::isColorEnable()
+    bool UVCCamera::isColorEnable() const
     {
+        const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &colorEnable]()
             {
-                result = m_directShowCamera->getProperties()->getColorEnable()->getValue();
+                result = colorEnable->getValue();
             },
-            supportColorEnable(),
-                "Error on isColorEnable()",
-                "ColorEnable is not supported."
-                );
+            *colorEnable
+        );
 
         bool isColorEnable = result == 0 ? false : true; // 0(off), 1(on)
         if (!success) isColorEnable = false;
@@ -976,25 +928,26 @@ namespace DirectShowCamera
      * @param isOn Color Enable On = true
      * @return Return true if success.
     */
-    bool UVCCamera::setColorEnable(bool isOn)
+    bool UVCCamera::setColorEnable(const bool isOn)
     {
+        const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, isOn, &result]()
+        bool success = getPropertyTemplate(
+            [this, isOn, &result, &colorEnable]()
             {
                 // Get value
-                std::pair<long, long> range = m_directShowCamera->getProperties()->getContrast()->getRange();
+                std::pair<long, long> range = colorEnable->getRange();
                 long value = isOn ? range.second : range.first; // 0(off), 1(on)
 
                 // Set
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getContrast(), value, false);
+                result = m_directShowCamera->setValue(colorEnable, value, false);
 
                 copyError(result);
             },
-            supportColorEnable(),
-                "Error on setColorEnable()",
-                "Color Enable is not supported."
-                );
+            *colorEnable
+        );
+
         success = success && result;
 
         return success;
@@ -1008,33 +961,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property white balance is supported.
      * @return Retrun true if property white balance is supported.
     */
-    bool UVCCamera::supportWhiteBalance()
+    bool UVCCamera::supportWhiteBalance() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getWhiteBalance()->isSupported();
-            },
-            "Error on supportWhiteBalance()"
-                );
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
+        return supportPropertyTemplate(*whiteBalance);
     }
 
     /**
      * @brief Get the range of the property - white balance in degree kelvin
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getWhiteBalanceRange()
+    std::pair<long, long> UVCCamera::getWhiteBalanceRange() const
     {
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &whiteBalance]()
             {
-                result = m_directShowCamera->getProperties()->getWhiteBalance()->getRange();
+                result = whiteBalance->getRange();
             },
-            supportWhiteBalance(),
-                "Error on getWhiteBalanceRange()",
-                "WhiteBalance is not supported."
-                );
+            *whiteBalance
+        );
 
         return result;
     }
@@ -1043,18 +992,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - White Balance.
      * @return Return the step of the White Balance. -1 return if error occurred.
     */
-    long UVCCamera::getWhiteBalanceStep()
+    long UVCCamera::getWhiteBalanceStep() const
     {
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &whiteBalance]()
             {
-                result = m_directShowCamera->getProperties()->getWhiteBalance()->getStep();
+                result = whiteBalance->getStep();
             },
-            supportWhiteBalance(),
-                "Error on getWhiteBalanceStep()",
-                "WhiteBalance is not supported."
-                );
+            *whiteBalance
+        );
 
         return result;
     }
@@ -1063,18 +1012,18 @@ namespace DirectShowCamera
      * @brief Get current white balance in degree kelvin
      * @return Return current white balance. -1 return if error occurred.
     */
-    long UVCCamera::getWhiteBalance()
+    long UVCCamera::getWhiteBalance() const
     {
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &whiteBalance]()
             {
-                result = m_directShowCamera->getProperties()->getWhiteBalance()->getValue();
+                result = whiteBalance->getValue();
             },
-            supportWhiteBalance(),
-                "Error on getWhiteBalance()",
-                "WhiteBalance is not supported."
-                );
+            *whiteBalance
+        );
 
         if (!success) result = -1;
 
@@ -1086,20 +1035,21 @@ namespace DirectShowCamera
      * @param kelvin Value to be set in degree kelvin
      * @return Return true if success.
     */
-    bool UVCCamera::setWhiteBalance(long kelvin)
+    bool UVCCamera::setWhiteBalance(const long kelvin)
     {
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, kelvin, &result]()
+        bool success = getPropertyTemplate(
+            [this, kelvin, &result, &whiteBalance]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getWhiteBalance(), kelvin, false);
+                result = m_directShowCamera->setValue(whiteBalance, kelvin, false);
 
                 copyError(result);
             },
-            supportWhiteBalance(),
-                "Error on setWhiteBalance()",
-                "WhiteBalance is not supported."
-                );
+            *whiteBalance
+        );
+
         success = success && result;
 
         return success;
@@ -1109,18 +1059,19 @@ namespace DirectShowCamera
      * @brief Retrun true if white balance is auto mode, return false if it is manual mode.
      * @return Retrun true if white balance is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoWhiteBalance()
+    bool UVCCamera::isAutoWhiteBalance() const
     {
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
         bool isAuto = false;
-        bool success = handlePropertyTemplate(
-            [this, &isAuto]()
+        bool success = getPropertyTemplate(
+            [this, &isAuto, &whiteBalance]()
             {
-                isAuto = m_directShowCamera->getProperties()->getWhiteBalance()->isAuto();
+                isAuto = whiteBalance->isAuto();
             },
-            supportWhiteBalance(),
-                "Error on isAutoWhiteBalance()",
-                "WhiteBalance is not supported."
-                );
+            *whiteBalance,
+            "AutoWhiteBalance"
+        );
 
         if (!success) isAuto = false;
 
@@ -1132,19 +1083,21 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoWhiteBalance(bool setToAuto)
+    bool UVCCamera::setAutoWhiteBalance(const bool setToAuto)
     {
+        const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, setToAuto, &result]()
+        bool success = getPropertyTemplate(
+            [this, setToAuto, &result, &whiteBalance]()
             {
-                if (setToAuto && !(m_directShowCamera->getProperties()->getWhiteBalance()->supportAutoMode()))
+                if (setToAuto && !(whiteBalance->supportAutoMode()))
                 {
                     // Not support auto mode
                     result = false;
                     m_errorString = "White Balance does not support auto mode.";
                 }
-                else if (!setToAuto && !(m_directShowCamera->getProperties()->getWhiteBalance()->supportManualMode()))
+                else if (!setToAuto && !(whiteBalance->supportManualMode()))
                 {
                     // Not support manual mode
                     result = false;
@@ -1160,10 +1113,8 @@ namespace DirectShowCamera
                     copyError(result);
                 }
             },
-            supportWhiteBalance(),
-                "Error on setAutoWhiteBalance()",
-                "WhiteBalance is not supported."
-                );
+            *whiteBalance
+        );
         success = success && result;
 
         return success;
@@ -1177,15 +1128,11 @@ namespace DirectShowCamera
      * @brief Retrun true if property backlight compensation is supported.
      * @return Retrun true if property backlight compensation is supported.
     */
-    bool UVCCamera::supportBacklightCompensation()
+    bool UVCCamera::supportBacklightCompensation() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getBacklightCompensation()->isSupported();
-            },
-            "Error on supportBacklightCompensation()"
-                );
+        const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
+
+        return supportPropertyTemplate(*backlightCompensation);
     }
 
 
@@ -1193,18 +1140,18 @@ namespace DirectShowCamera
      * @brief Get current backlight compensation
      * @return Return current backlight compensation. -1 return if error occurred.
     */
-    bool UVCCamera::isBacklightCompensation()
+    bool UVCCamera::isBacklightCompensation() const
     {
+        const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &backlightCompensation]()
             {
-                result = m_directShowCamera->getProperties()->getBacklightCompensation()->getValue();
+                result = backlightCompensation->getValue();
             },
-            supportBacklightCompensation(),
-                "Error on isBacklightCompensation()",
-                "BacklightCompensation is not supported."
-                );
+            *backlightCompensation
+        );
 
         bool isBacklightCompensation = result == 0 ? false : true; // 0(off), 1(on)
         if (!success) isBacklightCompensation = false;
@@ -1217,23 +1164,24 @@ namespace DirectShowCamera
      * @param isOn Backlight Compensation On = true
      * @return Return true if success.
     */
-    bool UVCCamera::setBacklightCompensation(bool isOn)
+    bool UVCCamera::setBacklightCompensation(const bool isOn)
     {
+        const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, isOn, &result]()
+        bool success = getPropertyTemplate(
+            [this, isOn, &result, &backlightCompensation]()
             {
                 // Get value
                 long value = isOn ? 1 : 0; // 0(off), 1(on)
 
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getBacklightCompensation(), value, false);
+                result = m_directShowCamera->setValue(backlightCompensation, value, false);
 
                 copyError(result);
             },
-            supportBacklightCompensation(),
-                "Error on setBacklightCompensation()",
-                "BacklightCompensation is not supported."
-                );
+            *backlightCompensation
+        );
+
         success = success && result;
 
         return success;
@@ -1247,33 +1195,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property gain is supported.
      * @return Retrun true if property gain is supported.
     */
-    bool UVCCamera::supportGain()
+    bool UVCCamera::supportGain() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getGain()->isSupported();
-            },
-            "Error on supportGain()"
-                );
+        const auto gain = m_directShowCamera->getProperties()->getGain();
+
+        return supportPropertyTemplate(*gain);
     }
 
     /**
      * @brief Get the range of the property - gain
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getGainRange()
+    std::pair<long, long> UVCCamera::getGainRange() const
     {
+        const auto gain = m_directShowCamera->getProperties()->getGain();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &gain]()
             {
-                result = m_directShowCamera->getProperties()->getGain()->getRange();
+                result = gain->getRange();
             },
-            supportGain(),
-                "Error on getGainRange()",
-                "Gain is not supported."
-                );
+            *gain
+        );
 
         return result;
     }
@@ -1282,18 +1226,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - gain.
      * @return Return the step of the gain. -1 return if error occurred.
     */
-    long UVCCamera::getGainStep()
+    long UVCCamera::getGainStep() const
     {
+        const auto gain = m_directShowCamera->getProperties()->getGain();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &gain]()
             {
-                result = m_directShowCamera->getProperties()->getGain()->getStep();
+                result = gain->getStep();
             },
-            supportGain(),
-                "Error on getGainStep()",
-                "Gain is not supported."
-                );
+            *gain
+        );
 
         return result;
     }
@@ -1302,18 +1246,18 @@ namespace DirectShowCamera
      * @brief Get current gain
      * @return Return current gain. -1 return if error occurred.
     */
-    long UVCCamera::getGain()
+    long UVCCamera::getGain() const
     {
+        const auto gain = m_directShowCamera->getProperties()->getGain();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &gain]()
             {
-                result = m_directShowCamera->getProperties()->getGain()->getValue();
+                result = gain->getValue();
             },
-            supportGain(),
-                "Error on getGain()",
-                "Gain is not supported."
-                );
+            *gain
+        );
 
         if (!success) result = -1;
 
@@ -1325,20 +1269,21 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setGain(long value)
+    bool UVCCamera::setGain(const long value)
     {
+        const auto gain = m_directShowCamera->getProperties()->getGain();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &gain]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getGain(), value, false);
+                result = m_directShowCamera->setValue(gain, value, false);
 
                 copyError(result);
             },
-            supportGain(),
-                "Error on setGain()",
-                "Gain is not supported."
-                );
+            *gain
+        );
+
         success = success && result;
 
         return success;
@@ -1352,33 +1297,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property pan is supported.
      * @return Retrun true if property pan is supported.
     */
-    bool UVCCamera::supportPan()
+    bool UVCCamera::supportPan() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getPan()->isSupported();
-            },
-            "Error on supportPan()"
-                );
+        const auto pan = m_directShowCamera->getProperties()->getPan();
+
+        return supportPropertyTemplate(*pan);
     }
 
     /**
      * @brief Get the range of the property - pan
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getPanRange()
+    std::pair<long, long> UVCCamera::getPanRange() const
     {
+        const auto pan = m_directShowCamera->getProperties()->getPan();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &pan]()
             {
-                result = m_directShowCamera->getProperties()->getPan()->getRange();
+                result = pan->getRange();
             },
-            supportPan(),
-                "Error on getPanRange()",
-                "Pan is not supported."
-                );
+            *pan
+        );
 
         return result;
     }
@@ -1387,18 +1328,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - pan.
      * @return Return the step of the pan. -1 return if error occurred.
     */
-    long UVCCamera::getPanStep()
+    long UVCCamera::getPanStep() const
     {
+        const auto pan = m_directShowCamera->getProperties()->getPan();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &pan]()
             {
-                result = m_directShowCamera->getProperties()->getPan()->getStep();
+                result = pan->getStep();
             },
-            supportPan(),
-                "Error on getPanStep()",
-                "Pan is not supported."
-                );
+            *pan
+        );
 
         return result;
     }
@@ -1407,18 +1348,18 @@ namespace DirectShowCamera
      * @brief Get current pan
      * @return Return current pan. 0 return if error occurred.
     */
-    long UVCCamera::getPan()
+    long UVCCamera::getPan() const
     {
+        const auto pan = m_directShowCamera->getProperties()->getPan();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &pan]()
             {
-                result = m_directShowCamera->getProperties()->getPan()->getValue();
+                result = pan->getValue();
             },
-            supportPan(),
-                "Error on getPan()",
-                "Pan is not supported."
-                );
+            *pan
+        );
 
         if (!success) result = 0;
 
@@ -1430,21 +1371,22 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setPan(long degree)
+    bool UVCCamera::setPan(const long degree)
     {
+        const auto pan = m_directShowCamera->getProperties()->getPan();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, degree, &result]()
+        bool success = getPropertyTemplate(
+            [this, degree, &result, &pan]()
             {
                 long value = confirmDegreeRange(degree);
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getPan(), value, false);
+                result = m_directShowCamera->setValue(pan, value, false);
 
                 copyError(result);
             },
-            supportPan(),
-                "Error on setPan()",
-                "Pan is not supported."
-                );
+            *pan
+        );
+
         success = success && result;
 
         return success;
@@ -1458,33 +1400,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property tilt is supported.
      * @return Retrun true if property tilt is supported.
     */
-    bool UVCCamera::supportTilt()
+    bool UVCCamera::supportTilt() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getTilt()->isSupported();
-            },
-            "Error on supportTilt()"
-                );
+        const auto tilt = m_directShowCamera->getProperties()->getTilt();
+
+        return supportPropertyTemplate(*tilt);
     }
 
     /**
      * @brief Get the range of the property - tilt
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getTiltRange()
+    std::pair<long, long> UVCCamera::getTiltRange() const
     {
+        const auto tilt = m_directShowCamera->getProperties()->getTilt();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &tilt]()
             {
-                result = m_directShowCamera->getProperties()->getTilt()->getRange();
+                result = tilt->getRange();
             },
-            supportTilt(),
-                "Error on getTiltRange()",
-                "Tilt is not supported."
-                );
+            *tilt
+        );
 
         return result;
     }
@@ -1493,18 +1431,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - tilt.
      * @return Return the step of the tilt. -1 return if error occurred.
     */
-    long UVCCamera::getTiltStep()
+    long UVCCamera::getTiltStep() const
     {
+        const auto tilt = m_directShowCamera->getProperties()->getTilt();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &tilt]()
             {
-                result = m_directShowCamera->getProperties()->getTilt()->getStep();
+                result = tilt->getStep();
             },
-            supportTilt(),
-                "Error on getTiltStep()",
-                "Tilt is not supported."
-                );
+            *tilt
+        );
 
         return result;
     }
@@ -1513,18 +1451,18 @@ namespace DirectShowCamera
      * @brief Get current tilt
      * @return Return current tilt. 0 return if error occurred.
     */
-    long UVCCamera::getTilt()
+    long UVCCamera::getTilt() const
     {
+        const auto tilt = m_directShowCamera->getProperties()->getTilt();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &tilt]()
             {
-                result = m_directShowCamera->getProperties()->getTilt()->getValue();
+                result = tilt->getValue();
             },
-            supportTilt(),
-                "Error on getTilt()",
-                "Tilt is not supported."
-                );
+            *tilt
+        );
 
         if (!success) result = 0;
 
@@ -1536,21 +1474,22 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setTilt(long degree)
+    bool UVCCamera::setTilt(const long degree)
     {
+        const auto tilt = m_directShowCamera->getProperties()->getTilt();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, degree, &result]()
+        bool success = getPropertyTemplate(
+            [this, degree, &result, &tilt]()
             {
                 long value = confirmDegreeRange(degree);
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getTilt(), value, false);
+                result = m_directShowCamera->setValue(tilt, value, false);
 
                 copyError(result);
             },
-            supportTilt(),
-                "Error on setTilt()",
-                "Tilt is not supported."
-                );
+            *tilt
+        );
+
         success = success && result;
 
         return success;
@@ -1564,33 +1503,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property roll is supported.
      * @return Retrun true if property roll is supported.
     */
-    bool UVCCamera::supportRoll()
+    bool UVCCamera::supportRoll() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getRoll()->isSupported();
-            },
-            "Error on supportRoll()"
-                );
+        const auto roll = m_directShowCamera->getProperties()->getRoll();
+
+        return supportPropertyTemplate(*roll);
     }
 
     /**
      * @brief Get the range of the property - roll
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getRollRange()
+    std::pair<long, long> UVCCamera::getRollRange() const
     {
+        const auto roll = m_directShowCamera->getProperties()->getRoll();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &roll]()
             {
-                result = m_directShowCamera->getProperties()->getRoll()->getRange();
+                result = roll->getRange();
             },
-            supportRoll(),
-                "Error on getRollRange()",
-                "Roll is not supported."
-                );
+            *roll
+        );
 
         return result;
     }
@@ -1599,18 +1534,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - roll.
      * @return Return the step of the roll. -1 return if error occurred.
     */
-    long UVCCamera::getRollStep()
+    long UVCCamera::getRollStep() const
     {
+        const auto roll = m_directShowCamera->getProperties()->getRoll();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &roll]()
             {
-                result = m_directShowCamera->getProperties()->getRoll()->getStep();
+                result = roll->getStep();
             },
-            supportRoll(),
-                "Error on getRollStep()",
-                "Roll is not supported."
-                );
+            *roll
+        );
 
         return result;
     }
@@ -1619,18 +1554,18 @@ namespace DirectShowCamera
      * @brief Get current Roll
      * @return Return current Roll. 0 return if error occurred.
     */
-    long UVCCamera::getRoll()
+    long UVCCamera::getRoll() const
     {
+        const auto roll = m_directShowCamera->getProperties()->getRoll();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &roll]()
             {
-                result = m_directShowCamera->getProperties()->getRoll()->getValue();
+                result = roll->getValue();
             },
-            supportRoll(),
-                "Error on Roll()",
-                "Roll is not supported."
-                );
+            *roll
+        );
 
         if (!success) result = 0;
 
@@ -1642,21 +1577,22 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setRoll(long degree)
+    bool UVCCamera::setRoll(const long degree)
     {
+        const auto roll = m_directShowCamera->getProperties()->getRoll();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, degree, &result]()
+        bool success = getPropertyTemplate(
+            [this, degree, &result, &roll]()
             {
                 long value = confirmDegreeRange(degree);
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getRoll(), value, false);
+                result = m_directShowCamera->setValue(roll, value, false);
 
                 copyError(result);
             },
-            supportRoll(),
-                "Error on setRoll()",
-                "Roll is not supported."
-                );
+            *roll
+        );
+
         success = success && result;
 
         return success;
@@ -1670,33 +1606,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property zoom is supported.
      * @return Retrun true if property zoom is supported.
     */
-    bool UVCCamera::supportZoom()
+    bool UVCCamera::supportZoom() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getZoom()->isSupported();
-            },
-            "Error on supportZoom()"
-                );
+        const auto zoom = m_directShowCamera->getProperties()->getZoom();
+
+        return supportPropertyTemplate(*zoom);
     }
 
     /**
      * @brief Get the range of the property - zoom
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getZoomRange()
+    std::pair<long, long> UVCCamera::getZoomRange() const
     {
+        const auto zoom = m_directShowCamera->getProperties()->getZoom();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &zoom]()
             {
-                result = m_directShowCamera->getProperties()->getZoom()->getRange();
+                result = zoom->getRange();
             },
-            supportZoom(),
-                "Error on getZoomRange()",
-                "Zoom is not supported."
-                );
+            *zoom
+        );
 
         return result;
     }
@@ -1705,18 +1637,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - zoom.
      * @return Return the step of the zoom. -1 return if error occurred.
     */
-    long UVCCamera::getZoomStep()
+    long UVCCamera::getZoomStep() const
     {
+        const auto zoom = m_directShowCamera->getProperties()->getZoom();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &zoom]()
             {
-                result = m_directShowCamera->getProperties()->getZoom()->getStep();
+                result = zoom->getStep();
             },
-            supportZoom(),
-                "Error on getZoomStep()",
-                "Zoom is not supported."
-                );
+            *zoom
+        );
 
         return result;
     }
@@ -1725,18 +1657,18 @@ namespace DirectShowCamera
      * @brief Get current zoom
      * @return Return current zoom. -1 return if error occurred.
     */
-    long UVCCamera::getZoom()
+    long UVCCamera::getZoom() const
     {
+        const auto zoom = m_directShowCamera->getProperties()->getZoom();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &zoom]()
             {
-                result = m_directShowCamera->getProperties()->getZoom()->getValue();
+                result = zoom->getValue();
             },
-            supportZoom(),
-                "Error on getZoom()",
-                "Zoom is not supported."
-                );
+            *zoom
+        );
 
         if (!success) result = -1;
 
@@ -1748,20 +1680,20 @@ namespace DirectShowCamera
      * @param millimeter Value to be set in millimeters
      * @return Return true if success.
     */
-    bool UVCCamera::setZoom(long millimeter)
+    bool UVCCamera::setZoom(const long millimeter)
     {
+        const auto zoom = m_directShowCamera->getProperties()->getZoom();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, millimeter, &result]()
+        bool success = getPropertyTemplate(
+            [this, millimeter, &result, &zoom]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getZoom(), millimeter, false);
+                result = m_directShowCamera->setValue(zoom, millimeter, false);
 
                 copyError(result);
             },
-            supportZoom(),
-                "Error on setZoom()",
-                "Zoom is not supported."
-                );
+            *zoom
+        );
         success = success && result;
 
         return success;
@@ -1775,38 +1707,34 @@ namespace DirectShowCamera
      * @brief Retrun true if property exposure is supported.
      * @return Retrun true if property exposure is supported.
     */
-    bool UVCCamera::supportExposure()
+    bool UVCCamera::supportExposure() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getExposure()->isSupported();
-            },
-            "Error on supportExposure()"
-                );
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
+        return supportPropertyTemplate(*exposure);
     }
 
     /**
      * @brief Get the range of the property - exposure in second
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<double, double> UVCCamera::getExposureRange()
+    std::pair<double, double> UVCCamera::getExposureRange() const
     {
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
         std::pair<double, double> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &exposure]()
             {
                 //Get
-                std::pair<long, long> range = m_directShowCamera->getProperties()->getExposure()->getRange();
+                std::pair<long, long> range = exposure->getRange();
 
                 // Convert to second
                 result.first = exposureConvertion(range.first);
                 result.second = exposureConvertion(range.second);
             },
-            supportExposure(),
-                "Error on getExposureRange()",
-                "Exposure is not supported."
-                );
+            *exposure
+        );
 
         return result;
     }
@@ -1815,22 +1743,22 @@ namespace DirectShowCamera
      * @brief Get current exposure in second
      * @return Return current exposure. -1 return if error occurred.
     */
-    double UVCCamera::getExposure()
+    double UVCCamera::getExposure() const
     {
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
         double result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &exposure]()
             {
                 // Get value
-                long value = m_directShowCamera->getProperties()->getExposure()->getValue();
+                long value = exposure->getValue();
 
                 // Convert to second
                 result = exposureConvertion(value);
             },
-            supportExposure(),
-                "Error on getExposure()",
-                "Exposure is not supported."
-                );
+            *exposure
+        );
 
         if (!success) result = -1;
 
@@ -1842,24 +1770,24 @@ namespace DirectShowCamera
      * @param second Value to be set in second
      * @return Return true if success.
     */
-    bool UVCCamera::setExposure(double second)
+    bool UVCCamera::setExposure(const double second)
     {
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, second, &result]()
+        bool success = getPropertyTemplate(
+            [this, second, &result, &exposure]()
             {
                 // Convert to DirectShow value
                 long dsValue = exposureConvertion(second);
 
                 // Set
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getExposure(), dsValue, false);
+                result = m_directShowCamera->setValue(exposure, dsValue, false);
 
                 copyError(result);
             },
-            supportExposure(),
-                "Error on setExposure()",
-                "Exposure is not supported."
-                );
+            *exposure
+        );
         success = success && result;
 
         return success;
@@ -1869,16 +1797,18 @@ namespace DirectShowCamera
      * @brief Get all possible exposure values in second
      * @return Return the possible exposure values. Return empty vector if error occurred.
     */
-    std::vector<double> UVCCamera::getPossibleExposureValues()
+    std::vector<double> UVCCamera::getPossibleExposureValues() const
     {
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
         std::vector<double> result;
         std::vector<long> exposureValues;
-        bool success = handlePropertyTemplate(
-            [this, &exposureValues]()
+        bool success = getPropertyTemplate(
+            [this, &exposureValues, &exposure]()
             {
                 // Get range and step
-                std::pair<long, long> range = m_directShowCamera->getProperties()->getExposure()->getRange();
-                long step = m_directShowCamera->getProperties()->getExposure()->getStep();
+                std::pair<long, long> range = exposure->getRange();
+                long step = exposure->getStep();
 
                 // Add possible value
                 long value = range.first;
@@ -1891,10 +1821,8 @@ namespace DirectShowCamera
                     value += step;
                 }
             },
-            supportExposure(),
-                "Error on getPossibleExposureValue()",
-                "Exposure is not supported."
-                );
+            *exposure
+        );
 
         if (success && exposureValues.size() > 0)
         {
@@ -1917,7 +1845,7 @@ namespace DirectShowCamera
      * @brief Get current exposure index of the getPossibleExposureValues()
      * @return Return current exposure index of the getPossibleExposureValues(). Return -1 if error occurred.
     */
-    int UVCCamera::getExposureIndex()
+    int UVCCamera::getExposureIndex() const
     {
         std::vector<double> exposureList = getPossibleExposureValues();
         double exposureValue = getExposure();
@@ -1947,18 +1875,18 @@ namespace DirectShowCamera
      * @brief Retrun true if exposure is auto mode, return false if it is manual mode.
      * @return Retrun true if exposure is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoExposure()
+    bool UVCCamera::isAutoExposure() const
     {
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
         bool isAuto = false;
-        bool success = handlePropertyTemplate(
-            [this, &isAuto]()
+        bool success = getPropertyTemplate(
+            [this, &isAuto, &exposure]()
             {
-                isAuto = m_directShowCamera->getProperties()->getExposure()->isAuto();
+                isAuto = exposure->isAuto();
             },
-            supportExposure(),
-                "Error on isAutoExposure()",
-                "Exposure is not supported."
-                );
+            *exposure
+        );
 
         if (!success) isAuto = false;
 
@@ -1970,19 +1898,21 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoExposure(bool setToAuto)
+    bool UVCCamera::setAutoExposure(const bool setToAuto)
     {
+        const auto exposure = m_directShowCamera->getProperties()->getExposure();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, setToAuto, &result]()
+        bool success = getPropertyTemplate(
+            [this, setToAuto, &result, &exposure]()
             {
-                if (setToAuto && !(m_directShowCamera->getProperties()->getExposure()->supportAutoMode()))
+                if (setToAuto && !(exposure->supportAutoMode()))
                 {
                     // Not support auto mode
                     result = false;
                     m_errorString = "Exposure does not support auto mode.";
                 }
-                else if (!setToAuto && !(m_directShowCamera->getProperties()->getExposure()->supportManualMode()))
+                else if (!setToAuto && !(exposure->supportManualMode()))
                 {
                     // Not support manual mode
                     result = false;
@@ -1998,10 +1928,9 @@ namespace DirectShowCamera
                     copyError(result);
                 }
             },
-            supportExposure(),
-                "Error on setAutoExposure()",
-                "Exposure is not supported."
-                );
+            *exposure
+        );
+
         success = success && result;
 
         return success;
@@ -2015,33 +1944,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property iris is supported.
      * @return Retrun true if property iris is supported.
     */
-    bool UVCCamera::supportIris()
+    bool UVCCamera::supportIris() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getIris()->isSupported();
-            },
-            "Error on supportIris()"
-                );
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
+        return supportPropertyTemplate(*iris);
     }
 
     /**
      * @brief Get the range of the property - iris in units of f_stop * 10.
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getIrisRange()
+    std::pair<long, long> UVCCamera::getIrisRange() const
     {
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &iris]()
             {
-                result = m_directShowCamera->getProperties()->getIris()->getRange();
+                result = iris->getRange();
             },
-            supportIris(),
-                "Error on getIrisRange()",
-                "Iris is not supported."
-                );
+            *iris
+        );
 
         return result;
     }
@@ -2050,18 +1975,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - iris in units of f_stop * 10.
      * @return Return the step of the iris. -1 return if error occurred.
     */
-    long UVCCamera::getIrisStep()
+    long UVCCamera::getIrisStep() const
     {
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &iris]()
             {
-                result = m_directShowCamera->getProperties()->getIris()->getStep();
+                result = iris->getStep();
             },
-            supportIris(),
-                "Error on getIrisStep()",
-                "Iris is not supported."
-                );
+            *iris
+        );
 
         return result;
     }
@@ -2070,18 +1995,18 @@ namespace DirectShowCamera
      * @brief Get current iris in units of f_stop * 10.
      * @return Return current iris. -1 return if error occurred.
     */
-    long UVCCamera::getIris()
+    long UVCCamera::getIris() const
     {
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &iris]()
             {
-                result = m_directShowCamera->getProperties()->getIris()->getValue();
+                result = iris->getValue();
             },
-            supportIris(),
-                "Error on getIris()",
-                "Iris is not supported."
-                );
+            *iris
+        );
 
         if (!success) result = -1;
 
@@ -2093,20 +2018,21 @@ namespace DirectShowCamera
      * @param value Value to be set in units of f_stop * 10.
      * @return Return true if success.
     */
-    bool UVCCamera::setIris(long value)
+    bool UVCCamera::setIris(const long value)
     {
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, value, &result]()
+        bool success = getPropertyTemplate(
+            [this, value, &result, &iris]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getIris(), value, false);
+                result = m_directShowCamera->setValue(iris, value, false);
 
                 copyError(result);
             },
-            supportIris(),
-                "Error on setIris()",
-                "Iris is not supported."
-                );
+            *iris
+        );
+
         success = success && result;
 
         return success;
@@ -2116,18 +2042,18 @@ namespace DirectShowCamera
      * @brief Retrun true if iris is auto mode, return false if it is manual mode.
      * @return Retrun true if iris is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoIris()
+    bool UVCCamera::isAutoIris() const
     {
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
         bool isAuto = false;
-        bool success = handlePropertyTemplate(
-            [this, &isAuto]()
+        bool success = getPropertyTemplate(
+            [this, &isAuto, &iris]()
             {
-                isAuto = m_directShowCamera->getProperties()->getIris()->isAuto();
+                isAuto = iris->isAuto();
             },
-            supportIris(),
-                "Error on isAutoIris()",
-                "Iris is not supported."
-                );
+            *iris
+        );
 
         if (!success) isAuto = false;
 
@@ -2139,13 +2065,15 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoIris(bool setToAuto)
+    bool UVCCamera::setAutoIris(const bool setToAuto)
     {
+        const auto iris = m_directShowCamera->getProperties()->getIris();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, setToAuto, &result]()
+        bool success = getPropertyTemplate(
+            [this, setToAuto, &result, &iris]()
             {
-                if (setToAuto && !(m_directShowCamera->getProperties()->getIris()->supportAutoMode()))
+                if (setToAuto && !(iris->supportAutoMode()))
                 {
                     // Not support auto mode
                     result = false;
@@ -2167,10 +2095,9 @@ namespace DirectShowCamera
                     copyError(result);
                 }
             },
-            supportIris(),
-                "Error on setAutoIris()",
-                "Iris is not supported."
-                );
+            *iris
+        );
+
         success = success && result;
 
         return success;
@@ -2184,33 +2111,29 @@ namespace DirectShowCamera
      * @brief Retrun true if property focus is supported.
      * @return Retrun true if property focus is supported.
     */
-    bool UVCCamera::supportFocus()
+    bool UVCCamera::supportFocus() const
     {
-        return supportPropertyTemplate(
-            [this]()
-            {
-                return m_directShowCamera->getProperties()->getFocus()->isSupported();
-            },
-            "Error on supportFocus()"
-                );
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
+        return supportPropertyTemplate(*focus);
     }
 
     /**
      * @brief Get the range of the property - focus in millimeters.
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getFocusRange()
+    std::pair<long, long> UVCCamera::getFocusRange() const
     {
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
         std::pair<long, long> result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &focus]()
             {
-                result = m_directShowCamera->getProperties()->getFocus()->getRange();
+                result = focus->getRange();
             },
-            supportFocus(),
-                "Error on getFocusRange()",
-                "Focus is not supported."
-                );
+            *focus
+        );
 
         return result;
     }
@@ -2219,18 +2142,18 @@ namespace DirectShowCamera
      * @brief Get the step of the property - focus in millimeters.
      * @return Return the step of the property - focus in millimeters. -1 return if error occurred.
     */
-    long UVCCamera::getFocusStep()
+    long UVCCamera::getFocusStep() const
     {
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
         long result = -1;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &focus]()
             {
-                result = m_directShowCamera->getProperties()->getFocus()->getStep();
+                result = focus->getStep();
             },
-            supportFocus(),
-                "Error on getFocusStep()",
-                "Focus is not supported."
-                );
+            *focus
+        );
 
         return result;
     }
@@ -2239,18 +2162,18 @@ namespace DirectShowCamera
      * @brief Get current focus in millimeters.
      * @return Return current focus. -1 return if error occurred.
     */
-    long UVCCamera::getFocus()
+    long UVCCamera::getFocus() const
     {
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
         long result;
-        bool success = handlePropertyTemplate(
-            [this, &result]()
+        bool success = getPropertyTemplate(
+            [this, &result, &focus]()
             {
-                result = m_directShowCamera->getProperties()->getFocus()->getValue();
+                result = focus->getValue();
             },
-            supportFocus(),
-                "Error on getFocus()",
-                "Focus is not supported."
-                );
+            *focus
+        );
 
         if (!success) result = -1;
 
@@ -2262,20 +2185,20 @@ namespace DirectShowCamera
      * @param millimeter Value to be set in millimeters.
      * @return Return true if success.
     */
-    bool UVCCamera::setFocus(long millimeter)
+    bool UVCCamera::setFocus(const long millimeter)
     {
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, millimeter, &result]()
+        bool success = getPropertyTemplate(
+            [this, millimeter, &result, &focus]()
             {
-                result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getFocus(), millimeter, false);
+                result = m_directShowCamera->setValue(focus, millimeter, false);
 
                 copyError(result);
             },
-            supportFocus(),
-                "Error on setFocus()",
-                "Focus is not supported."
-                );
+            *focus
+        );
         success = success && result;
 
         return success;
@@ -2285,18 +2208,18 @@ namespace DirectShowCamera
      * @brief Retrun true if focus is auto mode, return false if it is manual mode.
      * @return Retrun true if focus is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoFocus()
+    bool UVCCamera::isAutoFocus() const
     {
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
         bool isAuto = false;
-        bool success = handlePropertyTemplate(
-            [this, &isAuto]()
+        bool success = getPropertyTemplate(
+            [this, &isAuto, &focus]()
             {
-                isAuto = m_directShowCamera->getProperties()->getFocus()->isAuto();
+                isAuto = focus->isAuto();
             },
-            supportFocus(),
-                "Error on isAutoFocus()",
-                "Focus is not supported."
-                );
+            *focus
+        );
 
         if (!success) isAuto = false;
 
@@ -2308,19 +2231,21 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoFocus(bool setToAuto)
+    bool UVCCamera::setAutoFocus(const bool setToAuto)
     {
+        const auto focus = m_directShowCamera->getProperties()->getFocus();
+
         bool result = false;
-        bool success = handlePropertyTemplate(
-            [this, setToAuto, &result]()
+        bool success = getPropertyTemplate(
+            [this, setToAuto, &result, &focus]()
             {
-                if (setToAuto && !(m_directShowCamera->getProperties()->getFocus()->supportAutoMode()))
+                if (setToAuto && !(focus->supportAutoMode()))
                 {
                     // Not support auto mode
                     result = false;
                     m_errorString = "Focus does not support auto mode.";
                 }
-                else if (!setToAuto && !(m_directShowCamera->getProperties()->getFocus()->supportManualMode()))
+                else if (!setToAuto && !(focus->supportManualMode()))
                 {
                     // Not support manual mode
                     result = false;
@@ -2329,17 +2254,15 @@ namespace DirectShowCamera
                 else
                 {
                     // Set
-                    result = m_directShowCamera->setValue(m_directShowCamera->getProperties()->getFocus(),
-                        m_directShowCamera->getProperties()->getFocus()->getValue(),
+                    result = m_directShowCamera->setValue(focus,
+                        focus->getValue(),
                         setToAuto);
 
                     copyError(result);
                 }
             },
-            supportFocus(),
-                "Error on setAutoFocus()",
-                "Focus is not supported."
-                );
+            *focus
+        );
         success = success && result;
 
         return success;
@@ -2785,7 +2708,7 @@ namespace DirectShowCamera
      * @param dsValue DirectShow exposure value
      * @return Return exposure in second
     */
-    double UVCCamera::exposureConvertion(long dsValue)
+    double UVCCamera::exposureConvertion(const long dsValue) const
     {
         if (dsValue < 0)
         {
@@ -2802,7 +2725,7 @@ namespace DirectShowCamera
      * @param second Exposure value in second
      * @return Return DirectShow exposure value
     */
-    long UVCCamera::exposureConvertion(double second)
+    long UVCCamera::exposureConvertion(const double second) const
     {
         if (second <= 0)
         {

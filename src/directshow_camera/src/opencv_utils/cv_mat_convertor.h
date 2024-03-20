@@ -3,15 +3,15 @@
 #define OPENCV_MAT_CONVERTOR_H
 
 //************Content************
-#include <ds_libs_setting.h>
+#include "ds_camera/ds_libs_setting.h"
 
 #ifdef HAS_OPENCV
 
 #include <opencv2/opencv.hpp>
 
-#include <ds_camera_utils.h>
+#include "ds_camera/ds_camera_utils.h"
 
-#include <ds_video_format.h>
+#include "ds_camera/ds_video_format.h"
 
 namespace DirectShowCamera
 {
