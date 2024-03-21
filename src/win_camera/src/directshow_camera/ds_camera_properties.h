@@ -32,23 +32,23 @@ namespace DirectShowCamera
         void markAsInitialized();
 
         // Getter
-        DirectShowCameraProperty* getBrightness() const;
-        DirectShowCameraProperty* getContrast() const;
-        DirectShowCameraProperty* getHue() const;
-        DirectShowCameraProperty* getSaturation() const;
-        DirectShowCameraProperty* getSharpness() const;
-        DirectShowCameraProperty* getGamma() const;
-        DirectShowCameraProperty* getColorEnable() const;
-        DirectShowCameraProperty* getWhiteBalance() const;
-        DirectShowCameraProperty* getBacklightCompensation() const;
-        DirectShowCameraProperty* getGain() const;
-        DirectShowCameraProperty* getPan() const;
-        DirectShowCameraProperty* getTilt() const;
-        DirectShowCameraProperty* getRoll() const;
-        DirectShowCameraProperty* getZoom() const;
-        DirectShowCameraProperty* getExposure() const;
-        DirectShowCameraProperty* getIris() const;
-        DirectShowCameraProperty* getFocus() const;
+        std::shared_ptr<DirectShowCameraProperty> getBrightness() const;
+        std::shared_ptr<DirectShowCameraProperty> getContrast() const;
+        std::shared_ptr<DirectShowCameraProperty> getHue() const;
+        std::shared_ptr<DirectShowCameraProperty> getSaturation() const;
+        std::shared_ptr<DirectShowCameraProperty> getSharpness() const;
+        std::shared_ptr<DirectShowCameraProperty> getGamma() const;
+        std::shared_ptr<DirectShowCameraProperty> getColorEnable() const;
+        std::shared_ptr<DirectShowCameraProperty> getWhiteBalance() const;
+        std::shared_ptr<DirectShowCameraProperty> getBacklightCompensation() const;
+        std::shared_ptr<DirectShowCameraProperty> getGain() const;
+        std::shared_ptr<DirectShowCameraProperty> getPan() const;
+        std::shared_ptr<DirectShowCameraProperty> getTilt() const;
+        std::shared_ptr<DirectShowCameraProperty> getRoll() const;
+        std::shared_ptr<DirectShowCameraProperty> getZoom() const;
+        std::shared_ptr<DirectShowCameraProperty> getExposure() const;
+        std::shared_ptr<DirectShowCameraProperty> getIris() const;
+        std::shared_ptr<DirectShowCameraProperty> getFocus() const;
 
         // Class to string
 
@@ -87,26 +87,29 @@ namespace DirectShowCamera
         friend std::ostream& operator << (std::ostream& out, const DirectShowCameraProperties& obj) {
             return out << (std::string)obj;
         }
+
+    private:
+        void construct();
     private:
 
         // Properties
-        DirectShowCameraProperty* m_brightness = new DirectShowCameraProperty("Brightness", VideoProcAmp_Brightness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_contrast = new DirectShowCameraProperty("Contrast", VideoProcAmp_Contrast, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_hue = new DirectShowCameraProperty("Hue", VideoProcAmp_Hue, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_saturation = new DirectShowCameraProperty("Saturation", VideoProcAmp_Saturation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_sharpness = new DirectShowCameraProperty("Sharpness", VideoProcAmp_Sharpness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_gamma = new DirectShowCameraProperty("Gamma", VideoProcAmp_Gamma, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_colorEnable = new DirectShowCameraProperty("Color Enable", VideoProcAmp_ColorEnable, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP); // 0(off), 1(on)
-        DirectShowCameraProperty* m_whiteBalance = new DirectShowCameraProperty("White Balance", VideoProcAmp_WhiteBalance, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_backlightCompensation = new DirectShowCameraProperty("Backlight Compensation", VideoProcAmp_BacklightCompensation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);  // 0(off), 1(on)
-        DirectShowCameraProperty* m_gain = new DirectShowCameraProperty("Gain", VideoProcAmp_Gain, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        DirectShowCameraProperty* m_pan = new DirectShowCameraProperty("Pan", CameraControl_Pan, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_tilt = new DirectShowCameraProperty("Tilt", CameraControl_Tilt, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_roll = new DirectShowCameraProperty("Roll", CameraControl_Roll, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_zoom = new  DirectShowCameraProperty("Zoom", CameraControl_Zoom, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_exposure = new DirectShowCameraProperty("Exposure", CameraControl_Exposure, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_iris = new DirectShowCameraProperty("Iris", CameraControl_Iris, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        DirectShowCameraProperty* m_focus = new DirectShowCameraProperty("Focus", CameraControl_Focus, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        std::shared_ptr<DirectShowCameraProperty> m_brightness;
+        std::shared_ptr<DirectShowCameraProperty> m_contrast;
+        std::shared_ptr<DirectShowCameraProperty> m_hue;
+        std::shared_ptr<DirectShowCameraProperty> m_saturation;
+        std::shared_ptr<DirectShowCameraProperty> m_sharpness;
+        std::shared_ptr<DirectShowCameraProperty> m_gamma;
+        std::shared_ptr<DirectShowCameraProperty> m_colorEnable;
+        std::shared_ptr<DirectShowCameraProperty> m_whiteBalance;
+        std::shared_ptr<DirectShowCameraProperty> m_backlightCompensation;
+        std::shared_ptr<DirectShowCameraProperty> m_gain;
+        std::shared_ptr<DirectShowCameraProperty> m_pan;
+        std::shared_ptr<DirectShowCameraProperty> m_tilt;
+        std::shared_ptr<DirectShowCameraProperty> m_roll;
+        std::shared_ptr<DirectShowCameraProperty> m_zoom;
+        std::shared_ptr<DirectShowCameraProperty> m_exposure;
+        std::shared_ptr<DirectShowCameraProperty> m_iris;
+        std::shared_ptr<DirectShowCameraProperty> m_focus;
 
         bool m_isinitialized = false;
 

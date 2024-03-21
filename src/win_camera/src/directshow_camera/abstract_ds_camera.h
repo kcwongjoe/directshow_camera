@@ -62,7 +62,11 @@ namespace DirectShowCamera
         virtual std::shared_ptr<DirectShowCameraProperties> getProperties() const = 0;
 
         virtual void resetDefault(bool asAuto = true) = 0;
-        virtual bool setValue(DirectShowCameraProperty* property, long value, bool isAuto) = 0;
+        virtual bool setValue(
+            const std::shared_ptr<DirectShowCameraProperty>& property,
+            const long value,
+            const bool isAuto
+        ) = 0;
 
         // Get camera
         virtual bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices) = 0;

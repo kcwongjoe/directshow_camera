@@ -949,7 +949,11 @@ namespace DirectShowCamera
      * @param isAuto Set as true for auto mode, false for manual mode
      * @return Return true if success
     */
-    bool DirectShowCamera::setValue(DirectShowCameraProperty* property, long value, bool isAuto)
+    bool DirectShowCamera::setValue(
+        const std::shared_ptr<DirectShowCameraProperty>& property,
+        const long value,
+        const bool isAuto
+    )
     {
         if (m_videoInputFilter != NULL)
         {

@@ -1,5 +1,6 @@
 #include "win_camera/win_camera.h"
 #include "directshow_camera/ds_camera.h"
+#include "properties/win_camera_property_brightness.h"
 
 namespace WinCamera
 {
@@ -306,7 +307,7 @@ namespace WinCamera
     bool WinCamera::supportBrightness() const
     {
         const auto brightness = m_directShowCamera->getProperties()->getBrightness();
-        return supportPropertyTemplate(*brightness);
+        return supportPropertyTemplate(brightness);
     }
 
     std::pair<long, long> WinCamera::getBrightnessRange() const
@@ -319,7 +320,7 @@ namespace WinCamera
             {
                 result = brightness->getRange();
             },
-            *brightness
+            brightness
         );
 
         return result;
@@ -335,7 +336,7 @@ namespace WinCamera
             {
                 result = brightness->getStep();
             },
-            *brightness
+            brightness
         );
 
         return result;
@@ -351,7 +352,7 @@ namespace WinCamera
             {
                 result = brightness->getValue();
             },
-            *brightness
+            brightness
         );
 
         if (!success) result = -1;
@@ -371,7 +372,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *brightness
+            brightness
         );
 
         success = success && result;
@@ -391,7 +392,7 @@ namespace WinCamera
     {
         const auto contrast = m_directShowCamera->getProperties()->getContrast();
 
-        return supportPropertyTemplate(*contrast);
+        return supportPropertyTemplate(contrast);
     }
 
     /**
@@ -408,7 +409,7 @@ namespace WinCamera
             {
                 result = contrast->getRange();
             },
-            *contrast
+            contrast
         );
 
         return result;
@@ -428,7 +429,7 @@ namespace WinCamera
             {
                 result = contrast->getStep();
             },
-            *contrast
+            contrast
         );
 
         return result;
@@ -448,7 +449,7 @@ namespace WinCamera
             {
                 result = contrast->getValue();
             },
-            * contrast
+            contrast
         );
 
         if (!success) result = -1;
@@ -473,7 +474,7 @@ namespace WinCamera
 
                 copyError(result);
             }, 
-            *contrast
+            contrast
         );
         success = success && result;
 
@@ -492,7 +493,7 @@ namespace WinCamera
     {
         const auto hue = m_directShowCamera->getProperties()->getHue();
 
-        return supportPropertyTemplate(*hue);
+        return supportPropertyTemplate(hue);
     }
 
     /**
@@ -509,7 +510,7 @@ namespace WinCamera
             {
                 result = hue->getRange();
             },
-            *hue
+            hue
         );
 
         return result;
@@ -529,7 +530,7 @@ namespace WinCamera
             {
                 result = hue->getStep();
             },
-            *hue
+            hue
         );
 
         return result;
@@ -549,7 +550,7 @@ namespace WinCamera
             {
                 result = hue->getValue();
             },
-            *hue
+            hue
         );
 
         return result;
@@ -573,7 +574,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *hue
+            hue
         );
         success = success && result;
 
@@ -592,7 +593,7 @@ namespace WinCamera
     {
         const auto saturation = m_directShowCamera->getProperties()->getSaturation();
 
-        return supportPropertyTemplate(*saturation);
+        return supportPropertyTemplate(saturation);
     }
 
     /**
@@ -609,7 +610,7 @@ namespace WinCamera
             {
                 result = saturation->getRange();
             },
-            *saturation
+            saturation
         );
 
         return result;
@@ -629,7 +630,7 @@ namespace WinCamera
             {
                 result = saturation->getStep();
             },
-            *saturation
+            saturation
         );
 
         return result;
@@ -649,7 +650,7 @@ namespace WinCamera
             {
                 result = saturation->getValue();
             },
-            *saturation
+            saturation
         );
 
         if (!success) result = -1;
@@ -674,7 +675,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *saturation
+            saturation
         );
         success = success && result;
 
@@ -693,7 +694,7 @@ namespace WinCamera
     {
         const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
 
-        return supportPropertyTemplate(*sharpness);
+        return supportPropertyTemplate(sharpness);
     }
 
     /**
@@ -710,7 +711,7 @@ namespace WinCamera
             {
                 result = sharpness->getRange();
             },
-            *sharpness
+            sharpness
         );
 
         return result;
@@ -730,7 +731,7 @@ namespace WinCamera
             {
                 result = sharpness->getStep();
             },
-            *sharpness
+            sharpness
         );
 
         return result;
@@ -750,7 +751,7 @@ namespace WinCamera
             {
                 result = sharpness->getValue();
             },
-            *sharpness
+            sharpness
         );
 
         if (!success) result = -1;
@@ -775,7 +776,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *sharpness
+            sharpness
         );
         success = success && result;
 
@@ -794,7 +795,7 @@ namespace WinCamera
     {
         const auto gamma = m_directShowCamera->getProperties()->getGamma();
 
-        return supportPropertyTemplate(*gamma);
+        return supportPropertyTemplate(gamma);
     }
 
     /**
@@ -811,7 +812,7 @@ namespace WinCamera
             {
                 result = gamma->getRange();
             },
-            *gamma
+            gamma
         );
 
         return result;
@@ -831,7 +832,7 @@ namespace WinCamera
             {
                 result = gamma->getStep();
             },
-            *gamma
+            gamma
         );
 
         return result;
@@ -851,7 +852,7 @@ namespace WinCamera
             {
                 result = gamma->getValue();
             },
-            *gamma
+            gamma
         );
 
         if (!success) result = -1;
@@ -878,7 +879,7 @@ namespace WinCamera
 
                 return result;
             },
-            *gamma
+            gamma
         );
 
         success = success && result;
@@ -898,7 +899,7 @@ namespace WinCamera
     {
         const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
 
-        return supportPropertyTemplate(*colorEnable);
+        return supportPropertyTemplate(colorEnable);
     }
 
     /**
@@ -915,7 +916,7 @@ namespace WinCamera
             {
                 result = colorEnable->getValue();
             },
-            *colorEnable
+            colorEnable
         );
 
         bool isColorEnable = result == 0 ? false : true; // 0(off), 1(on)
@@ -946,7 +947,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *colorEnable
+            colorEnable
         );
 
         success = success && result;
@@ -966,7 +967,7 @@ namespace WinCamera
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
-        return supportPropertyTemplate(*whiteBalance);
+        return supportPropertyTemplate(whiteBalance);
     }
 
     /**
@@ -983,7 +984,7 @@ namespace WinCamera
             {
                 result = whiteBalance->getRange();
             },
-            *whiteBalance
+            whiteBalance
         );
 
         return result;
@@ -1003,7 +1004,7 @@ namespace WinCamera
             {
                 result = whiteBalance->getStep();
             },
-            *whiteBalance
+            whiteBalance
         );
 
         return result;
@@ -1023,7 +1024,7 @@ namespace WinCamera
             {
                 result = whiteBalance->getValue();
             },
-            *whiteBalance
+            whiteBalance
         );
 
         if (!success) result = -1;
@@ -1048,7 +1049,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *whiteBalance
+            whiteBalance
         );
 
         success = success && result;
@@ -1070,7 +1071,7 @@ namespace WinCamera
             {
                 isAuto = whiteBalance->isAuto();
             },
-            *whiteBalance,
+            whiteBalance,
             "AutoWhiteBalance"
         );
 
@@ -1114,7 +1115,7 @@ namespace WinCamera
                     copyError(result);
                 }
             },
-            *whiteBalance
+            whiteBalance
         );
         success = success && result;
 
@@ -1133,7 +1134,7 @@ namespace WinCamera
     {
         const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
 
-        return supportPropertyTemplate(*backlightCompensation);
+        return supportPropertyTemplate(backlightCompensation);
     }
 
 
@@ -1151,7 +1152,7 @@ namespace WinCamera
             {
                 result = backlightCompensation->getValue();
             },
-            *backlightCompensation
+            backlightCompensation
         );
 
         bool isBacklightCompensation = result == 0 ? false : true; // 0(off), 1(on)
@@ -1180,7 +1181,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *backlightCompensation
+            backlightCompensation
         );
 
         success = success && result;
@@ -1200,7 +1201,7 @@ namespace WinCamera
     {
         const auto gain = m_directShowCamera->getProperties()->getGain();
 
-        return supportPropertyTemplate(*gain);
+        return supportPropertyTemplate(gain);
     }
 
     /**
@@ -1217,7 +1218,7 @@ namespace WinCamera
             {
                 result = gain->getRange();
             },
-            *gain
+            gain
         );
 
         return result;
@@ -1237,7 +1238,7 @@ namespace WinCamera
             {
                 result = gain->getStep();
             },
-            *gain
+            gain
         );
 
         return result;
@@ -1257,7 +1258,7 @@ namespace WinCamera
             {
                 result = gain->getValue();
             },
-            *gain
+            gain
         );
 
         if (!success) result = -1;
@@ -1282,7 +1283,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *gain
+            gain
         );
 
         success = success && result;
@@ -1302,7 +1303,7 @@ namespace WinCamera
     {
         const auto pan = m_directShowCamera->getProperties()->getPan();
 
-        return supportPropertyTemplate(*pan);
+        return supportPropertyTemplate(pan);
     }
 
     /**
@@ -1319,7 +1320,7 @@ namespace WinCamera
             {
                 result = pan->getRange();
             },
-            *pan
+            pan
         );
 
         return result;
@@ -1339,7 +1340,7 @@ namespace WinCamera
             {
                 result = pan->getStep();
             },
-            *pan
+            pan
         );
 
         return result;
@@ -1359,7 +1360,7 @@ namespace WinCamera
             {
                 result = pan->getValue();
             },
-            *pan
+            pan
         );
 
         if (!success) result = 0;
@@ -1385,7 +1386,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *pan
+            pan
         );
 
         success = success && result;
@@ -1405,7 +1406,7 @@ namespace WinCamera
     {
         const auto tilt = m_directShowCamera->getProperties()->getTilt();
 
-        return supportPropertyTemplate(*tilt);
+        return supportPropertyTemplate(tilt);
     }
 
     /**
@@ -1422,7 +1423,7 @@ namespace WinCamera
             {
                 result = tilt->getRange();
             },
-            *tilt
+            tilt
         );
 
         return result;
@@ -1442,7 +1443,7 @@ namespace WinCamera
             {
                 result = tilt->getStep();
             },
-            *tilt
+            tilt
         );
 
         return result;
@@ -1462,7 +1463,7 @@ namespace WinCamera
             {
                 result = tilt->getValue();
             },
-            *tilt
+            tilt
         );
 
         if (!success) result = 0;
@@ -1488,7 +1489,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *tilt
+            tilt
         );
 
         success = success && result;
@@ -1508,7 +1509,7 @@ namespace WinCamera
     {
         const auto roll = m_directShowCamera->getProperties()->getRoll();
 
-        return supportPropertyTemplate(*roll);
+        return supportPropertyTemplate(roll);
     }
 
     /**
@@ -1525,7 +1526,7 @@ namespace WinCamera
             {
                 result = roll->getRange();
             },
-            *roll
+            roll
         );
 
         return result;
@@ -1545,7 +1546,7 @@ namespace WinCamera
             {
                 result = roll->getStep();
             },
-            *roll
+            roll
         );
 
         return result;
@@ -1565,7 +1566,7 @@ namespace WinCamera
             {
                 result = roll->getValue();
             },
-            *roll
+            roll
         );
 
         if (!success) result = 0;
@@ -1591,7 +1592,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *roll
+            roll
         );
 
         success = success && result;
@@ -1611,7 +1612,7 @@ namespace WinCamera
     {
         const auto zoom = m_directShowCamera->getProperties()->getZoom();
 
-        return supportPropertyTemplate(*zoom);
+        return supportPropertyTemplate(zoom);
     }
 
     /**
@@ -1628,7 +1629,7 @@ namespace WinCamera
             {
                 result = zoom->getRange();
             },
-            *zoom
+            zoom
         );
 
         return result;
@@ -1648,7 +1649,7 @@ namespace WinCamera
             {
                 result = zoom->getStep();
             },
-            *zoom
+            zoom
         );
 
         return result;
@@ -1668,7 +1669,7 @@ namespace WinCamera
             {
                 result = zoom->getValue();
             },
-            *zoom
+            zoom
         );
 
         if (!success) result = -1;
@@ -1693,7 +1694,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *zoom
+            zoom
         );
         success = success && result;
 
@@ -1712,7 +1713,7 @@ namespace WinCamera
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
-        return supportPropertyTemplate(*exposure);
+        return supportPropertyTemplate(exposure);
     }
 
     /**
@@ -1734,7 +1735,7 @@ namespace WinCamera
                 result.first = exposureConvertion(range.first);
                 result.second = exposureConvertion(range.second);
             },
-            *exposure
+            exposure
         );
 
         return result;
@@ -1758,7 +1759,7 @@ namespace WinCamera
                 // Convert to second
                 result = exposureConvertion(value);
             },
-            *exposure
+            exposure
         );
 
         if (!success) result = -1;
@@ -1787,7 +1788,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *exposure
+            exposure
         );
         success = success && result;
 
@@ -1822,7 +1823,7 @@ namespace WinCamera
                     value += step;
                 }
             },
-            *exposure
+            exposure
         );
 
         if (success && exposureValues.size() > 0)
@@ -1886,7 +1887,7 @@ namespace WinCamera
             {
                 isAuto = exposure->isAuto();
             },
-            *exposure
+            exposure
         );
 
         if (!success) isAuto = false;
@@ -1929,7 +1930,7 @@ namespace WinCamera
                     copyError(result);
                 }
             },
-            *exposure
+            exposure
         );
 
         success = success && result;
@@ -1949,7 +1950,7 @@ namespace WinCamera
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
-        return supportPropertyTemplate(*iris);
+        return supportPropertyTemplate(iris);
     }
 
     /**
@@ -1966,7 +1967,7 @@ namespace WinCamera
             {
                 result = iris->getRange();
             },
-            *iris
+            iris
         );
 
         return result;
@@ -1986,7 +1987,7 @@ namespace WinCamera
             {
                 result = iris->getStep();
             },
-            *iris
+            iris
         );
 
         return result;
@@ -2006,7 +2007,7 @@ namespace WinCamera
             {
                 result = iris->getValue();
             },
-            *iris
+            iris
         );
 
         if (!success) result = -1;
@@ -2031,7 +2032,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *iris
+            iris
         );
 
         success = success && result;
@@ -2053,7 +2054,7 @@ namespace WinCamera
             {
                 isAuto = iris->isAuto();
             },
-            *iris
+            iris
         );
 
         if (!success) isAuto = false;
@@ -2096,7 +2097,7 @@ namespace WinCamera
                     copyError(result);
                 }
             },
-            *iris
+            iris
         );
 
         success = success && result;
@@ -2116,7 +2117,7 @@ namespace WinCamera
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
-        return supportPropertyTemplate(*focus);
+        return supportPropertyTemplate(focus);
     }
 
     /**
@@ -2133,7 +2134,7 @@ namespace WinCamera
             {
                 result = focus->getRange();
             },
-            *focus
+            focus
         );
 
         return result;
@@ -2153,7 +2154,7 @@ namespace WinCamera
             {
                 result = focus->getStep();
             },
-            *focus
+            focus
         );
 
         return result;
@@ -2173,7 +2174,7 @@ namespace WinCamera
             {
                 result = focus->getValue();
             },
-            *focus
+            focus
         );
 
         if (!success) result = -1;
@@ -2198,7 +2199,7 @@ namespace WinCamera
 
                 copyError(result);
             },
-            *focus
+            focus
         );
         success = success && result;
 
@@ -2219,7 +2220,7 @@ namespace WinCamera
             {
                 isAuto = focus->isAuto();
             },
-            *focus
+            focus
         );
 
         if (!success) isAuto = false;
@@ -2262,7 +2263,7 @@ namespace WinCamera
                     copyError(result);
                 }
             },
-            *focus
+            focus
         );
         success = success && result;
 

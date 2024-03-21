@@ -490,14 +490,14 @@ namespace WinCamera
          * @return Return true if property support.
         */
         bool supportPropertyTemplate(
-            const DirectShowCamera::DirectShowCameraProperty& property
+            const std::shared_ptr<DirectShowCamera::DirectShowCameraProperty>& property
         ) const
         {
             // Throw if camera is not opened
             if (!isOpened()) throw CameraNotOpenedException();
 
             // Get property support
-            return property.isSupported();
+            return property->isSupported();
         }
 
         /**
@@ -510,7 +510,7 @@ namespace WinCamera
         */
         template <typename Func> bool getPropertyTemplate(
             const Func func,
-            const DirectShowCamera::DirectShowCameraProperty& property,
+            const std::shared_ptr<DirectShowCamera::DirectShowCameraProperty>& property,
             const std::string propertyName= ""
         ) const
         {
@@ -518,11 +518,11 @@ namespace WinCamera
             if (!isOpened()) throw CameraNotOpenedException();
 
             // Throw if property is not support
-            if (!property.isSupported())
+            if (!property->isSupported())
             {
                 if (propertyName.empty())
                 {
-                    throw PropertyNotSupportException(property.getName());
+                    throw PropertyNotSupportException(property->getName());
                 }
                 else
                 {

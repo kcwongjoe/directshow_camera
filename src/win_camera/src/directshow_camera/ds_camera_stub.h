@@ -81,7 +81,11 @@ namespace DirectShowCamera
         std::shared_ptr<DirectShowCameraProperties> getProperties() const override;
 
         void resetDefault(bool asAuto = true) override;
-        bool setValue(DirectShowCameraProperty* property, long value, bool isAuto) override;
+        bool setValue(
+            const std::shared_ptr<DirectShowCameraProperty>& property,
+            const long value,
+            const bool isAuto
+        ) override;
 
         // Get camera
         bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices) override;
