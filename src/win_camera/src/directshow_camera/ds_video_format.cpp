@@ -1,4 +1,4 @@
-#include "ds_camera/ds_video_format.h"
+#include "directshow_camera/ds_video_format.h"
 
 namespace DirectShowCamera
 {

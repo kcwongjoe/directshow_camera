@@ -1,16 +1,16 @@
 #pragma once
-#ifndef UVC_CAMERA_DEVICE_H
-#define UVC_CAMERA_DEVICE_H
+#ifndef WIN_CAMERA_DEVICE_H
+#define WIN_CAMERA_DEVICE_H
 
 //************Content************
 #include <string>
 #include <vector>
 #include <utility>
 
-#include "ds_camera/ds_camera_device.h"
-#include "ds_camera/ds_video_format.h"
+#include "directshow_camera/ds_camera_device.h"
+#include "directshow_camera/ds_video_format.h"
 
-namespace DirectShowCamera
+namespace WinCamera
 {
     /**
      * @brief A class to store UVC Camera Device information
@@ -18,7 +18,7 @@ namespace DirectShowCamera
     class CameraDevice
     {
     public:
-        CameraDevice(DirectShowCameraDevice* directShowCameraDevice);
+        CameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCameraDevice);
         CameraDevice(const CameraDevice& cameraDevice);
 
         bool supportMonochrome() const;

@@ -3,10 +3,10 @@
 #define DIRECTSHOW_CAMERA_STUB_H
 
 //************Content************
-#include "ds_camera/abstract_ds_camera.h"
-#include "ds_camera/ds_camera_properties.h"
-#include "ds_camera/ds_camera_stub_default.h"
-#include "ds_camera/ds_video_format.h"
+#include "directshow_camera/abstract_ds_camera.h"
+#include "directshow_camera/ds_camera_properties.h"
+#include "directshow_camera/ds_camera_stub_default.h"
+#include "directshow_camera/ds_video_format.h"
 
 #include "camera_device.h"
 

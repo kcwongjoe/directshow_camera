@@ -4,12 +4,12 @@
 
 #include <iostream>
 
-using namespace DirectShowCamera;
+using namespace WinCamera;
 
 void eg1_capture()
 {
     // Get a empty camera
-    UVCCamera camera = UVCCamera();
+    WinCamera camera = WinCamera();
 
     // Get available camera list
     std::cout << "Start to list the available cameras..." << std::endl;

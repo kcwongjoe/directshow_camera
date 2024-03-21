@@ -1,6 +1,6 @@
 #include "exceptions/camera_not_opened_exception.h"
 
-namespace DirectShowCamera
+namespace WinCamera
 {
     CameraNotOpenedException::CameraNotOpenedException() :
         m_errorMessage("Camera is not opened.")

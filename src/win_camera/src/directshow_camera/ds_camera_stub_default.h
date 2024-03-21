@@ -3,8 +3,8 @@
 #define DIRECTSHOW_CAMERA_STUB_DEFAULT_H
 
 //************Content************
-#include "ds_camera/ds_camera_properties.h"
-#include "ds_camera/ds_video_format.h"
+#include "directshow_camera/ds_camera_properties.h"
+#include "directshow_camera/ds_video_format.h"
 
 #include <cstring>
 #include <set>

@@ -5,11 +5,11 @@
 //************Content************
 
 // Include
-#include "ds_camera/ds_camera_utils.h"
+#include "directshow_camera/ds_camera_utils.h"
 #include "camera_device.h"
-#include "ds_camera/ds_camera.h"
-#include "ds_camera/abstract_ds_camera.h"
-#include "ds_camera/ds_libs_setting.h"
+#include "directshow_camera/ds_camera.h"
+#include "directshow_camera/abstract_ds_camera.h"
+#include "directshow_camera/ds_libs_setting.h"
 
 #include "exceptions/camera_not_opened_exception.h"
 #include "exceptions/property_not_support_exception.h"
@@ -23,21 +23,13 @@
 #include <math.h>
 #include <vector>
 
-/**
- * @example eg1_capture.cpp
- * @example eg2_properties.cpp
- * @example eg3_camera_looper.cpp
- * @example eg4_exposure_fusion.cpp
- * @example eg5_disconnect_process.cpp
- * @example eg6_stub.cpp
- */
-namespace WindowCamera
+namespace WinCamera
 {
     /**
-     * @brief UVC Camera Class
+     * @brief WinCamera Class
      * 
      */
-    class UVCCamera
+    class WinCamera
     {
 
     /**********************Public********************************/
@@ -51,13 +43,13 @@ namespace WindowCamera
         /**
          * @brief Constructor
         */
-        UVCCamera();
+        WinCamera();
 
         /**
          * @brief Constructor
          * @param abstractDirectShowCamera DirectShowCamera or DirectShowCameraStub.
         */
-        UVCCamera(const std::shared_ptr<AbstractDirectShowCamera>& abstractDirectShowCamera);
+        WinCamera(const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera>& abstractDirectShowCamera);
 
         /**
          * @brief Constructor
@@ -68,7 +60,7 @@ namespace WindowCamera
         /**
          * @brief Destructor
         */
-        ~UVCCamera();
+        ~WinCamera();
 
         //-----------------Connection-----------------
 
@@ -88,7 +80,7 @@ namespace WindowCamera
          * @param videoFormat (Option) Video format. Default as NULL which use the default video format.
          * @return Return true if success.
         */
-        bool open(const DirectShowCameraDevice& device, DirectShowVideoFormat* videoFormat = NULL);
+        bool open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
 
         /**
          * @brief Return true if the camera is opened.
@@ -145,20 +137,20 @@ namespace WindowCamera
          * @brief Get support DirectShowVideoFormat list. It is a advance option. Suggest to acquire the resolution from CameraDevice (Use getCameras() to get CameraDevice).
          * @return Return the support DirectShowVideoFormat list.
         */
-        std::vector<DirectShowVideoFormat> getSupportDirectShowVideoFormats() const;
+        std::vector<DirectShowCamera::DirectShowVideoFormat> getSupportDirectShowVideoFormats() const;
 
         /**
          * @brief Get the current DirectShowVideoFormat
          * @return Return the current DirectShowVideoFormat
         */
-        DirectShowVideoFormat getDirectShowVideoFormat() const;
+        DirectShowCamera::DirectShowVideoFormat getDirectShowVideoFormat() const;
 
         /**
          * @brief Set DirectShowVideoFormat to the camera. Problam may caused when camera was opened. It is suggest to set DirectShowVideoFormat by open() fucntion.
          * @param videoFormat DirectShowVideoFormat
          * @return Return true if success.
         */
-        bool setDirectShowVideoFormat(DirectShowVideoFormat* videoFormat);
+        bool setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat* videoFormat);
 
         // ------Frame------
 
@@ -291,7 +283,7 @@ namespace WindowCamera
          * @brief Get the available DirectShowCameraDevice list. It is a advance option. Suggest to use getCameras().
          * @return Return the available DirectShowCameraDevice list
         */
-        std::vector<DirectShowCameraDevice> getDirectShowCameras();
+        std::vector<DirectShowCamera::DirectShowCameraDevice> getDirectShowCameras();
 
         /**
          * @brief Get the available camera.
@@ -311,7 +303,7 @@ namespace WindowCamera
          * @brief Get directshow properties pointer. It is a advance option.
          * @return Return the directshow properties pointer
         */
-        std::shared_ptr<DirectShowCameraProperties> getDirectShowProperties() const;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperties> getDirectShowProperties() const;
 
         // ---Brightness---
 
@@ -465,7 +457,7 @@ namespace WindowCamera
 
     /**********************Private********************************/
     private:
-        std::shared_ptr<AbstractDirectShowCamera> m_directShowCamera;
+        std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> m_directShowCamera;
 
         unsigned long m_lastFrameIndex = 0;
         std::string m_errorString;
@@ -482,7 +474,7 @@ namespace WindowCamera
          * @param videoFormat Video format
          * @return Return true if success.
         */
-        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL);
+        bool open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
 
         // Utils
         void copyError(bool success);
@@ -498,7 +490,7 @@ namespace WindowCamera
          * @return Return true if property support.
         */
         bool supportPropertyTemplate(
-            const DirectShowCameraProperty& property
+            const DirectShowCamera::DirectShowCameraProperty& property
         ) const
         {
             // Throw if camera is not opened
@@ -518,7 +510,7 @@ namespace WindowCamera
         */
         template <typename Func> bool getPropertyTemplate(
             const Func func,
-            const DirectShowCameraProperty& property,
+            const DirectShowCamera::DirectShowCameraProperty& property,
             const std::string propertyName= ""
         ) const
         {

@@ -1,4 +1,4 @@
-#include "ds_camera/ds_grabber_callback.h"
+#include "directshow_camera/ds_grabber_callback.h"
 
 namespace DirectShowCamera
 {

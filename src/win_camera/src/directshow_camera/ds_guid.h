@@ -3,7 +3,7 @@
 #define DIRECTSHOW_GUID_H
 
 //************Content************
-#include "ds_camera/qedit.h"
+#include "directshow_camera/qedit.h"
 
 // Media sub type
 static const GUID MEDIASUBTYPE_GREY = { 0x59455247, 0x0000, 0x0010,{ 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71 } };

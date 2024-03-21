@@ -3,12 +3,12 @@
 #include <uvc_camera_looper.h>
 #include <iostream>
 
-using namespace DirectShowCamera;
+using namespace WinCamera;
 
 void eg3_camera_looper()
 {
     // Create a looper
-    UVCCameraLooper cameraLooper = UVCCameraLooper();
+    WinCameraLooper cameraLooper = WinCameraLooper();
 
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;

@@ -2,9 +2,9 @@
 
 #include <uvc_camera.h>
 #include <iostream>
-#include "ds_camera/ds_camera_stub.h"
+#include "directshow_camera/ds_camera_stub.h"
 
-using namespace DirectShowCamera;
+using namespace WinCamera;
 
 void eg6_stub()
 {
@@ -18,11 +18,11 @@ void eg6_stub()
     // Stub or directshow camera
 #ifdef USE_STUB
     // Create Stub
-    const std::shared_ptr<AbstractDirectShowCamera> stub = std::make_shared<DirectShowCameraStub>();
-    DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCameraStub*>(stub.get());
+    const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> stub = std::make_shared<DirectShowCamera::DirectShowCameraStub>();
+    DirectShowCamera::DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCamera::DirectShowCameraStub*>(stub.get());
 
     // Open
-    UVCCamera camera = UVCCamera(stub);
+    WinCamera camera = WinCamera(stub);
 #else
     // Use normal directshow camera
     UVCCamera camera = UVCCamera();

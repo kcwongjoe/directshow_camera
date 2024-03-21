@@ -1,6 +1,6 @@
 #include "uvc_camera_looper.h"
 
-namespace DirectShowCamera
+namespace WinCamera
 {
     
 #pragma region Constructor and Destructor
@@ -8,17 +8,17 @@ namespace DirectShowCamera
     /**
      * @brief Constructor
     */
-    UVCCameraLooper::UVCCameraLooper()
+    WinCameraLooper::WinCameraLooper()
     {
         reset();
-        m_camera = new UVCCamera();
+        m_camera = new WinCamera();
     }
 
     /**
      * @brief Constructor
      * @param camera Camera
     */
-    UVCCameraLooper::UVCCameraLooper(UVCCamera* camera)
+    WinCameraLooper::WinCameraLooper(WinCamera* camera)
     {
         reset();
         m_camera = camera;
@@ -27,7 +27,7 @@ namespace DirectShowCamera
     /**
      * @brief Destructor
     */
-    UVCCameraLooper::~UVCCameraLooper()
+    WinCameraLooper::~WinCameraLooper()
     {
         stop(false);
 
@@ -40,7 +40,7 @@ namespace DirectShowCamera
     /**
      * @brief Reset variables
     */
-    void UVCCameraLooper::reset()
+    void WinCameraLooper::reset()
     {
         m_stopThread = false;
         m_stopCapture = false;
@@ -56,7 +56,7 @@ namespace DirectShowCamera
      * @brief Start looper
      * @param startCapture Set it as true if you want to run startCapture() on the camera. Default as true. 
     */
-    void UVCCameraLooper::start(bool startCapture)
+    void WinCameraLooper::start(bool startCapture)
     {
         if (!m_isRunning)
         {
@@ -66,7 +66,7 @@ namespace DirectShowCamera
 
             // Start the thread
             m_stopThread = false;
-            m_thread = std::thread(&UVCCameraLooper::run, this);
+            m_thread = std::thread(&WinCameraLooper::run, this);
             m_thread.detach();
 
         }
@@ -79,7 +79,7 @@ namespace DirectShowCamera
      * @param stopCapture Set it as true if you want to run stopCapture() after looper is stopped. Default as true. 
      * @return Return true if success to close. Return false if timeout.
     */
-    bool UVCCameraLooper::stop(bool async, bool stopCapture)
+    bool WinCameraLooper::stop(bool async, bool stopCapture)
     {
         if (this && m_isRunning)
         {
@@ -128,7 +128,7 @@ namespace DirectShowCamera
     /**
      * @brief Run
     */
-    void UVCCameraLooper::run()
+    void WinCameraLooper::run()
     {
         // Set as running
         m_isRunning = true;
@@ -211,7 +211,7 @@ namespace DirectShowCamera
      *
      * @return Return true if thread is running.
      */
-    bool UVCCameraLooper::isRunning()
+    bool WinCameraLooper::isRunning()
     {
         return m_isRunning;
     }
@@ -225,7 +225,7 @@ namespace DirectShowCamera
      *
      * @param timeout in millisecond. Set as 0 to disable the timeout. Default as 3 seconds.
      */
-    void UVCCameraLooper::setWaitForStopTimeout(int timeout)
+    void WinCameraLooper::setWaitForStopTimeout(int timeout)
     {
         // Exception
         if (timeout < 0)
@@ -239,7 +239,7 @@ namespace DirectShowCamera
      *
      * @return Timeout in millisecond.
      */
-    int UVCCameraLooper::getWaitForStopTimeout()
+    int WinCameraLooper::getWaitForStopTimeout()
     {
         return m_waitForStopTimeout;
     }
@@ -252,7 +252,7 @@ namespace DirectShowCamera
      * @brief Set the save image folder path
      * @param path Path
     */
-    void UVCCameraLooper::setSaveImagePath(std::string path)
+    void WinCameraLooper::setSaveImagePath(std::string path)
     {
         m_saveImagePath = path;
     }
@@ -262,7 +262,7 @@ namespace DirectShowCamera
      * @param enable Set as true to save image.
      * @param saveInAsync (Option) Set as true to save image in async mode. Default as true;
     */
-    void UVCCameraLooper::enableSaveImage(bool enable, bool saveInAsync)
+    void WinCameraLooper::enableSaveImage(bool enable, bool saveInAsync)
     {
         m_saveImage = enable;
         m_saveImageInAsync = saveInAsync;
@@ -275,7 +275,7 @@ namespace DirectShowCamera
      * 
      * @param capturedProcess void(cv::mat image)
      */
-    void UVCCameraLooper::setCapturedProcess(CapturedProcess capturedProcess)
+    void WinCameraLooper::setCapturedProcess(CapturedProcess capturedProcess)
     {
         m_capturedProcess = capturedProcess;
     }
@@ -285,7 +285,7 @@ namespace DirectShowCamera
      * 
      * @return Return the camera pointer
      */
-    UVCCamera* UVCCameraLooper::getCamera()
+    WinCamera* WinCameraLooper::getCamera()
     {
         return m_camera;
     }
@@ -295,7 +295,7 @@ namespace DirectShowCamera
      * 
      * @return Return the last capture image
      */
-    cv::Mat UVCCameraLooper::getImage()
+    cv::Mat WinCameraLooper::getImage()
     {
         return m_capturedImage;
     }

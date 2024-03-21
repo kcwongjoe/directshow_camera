@@ -1,6 +1,6 @@
 #include "camera_device.h"
 
-namespace DirectShowCamera
+namespace WinCamera
 {
 
 #pragma region constructor and destructor
@@ -9,14 +9,14 @@ namespace DirectShowCamera
      * @brief Constructor
      * @param directShowCamera Directshow Camera
     */
-    CameraDevice::CameraDevice(DirectShowCameraDevice* directShowCamera)
+    CameraDevice::CameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCamera)
     {
         m_friendlyName = directShowCamera->getFriendlyName();
         m_description = directShowCamera->getDescription();
         m_devicePath = directShowCamera->getDevicePath();
 
         // Get frame size
-        std::vector<DirectShowVideoFormat> videoForamts = directShowCamera->getDirectShowVideoFormats();	
+        std::vector<DirectShowCamera::DirectShowVideoFormat> videoForamts = directShowCamera->getDirectShowVideoFormats();
         for (int i = 0; i < videoForamts.size(); i++)
         {
             int width = videoForamts[i].getWidth();
@@ -25,7 +25,7 @@ namespace DirectShowCamera
 
             if (width != 0 && height != 0)
             {
-                if (DirectShowVideoFormat::supportRGBConvertion(subType))
+                if (DirectShowCamera::DirectShowVideoFormat::supportRGBConvertion(subType))
                 {
                     // RGB
 
@@ -44,7 +44,7 @@ namespace DirectShowCamera
                         m_rgbResolutions.push_back(std::pair<int, int>(width, height));
                     }
                 }
-                else if (DirectShowVideoFormat::isMonochrome(subType))
+                else if (DirectShowCamera::DirectShowVideoFormat::isMonochrome(subType))
                 {
                     // Monochrome 
 

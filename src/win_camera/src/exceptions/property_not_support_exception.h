@@ -7,7 +7,7 @@
 #include <exception>
 #include <string>
 
-namespace DirectShowCamera
+namespace WinCamera
 {
     /**
      * @class PropertyNotSupportException

@@ -1,27 +1,28 @@
 #pragma once
-#ifndef UVC_CAMERA_LOOPER_H
-#define UVC_CAMERA_LOOPER_H
+#ifndef WIN_CAMERA_LOOPER_H
+#define WIN_CAMERA_LOOPER_H
 
 //************Content************
 
 #include <thread>
-#include <uvc_camera.h>
-namespace DirectShowCamera
+#include "win_camera.h"
+
+namespace WinCamera
 {
     /**
      * @brief UVC Camera Looper
      * 
      */
-    class UVCCameraLooper {
+    class WinCameraLooper {
     public:
 
         typedef std::function<void(cv::Mat image)> CapturedProcess;
 
-        UVCCameraLooper();
+        WinCameraLooper();
 
-        UVCCameraLooper(UVCCamera* camera);
+        WinCameraLooper(WinCamera* camera);
 
-        ~UVCCameraLooper();
+        ~WinCameraLooper();
 
         void setCapturedProcess(CapturedProcess capturedProcess);
         void setSaveImagePath(std::string path);
@@ -36,7 +37,7 @@ namespace DirectShowCamera
 
         cv::Mat getImage();
 
-        UVCCamera* getCamera();
+        WinCamera* getCamera();
 
     private:
         bool m_stopThread = false;
@@ -49,7 +50,7 @@ namespace DirectShowCamera
         bool m_saveImage = false;
         bool m_saveImageInAsync = true;
 
-        UVCCamera* m_camera;
+        WinCamera* m_camera;
         cv::Mat m_capturedImage;
         CapturedProcess m_capturedProcess = NULL;
 

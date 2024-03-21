@@ -3,12 +3,12 @@
 #include <uvc_camera.h>
 #include <iostream>
 
-using namespace DirectShowCamera;
+using namespace WinCamera;
 
 void eg5_disconnect_process()
 {
     // Get a empty camera
-    UVCCamera camera = UVCCamera();
+    WinCamera camera = WinCamera();
 
     // Print camera list
     std::vector<CameraDevice> cameraDeivceList = camera.getCameras();

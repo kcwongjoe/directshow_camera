@@ -3,12 +3,12 @@
 #include <uvc_camera.h>
 #include <iostream>
 
-using namespace DirectShowCamera;
+using namespace WinCamera;
 
 void eg4_exposure_fusion()
 {
     // Get a empty camera
-    UVCCamera camera = UVCCamera();
+    WinCamera camera = WinCamera();
 
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;

@@ -3,12 +3,12 @@
 #define DIRECTSHOW_CAMERA_H
 
 //************Content************
-#include "ds_camera/ds_camera_utils.h"
+#include "directshow_camera/ds_camera_utils.h"
 
-#include "ds_camera/abstract_ds_camera.h"
-#include "ds_camera/ds_camera_properties.h"
-#include "ds_camera/ds_video_format.h"
-#include "ds_camera/ds_grabber_callback.h"
+#include "directshow_camera/abstract_ds_camera.h"
+#include "directshow_camera/ds_camera_properties.h"
+#include "directshow_camera/ds_video_format.h"
+#include "directshow_camera/ds_grabber_callback.h"
 
 #include "camera_device.h"
 

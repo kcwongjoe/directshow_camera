@@ -2,7 +2,7 @@
 
 #ifdef HAS_OPENCV
 
-namespace DirectShowCamera
+namespace WinCamera
 {
 
     /**

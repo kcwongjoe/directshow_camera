@@ -1,25 +1,26 @@
-#include <uvc_camera.h>
+#include "win_camera.h"
+#include "directshow_camera/ds_camera.h"
 
-namespace DirectShowCamera
+namespace WinCamera
 {
 
 #pragma region Constructor and Destructor
 
-    UVCCamera::UVCCamera() : 
-        m_directShowCamera(std::make_shared<DirectShowCamera>())
+    WinCamera::WinCamera() : 
+        m_directShowCamera(std::make_shared<DirectShowCamera::DirectShowCamera>())
     {
         constructor();
     }
 
-    UVCCamera::UVCCamera(
-        const std::shared_ptr<AbstractDirectShowCamera>& abstractDirectShowCamera
+    WinCamera::WinCamera(
+        const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera>& abstractDirectShowCamera
     ) :
         m_directShowCamera(abstractDirectShowCamera)
     {
         constructor();
     }
 
-    void UVCCamera::constructor()
+    void WinCamera::constructor()
     {
         DirectShowCameraUtils::initCOMLib();
 
@@ -30,7 +31,7 @@ namespace DirectShowCamera
 #endif
     }
 
-    UVCCamera::~UVCCamera()
+    WinCamera::~WinCamera()
     {
         close();
         
@@ -42,7 +43,7 @@ namespace DirectShowCamera
 
 #pragma region Connection
 
-    bool UVCCamera::open(
+    bool WinCamera::open(
         const CameraDevice& device,
         const int width,
         const int height,
@@ -52,7 +53,7 @@ namespace DirectShowCamera
         bool result = false;
 
         // Get DirectShowCameraDevice
-        std::vector<DirectShowCameraDevice> possibleCamera = getDirectShowCameras();
+        std::vector<DirectShowCamera::DirectShowCameraDevice> possibleCamera = getDirectShowCameras();
         int cameraIndex = -1;
         for (int i = 0; i < possibleCamera.size(); i++)
         {
@@ -76,10 +77,10 @@ namespace DirectShowCamera
             else
             {
                 // Lookup format
-                std::vector<DirectShowVideoFormat> videoFormats = possibleCamera[cameraIndex].getDirectShowVideoFormats();
+                std::vector<DirectShowCamera::DirectShowVideoFormat> videoFormats = possibleCamera[cameraIndex].getDirectShowVideoFormats();
 
                 // Lookup size
-                std::vector<DirectShowVideoFormat> possibleVideoFormat;
+                std::vector<DirectShowCamera::DirectShowVideoFormat> possibleVideoFormat;
                 for (int i = 0; i < videoFormats.size(); i++)
                 {
                     if (videoFormats[i].getWidth() == width && videoFormats[i].getHeight() == height)
@@ -96,12 +97,12 @@ namespace DirectShowCamera
                     if (rgb)
                     {
                         // RGB
-                        mediaType = DirectShowVideoFormat::getSupportRGBSubType();
+                        mediaType = DirectShowCamera::DirectShowVideoFormat::getSupportRGBSubType();
                     }
                     else
                     {
                         // MonoChrome
-                        mediaType = DirectShowVideoFormat::getMonochromeSubType();
+                        mediaType = DirectShowCamera::DirectShowVideoFormat::getMonochromeSubType();
                     }
 
                     // Match with list
@@ -154,7 +155,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    bool UVCCamera::open(const DirectShowCameraDevice& device, DirectShowVideoFormat* videoFormat)
+    bool WinCamera::open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat)
     {
         bool result = false;
 
@@ -178,7 +179,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    bool UVCCamera::open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat)
+    bool WinCamera::open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat)
     {
         bool result = false;
 
@@ -197,7 +198,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    bool UVCCamera::isOpened() const
+    bool WinCamera::isOpened() const
     {
         if (m_directShowCamera)
             return m_directShowCamera->isOpening();
@@ -205,7 +206,7 @@ namespace DirectShowCamera
             return false;
     }
 
-    bool UVCCamera::close()
+    bool WinCamera::close()
     {
         bool result = true;
         if (m_directShowCamera)
@@ -225,12 +226,12 @@ namespace DirectShowCamera
         return result;
     }
 
-    bool UVCCamera::checkDisconnection()
+    bool WinCamera::checkDisconnection()
     {
         return m_directShowCamera->checkDisconnection();
     }
 
-    void UVCCamera::setDisconnectionProcess(std::function<void()> func)
+    void WinCamera::setDisconnectionProcess(std::function<void()> func)
     {
         m_directShowCamera->setDisconnectionProcess(func);
     }
@@ -239,7 +240,7 @@ namespace DirectShowCamera
 
 #pragma region Capture
 
-    bool UVCCamera::startCapture()
+    bool WinCamera::startCapture()
     {
         if (m_directShowCamera->isOpening())
         {
@@ -256,7 +257,7 @@ namespace DirectShowCamera
         }
     }
 
-    bool UVCCamera::stopCapture()
+    bool WinCamera::stopCapture()
     {
         if (m_directShowCamera->isOpening())
         {
@@ -273,7 +274,7 @@ namespace DirectShowCamera
         }
     }
 
-    bool UVCCamera::isCapturing() const
+    bool WinCamera::isCapturing() const
     {
         if (m_directShowCamera)
         {
@@ -290,25 +291,25 @@ namespace DirectShowCamera
 
 #pragma region Properties
 
-    void UVCCamera::resetProperties(const bool asAuto)
+    void WinCamera::resetProperties(const bool asAuto)
     {
         m_directShowCamera->resetDefault(asAuto);
     }
 
-    std::shared_ptr<DirectShowCameraProperties> UVCCamera::getDirectShowProperties() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperties> WinCamera::getDirectShowProperties() const
     {
         return m_directShowCamera->getProperties();
     }
 
 #pragma region Brightness
 
-    bool UVCCamera::supportBrightness() const
+    bool WinCamera::supportBrightness() const
     {
         const auto brightness = m_directShowCamera->getProperties()->getBrightness();
         return supportPropertyTemplate(*brightness);
     }
 
-    std::pair<long, long> UVCCamera::getBrightnessRange() const
+    std::pair<long, long> WinCamera::getBrightnessRange() const
     {
         const auto brightness = m_directShowCamera->getProperties()->getBrightness();
 
@@ -324,7 +325,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    long UVCCamera::getBrightnessStep() const
+    long WinCamera::getBrightnessStep() const
     {
         const auto brightness = m_directShowCamera->getProperties()->getBrightness();
 
@@ -340,7 +341,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    long UVCCamera::getBrightness() const
+    long WinCamera::getBrightness() const
     {
         const auto brightness = m_directShowCamera->getProperties()->getBrightness();
 
@@ -358,7 +359,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    bool UVCCamera::setBrightness(const long value)
+    bool WinCamera::setBrightness(const long value)
     {
         const auto brightness = m_directShowCamera->getProperties()->getBrightness();
 
@@ -386,7 +387,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property contrast is supported.
      * @return Retrun true if property contrast is supported.
     */
-    bool UVCCamera::supportContrast() const
+    bool WinCamera::supportContrast() const
     {
         const auto contrast = m_directShowCamera->getProperties()->getContrast();
 
@@ -397,7 +398,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - contrast
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getContrastRange() const
+    std::pair<long, long> WinCamera::getContrastRange() const
     {
         const auto contrast = m_directShowCamera->getProperties()->getContrast();
 
@@ -417,7 +418,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Contrast.
      * @return Return the step of the Contrast. -1 return if error occurred.
     */
-    long UVCCamera::getContrastStep() const
+    long WinCamera::getContrastStep() const
     {
         const auto contrast = m_directShowCamera->getProperties()->getContrast();
 
@@ -437,7 +438,7 @@ namespace DirectShowCamera
      * @brief Get current contrast
      * @return Return current contrast. -1 return if error occurred.
     */
-    long UVCCamera::getContrast() const
+    long WinCamera::getContrast() const
     {
         const auto contrast = m_directShowCamera->getProperties()->getContrast();
 
@@ -460,7 +461,7 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setContrast(const long value)
+    bool WinCamera::setContrast(const long value)
     {
         const auto contrast = m_directShowCamera->getProperties()->getContrast();
 
@@ -487,7 +488,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property hue is supported.
      * @return Retrun true if property hue is supported.
     */
-    bool UVCCamera::supportHue() const
+    bool WinCamera::supportHue() const
     {
         const auto hue = m_directShowCamera->getProperties()->getHue();
 
@@ -498,7 +499,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - hue
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getHueRange() const
+    std::pair<long, long> WinCamera::getHueRange() const
     {
         const auto hue = m_directShowCamera->getProperties()->getHue();
 
@@ -518,7 +519,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Hue.
      * @return Return the step of the Hue. -1 return if error occurred.
     */
-    long UVCCamera::getHueStep() const
+    long WinCamera::getHueStep() const
     {
         const auto hue = m_directShowCamera->getProperties()->getHue();
 
@@ -538,7 +539,7 @@ namespace DirectShowCamera
      * @brief Get current hue
      * @return Return current hue.
     */
-    long UVCCamera::getHue() const
+    long WinCamera::getHue() const
     {
         const auto hue = m_directShowCamera->getProperties()->getHue();
 
@@ -559,7 +560,7 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setHue(const long degree)
+    bool WinCamera::setHue(const long degree)
     {
         const auto hue = m_directShowCamera->getProperties()->getHue();
 
@@ -587,7 +588,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property saturation is supported.
      * @return Retrun true if property saturation is supported.
     */
-    bool UVCCamera::supportSaturation() const
+    bool WinCamera::supportSaturation() const
     {
         const auto saturation = m_directShowCamera->getProperties()->getSaturation();
 
@@ -598,7 +599,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - saturation
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getSaturationRange() const
+    std::pair<long, long> WinCamera::getSaturationRange() const
     {
         const auto saturation = m_directShowCamera->getProperties()->getSaturation();
 
@@ -618,7 +619,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Saturation.
      * @return Return the step of the Saturation. -1 return if error occurred.
     */
-    long UVCCamera::getSaturationStep() const
+    long WinCamera::getSaturationStep() const
     {
         const auto saturation = m_directShowCamera->getProperties()->getSaturation();
 
@@ -638,7 +639,7 @@ namespace DirectShowCamera
      * @brief Get current saturation
      * @return Return current saturation. -1 return if error occurred.
     */
-    long UVCCamera::getSaturation() const
+    long WinCamera::getSaturation() const
     {
         const auto saturation = m_directShowCamera->getProperties()->getSaturation();
 
@@ -661,7 +662,7 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setSaturation(const long value)
+    bool WinCamera::setSaturation(const long value)
     {
         const auto saturation = m_directShowCamera->getProperties()->getSaturation();
 
@@ -688,7 +689,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property sharpness is supported.
      * @return Retrun true if property sharpness is supported.
     */
-    bool UVCCamera::supportSharpness() const
+    bool WinCamera::supportSharpness() const
     {
         const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
 
@@ -699,7 +700,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - sharpness
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getSharpnessRange() const
+    std::pair<long, long> WinCamera::getSharpnessRange() const
     {
         const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
 
@@ -719,7 +720,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Sharpness.
      * @return Return the step of the Sharpness. -1 return if error occurred.
     */
-    long UVCCamera::getSharpnessStep() const
+    long WinCamera::getSharpnessStep() const
     {
         const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
 
@@ -739,7 +740,7 @@ namespace DirectShowCamera
      * @brief Get current sharpness
      * @return Return current sharpness. -1 return if error occurred.
     */
-    long UVCCamera::getSharpness() const
+    long WinCamera::getSharpness() const
     {
         const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
 
@@ -762,7 +763,7 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setSharpness(const long value)
+    bool WinCamera::setSharpness(const long value)
     {
         const auto sharpness = m_directShowCamera->getProperties()->getSharpness();
 
@@ -789,7 +790,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property gamma is supported.
      * @return Retrun true if property gamma is supported.
     */
-    bool UVCCamera::supportGamma() const
+    bool WinCamera::supportGamma() const
     {
         const auto gamma = m_directShowCamera->getProperties()->getGamma();
 
@@ -800,7 +801,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - gamma
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getGammaRange() const
+    std::pair<long, long> WinCamera::getGammaRange() const
     {
         const auto gamma = m_directShowCamera->getProperties()->getGamma();
 
@@ -820,7 +821,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - Gamma.
      * @return Return the step of the Gamma. -1 return if error occurred.
     */
-    long UVCCamera::getGammaStep() const
+    long WinCamera::getGammaStep() const
     {
         const auto gamma = m_directShowCamera->getProperties()->getGamma();
 
@@ -840,7 +841,7 @@ namespace DirectShowCamera
      * @brief Get current gamma
      * @return Return current gamma. -1 return if error occurred.
     */
-    long UVCCamera::getGamma() const
+    long WinCamera::getGamma() const
     {
         const auto gamma = m_directShowCamera->getProperties()->getGamma();
 
@@ -863,7 +864,7 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setGamma(const long value)
+    bool WinCamera::setGamma(const long value)
     {
         const auto gamma = m_directShowCamera->getProperties()->getGamma();
 
@@ -893,7 +894,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property Color Enable is supported.
      * @return Retrun true if property Color Enable is supported.
     */
-    bool UVCCamera::supportColorEnable() const
+    bool WinCamera::supportColorEnable() const
     {
         const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
 
@@ -904,7 +905,7 @@ namespace DirectShowCamera
      * @brief Get current color enable
      * @return Return current color enable. -1 return if error occurred.
     */
-    bool UVCCamera::isColorEnable() const
+    bool WinCamera::isColorEnable() const
     {
         const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
 
@@ -928,7 +929,7 @@ namespace DirectShowCamera
      * @param isOn Color Enable On = true
      * @return Return true if success.
     */
-    bool UVCCamera::setColorEnable(const bool isOn)
+    bool WinCamera::setColorEnable(const bool isOn)
     {
         const auto colorEnable = m_directShowCamera->getProperties()->getColorEnable();
 
@@ -961,7 +962,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property white balance is supported.
      * @return Retrun true if property white balance is supported.
     */
-    bool UVCCamera::supportWhiteBalance() const
+    bool WinCamera::supportWhiteBalance() const
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -972,7 +973,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - white balance in degree kelvin
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getWhiteBalanceRange() const
+    std::pair<long, long> WinCamera::getWhiteBalanceRange() const
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -992,7 +993,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - White Balance.
      * @return Return the step of the White Balance. -1 return if error occurred.
     */
-    long UVCCamera::getWhiteBalanceStep() const
+    long WinCamera::getWhiteBalanceStep() const
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -1012,7 +1013,7 @@ namespace DirectShowCamera
      * @brief Get current white balance in degree kelvin
      * @return Return current white balance. -1 return if error occurred.
     */
-    long UVCCamera::getWhiteBalance() const
+    long WinCamera::getWhiteBalance() const
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -1035,7 +1036,7 @@ namespace DirectShowCamera
      * @param kelvin Value to be set in degree kelvin
      * @return Return true if success.
     */
-    bool UVCCamera::setWhiteBalance(const long kelvin)
+    bool WinCamera::setWhiteBalance(const long kelvin)
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -1059,7 +1060,7 @@ namespace DirectShowCamera
      * @brief Retrun true if white balance is auto mode, return false if it is manual mode.
      * @return Retrun true if white balance is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoWhiteBalance() const
+    bool WinCamera::isAutoWhiteBalance() const
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -1083,7 +1084,7 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoWhiteBalance(const bool setToAuto)
+    bool WinCamera::setAutoWhiteBalance(const bool setToAuto)
     {
         const auto whiteBalance = m_directShowCamera->getProperties()->getWhiteBalance();
 
@@ -1128,7 +1129,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property backlight compensation is supported.
      * @return Retrun true if property backlight compensation is supported.
     */
-    bool UVCCamera::supportBacklightCompensation() const
+    bool WinCamera::supportBacklightCompensation() const
     {
         const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
 
@@ -1140,7 +1141,7 @@ namespace DirectShowCamera
      * @brief Get current backlight compensation
      * @return Return current backlight compensation. -1 return if error occurred.
     */
-    bool UVCCamera::isBacklightCompensation() const
+    bool WinCamera::isBacklightCompensation() const
     {
         const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
 
@@ -1164,7 +1165,7 @@ namespace DirectShowCamera
      * @param isOn Backlight Compensation On = true
      * @return Return true if success.
     */
-    bool UVCCamera::setBacklightCompensation(const bool isOn)
+    bool WinCamera::setBacklightCompensation(const bool isOn)
     {
         const auto backlightCompensation = m_directShowCamera->getProperties()->getBacklightCompensation();
 
@@ -1195,7 +1196,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property gain is supported.
      * @return Retrun true if property gain is supported.
     */
-    bool UVCCamera::supportGain() const
+    bool WinCamera::supportGain() const
     {
         const auto gain = m_directShowCamera->getProperties()->getGain();
 
@@ -1206,7 +1207,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - gain
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getGainRange() const
+    std::pair<long, long> WinCamera::getGainRange() const
     {
         const auto gain = m_directShowCamera->getProperties()->getGain();
 
@@ -1226,7 +1227,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - gain.
      * @return Return the step of the gain. -1 return if error occurred.
     */
-    long UVCCamera::getGainStep() const
+    long WinCamera::getGainStep() const
     {
         const auto gain = m_directShowCamera->getProperties()->getGain();
 
@@ -1246,7 +1247,7 @@ namespace DirectShowCamera
      * @brief Get current gain
      * @return Return current gain. -1 return if error occurred.
     */
-    long UVCCamera::getGain() const
+    long WinCamera::getGain() const
     {
         const auto gain = m_directShowCamera->getProperties()->getGain();
 
@@ -1269,7 +1270,7 @@ namespace DirectShowCamera
      * @param value Value to be set
      * @return Return true if success.
     */
-    bool UVCCamera::setGain(const long value)
+    bool WinCamera::setGain(const long value)
     {
         const auto gain = m_directShowCamera->getProperties()->getGain();
 
@@ -1297,7 +1298,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property pan is supported.
      * @return Retrun true if property pan is supported.
     */
-    bool UVCCamera::supportPan() const
+    bool WinCamera::supportPan() const
     {
         const auto pan = m_directShowCamera->getProperties()->getPan();
 
@@ -1308,7 +1309,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - pan
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getPanRange() const
+    std::pair<long, long> WinCamera::getPanRange() const
     {
         const auto pan = m_directShowCamera->getProperties()->getPan();
 
@@ -1328,7 +1329,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - pan.
      * @return Return the step of the pan. -1 return if error occurred.
     */
-    long UVCCamera::getPanStep() const
+    long WinCamera::getPanStep() const
     {
         const auto pan = m_directShowCamera->getProperties()->getPan();
 
@@ -1348,7 +1349,7 @@ namespace DirectShowCamera
      * @brief Get current pan
      * @return Return current pan. 0 return if error occurred.
     */
-    long UVCCamera::getPan() const
+    long WinCamera::getPan() const
     {
         const auto pan = m_directShowCamera->getProperties()->getPan();
 
@@ -1371,7 +1372,7 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setPan(const long degree)
+    bool WinCamera::setPan(const long degree)
     {
         const auto pan = m_directShowCamera->getProperties()->getPan();
 
@@ -1400,7 +1401,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property tilt is supported.
      * @return Retrun true if property tilt is supported.
     */
-    bool UVCCamera::supportTilt() const
+    bool WinCamera::supportTilt() const
     {
         const auto tilt = m_directShowCamera->getProperties()->getTilt();
 
@@ -1411,7 +1412,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - tilt
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getTiltRange() const
+    std::pair<long, long> WinCamera::getTiltRange() const
     {
         const auto tilt = m_directShowCamera->getProperties()->getTilt();
 
@@ -1431,7 +1432,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - tilt.
      * @return Return the step of the tilt. -1 return if error occurred.
     */
-    long UVCCamera::getTiltStep() const
+    long WinCamera::getTiltStep() const
     {
         const auto tilt = m_directShowCamera->getProperties()->getTilt();
 
@@ -1451,7 +1452,7 @@ namespace DirectShowCamera
      * @brief Get current tilt
      * @return Return current tilt. 0 return if error occurred.
     */
-    long UVCCamera::getTilt() const
+    long WinCamera::getTilt() const
     {
         const auto tilt = m_directShowCamera->getProperties()->getTilt();
 
@@ -1474,7 +1475,7 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setTilt(const long degree)
+    bool WinCamera::setTilt(const long degree)
     {
         const auto tilt = m_directShowCamera->getProperties()->getTilt();
 
@@ -1503,7 +1504,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property roll is supported.
      * @return Retrun true if property roll is supported.
     */
-    bool UVCCamera::supportRoll() const
+    bool WinCamera::supportRoll() const
     {
         const auto roll = m_directShowCamera->getProperties()->getRoll();
 
@@ -1514,7 +1515,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - roll
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getRollRange() const
+    std::pair<long, long> WinCamera::getRollRange() const
     {
         const auto roll = m_directShowCamera->getProperties()->getRoll();
 
@@ -1534,7 +1535,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - roll.
      * @return Return the step of the roll. -1 return if error occurred.
     */
-    long UVCCamera::getRollStep() const
+    long WinCamera::getRollStep() const
     {
         const auto roll = m_directShowCamera->getProperties()->getRoll();
 
@@ -1554,7 +1555,7 @@ namespace DirectShowCamera
      * @brief Get current Roll
      * @return Return current Roll. 0 return if error occurred.
     */
-    long UVCCamera::getRoll() const
+    long WinCamera::getRoll() const
     {
         const auto roll = m_directShowCamera->getProperties()->getRoll();
 
@@ -1577,7 +1578,7 @@ namespace DirectShowCamera
      * @param degree Value to be set in degree
      * @return Return true if success.
     */
-    bool UVCCamera::setRoll(const long degree)
+    bool WinCamera::setRoll(const long degree)
     {
         const auto roll = m_directShowCamera->getProperties()->getRoll();
 
@@ -1606,7 +1607,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property zoom is supported.
      * @return Retrun true if property zoom is supported.
     */
-    bool UVCCamera::supportZoom() const
+    bool WinCamera::supportZoom() const
     {
         const auto zoom = m_directShowCamera->getProperties()->getZoom();
 
@@ -1617,7 +1618,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - zoom
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getZoomRange() const
+    std::pair<long, long> WinCamera::getZoomRange() const
     {
         const auto zoom = m_directShowCamera->getProperties()->getZoom();
 
@@ -1637,7 +1638,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - zoom.
      * @return Return the step of the zoom. -1 return if error occurred.
     */
-    long UVCCamera::getZoomStep() const
+    long WinCamera::getZoomStep() const
     {
         const auto zoom = m_directShowCamera->getProperties()->getZoom();
 
@@ -1657,7 +1658,7 @@ namespace DirectShowCamera
      * @brief Get current zoom
      * @return Return current zoom. -1 return if error occurred.
     */
-    long UVCCamera::getZoom() const
+    long WinCamera::getZoom() const
     {
         const auto zoom = m_directShowCamera->getProperties()->getZoom();
 
@@ -1680,7 +1681,7 @@ namespace DirectShowCamera
      * @param millimeter Value to be set in millimeters
      * @return Return true if success.
     */
-    bool UVCCamera::setZoom(const long millimeter)
+    bool WinCamera::setZoom(const long millimeter)
     {
         const auto zoom = m_directShowCamera->getProperties()->getZoom();
 
@@ -1707,7 +1708,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property exposure is supported.
      * @return Retrun true if property exposure is supported.
     */
-    bool UVCCamera::supportExposure() const
+    bool WinCamera::supportExposure() const
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1718,7 +1719,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - exposure in second
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<double, double> UVCCamera::getExposureRange() const
+    std::pair<double, double> WinCamera::getExposureRange() const
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1743,7 +1744,7 @@ namespace DirectShowCamera
      * @brief Get current exposure in second
      * @return Return current exposure. -1 return if error occurred.
     */
-    double UVCCamera::getExposure() const
+    double WinCamera::getExposure() const
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1770,7 +1771,7 @@ namespace DirectShowCamera
      * @param second Value to be set in second
      * @return Return true if success.
     */
-    bool UVCCamera::setExposure(const double second)
+    bool WinCamera::setExposure(const double second)
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1797,7 +1798,7 @@ namespace DirectShowCamera
      * @brief Get all possible exposure values in second
      * @return Return the possible exposure values. Return empty vector if error occurred.
     */
-    std::vector<double> UVCCamera::getPossibleExposureValues() const
+    std::vector<double> WinCamera::getPossibleExposureValues() const
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1845,7 +1846,7 @@ namespace DirectShowCamera
      * @brief Get current exposure index of the getPossibleExposureValues()
      * @return Return current exposure index of the getPossibleExposureValues(). Return -1 if error occurred.
     */
-    int UVCCamera::getExposureIndex() const
+    int WinCamera::getExposureIndex() const
     {
         std::vector<double> exposureList = getPossibleExposureValues();
         double exposureValue = getExposure();
@@ -1875,7 +1876,7 @@ namespace DirectShowCamera
      * @brief Retrun true if exposure is auto mode, return false if it is manual mode.
      * @return Retrun true if exposure is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoExposure() const
+    bool WinCamera::isAutoExposure() const
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1898,7 +1899,7 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoExposure(const bool setToAuto)
+    bool WinCamera::setAutoExposure(const bool setToAuto)
     {
         const auto exposure = m_directShowCamera->getProperties()->getExposure();
 
@@ -1944,7 +1945,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property iris is supported.
      * @return Retrun true if property iris is supported.
     */
-    bool UVCCamera::supportIris() const
+    bool WinCamera::supportIris() const
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -1955,7 +1956,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - iris in units of f_stop * 10.
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getIrisRange() const
+    std::pair<long, long> WinCamera::getIrisRange() const
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -1975,7 +1976,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - iris in units of f_stop * 10.
      * @return Return the step of the iris. -1 return if error occurred.
     */
-    long UVCCamera::getIrisStep() const
+    long WinCamera::getIrisStep() const
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -1995,7 +1996,7 @@ namespace DirectShowCamera
      * @brief Get current iris in units of f_stop * 10.
      * @return Return current iris. -1 return if error occurred.
     */
-    long UVCCamera::getIris() const
+    long WinCamera::getIris() const
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -2018,7 +2019,7 @@ namespace DirectShowCamera
      * @param value Value to be set in units of f_stop * 10.
      * @return Return true if success.
     */
-    bool UVCCamera::setIris(const long value)
+    bool WinCamera::setIris(const long value)
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -2042,7 +2043,7 @@ namespace DirectShowCamera
      * @brief Retrun true if iris is auto mode, return false if it is manual mode.
      * @return Retrun true if iris is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoIris() const
+    bool WinCamera::isAutoIris() const
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -2065,7 +2066,7 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoIris(const bool setToAuto)
+    bool WinCamera::setAutoIris(const bool setToAuto)
     {
         const auto iris = m_directShowCamera->getProperties()->getIris();
 
@@ -2111,7 +2112,7 @@ namespace DirectShowCamera
      * @brief Retrun true if property focus is supported.
      * @return Retrun true if property focus is supported.
     */
-    bool UVCCamera::supportFocus() const
+    bool WinCamera::supportFocus() const
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2122,7 +2123,7 @@ namespace DirectShowCamera
      * @brief Get the range of the property - focus in millimeters.
      * @return Return (min,max). (0,0) return if error occurred.
     */
-    std::pair<long, long> UVCCamera::getFocusRange() const
+    std::pair<long, long> WinCamera::getFocusRange() const
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2142,7 +2143,7 @@ namespace DirectShowCamera
      * @brief Get the step of the property - focus in millimeters.
      * @return Return the step of the property - focus in millimeters. -1 return if error occurred.
     */
-    long UVCCamera::getFocusStep() const
+    long WinCamera::getFocusStep() const
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2162,7 +2163,7 @@ namespace DirectShowCamera
      * @brief Get current focus in millimeters.
      * @return Return current focus. -1 return if error occurred.
     */
-    long UVCCamera::getFocus() const
+    long WinCamera::getFocus() const
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2185,7 +2186,7 @@ namespace DirectShowCamera
      * @param millimeter Value to be set in millimeters.
      * @return Return true if success.
     */
-    bool UVCCamera::setFocus(const long millimeter)
+    bool WinCamera::setFocus(const long millimeter)
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2208,7 +2209,7 @@ namespace DirectShowCamera
      * @brief Retrun true if focus is auto mode, return false if it is manual mode.
      * @return Retrun true if focus is auto mode, return false if it is manual mode or error occurred.
     */
-    bool UVCCamera::isAutoFocus() const
+    bool WinCamera::isAutoFocus() const
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2231,7 +2232,7 @@ namespace DirectShowCamera
      * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
      * @return Return true if success.
     */
-    bool UVCCamera::setAutoFocus(const bool setToAuto)
+    bool WinCamera::setAutoFocus(const bool setToAuto)
     {
         const auto focus = m_directShowCamera->getProperties()->getFocus();
 
@@ -2272,16 +2273,16 @@ namespace DirectShowCamera
 
 #pragma endregion Properties
 
-    std::string UVCCamera::getLastError() const
+    std::string WinCamera::getLastError() const
     {
         return m_errorString;
     }
 
 #pragma region Cameras
 
-    std::vector<DirectShowCameraDevice> UVCCamera::getDirectShowCameras()
+    std::vector<DirectShowCamera::DirectShowCameraDevice> WinCamera::getDirectShowCameras()
     {
-        std::vector<DirectShowCameraDevice> result;
+        std::vector<DirectShowCamera::DirectShowCameraDevice> result;
         bool success = m_directShowCamera->getCameras(&result);
 
         copyError(success);
@@ -2289,10 +2290,10 @@ namespace DirectShowCamera
         return result;
     }
 
-    std::vector<CameraDevice> UVCCamera::getCameras()
+    std::vector<CameraDevice> WinCamera::getCameras()
     {
         // Get DirectShowCameraDevice
-        std::vector<DirectShowCameraDevice> directShowCameras = getDirectShowCameras();
+        std::vector<DirectShowCamera::DirectShowCameraDevice> directShowCameras = getDirectShowCameras();
 
         // Convert to CameraDevice
         std::vector<CameraDevice> result;
@@ -2308,12 +2309,12 @@ namespace DirectShowCamera
 
 #pragma region DirectShow Video Format
 
-    std::vector<DirectShowVideoFormat> UVCCamera::getSupportDirectShowVideoFormats() const
+    std::vector<DirectShowCamera::DirectShowVideoFormat> WinCamera::getSupportDirectShowVideoFormats() const
     {
         return m_directShowCamera->getVideoFormatList();
     }
 
-    bool UVCCamera::setDirectShowVideoFormat(DirectShowVideoFormat* videoFormat)
+    bool WinCamera::setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat* videoFormat)
     {
         if (m_directShowCamera->isOpening())
         {
@@ -2349,7 +2350,7 @@ namespace DirectShowCamera
         }
     }
 
-    DirectShowVideoFormat UVCCamera::getDirectShowVideoFormat() const
+    DirectShowCamera::DirectShowVideoFormat WinCamera::getDirectShowVideoFormat() const
     {
         return m_directShowCamera->getCurrentGrabberFormat();
     }
@@ -2358,7 +2359,7 @@ namespace DirectShowCamera
 
 #pragma region Frame
 
-    bool UVCCamera::getFrame(unsigned char* frame, int& numOfBytes, const bool onlyGetNewFrame)
+    bool WinCamera::getFrame(unsigned char* frame, int& numOfBytes, const bool onlyGetNewFrame)
     {
         bool result = false;
 
@@ -2393,12 +2394,12 @@ namespace DirectShowCamera
         return result;
     }
 
-    long UVCCamera::getFrameIndex() const
+    long WinCamera::getFrameIndex() const
     {
         return m_lastFrameIndex;
     }
 
-    double UVCCamera::getFPS() const
+    double WinCamera::getFPS() const
     {
         return m_directShowCamera->getFPS();
     }
@@ -2407,17 +2408,17 @@ namespace DirectShowCamera
 
 #ifdef HAS_OPENCV
 
-    void UVCCamera::setMatAsBGR(const bool asBGR)
+    void WinCamera::setMatAsBGR(const bool asBGR)
     {
         m_matConvertor.isBGR = asBGR;
     }
 
-    void UVCCamera::vecticalFlipMat(const bool verticalFlip)
+    void WinCamera::vecticalFlipMat(const bool verticalFlip)
     {
         m_matConvertor.isVerticalFlip = verticalFlip;
     }
 
-    bool UVCCamera::allocateMatBuffer()
+    bool WinCamera::allocateMatBuffer()
     {
         bool result = false;
 
@@ -2448,7 +2449,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    cv::Mat UVCCamera::getMat(const bool onlyGetNewMat)
+    cv::Mat WinCamera::getMat(const bool onlyGetNewMat)
     {
         // Reallocate frame buffer size if changed
         if (m_matBufferSize != m_directShowCamera->getFrameTotalSize())
@@ -2471,12 +2472,12 @@ namespace DirectShowCamera
         }
     }
 
-    cv::Mat UVCCamera::getLastMat()
+    cv::Mat WinCamera::getLastMat()
     {
         return m_matConvertor.convert(m_matBuffer, getWidth(), getHeight());
     }
 
-    cv::Mat UVCCamera::getNewMat(const int step, const int timeout, const int skip)
+    cv::Mat WinCamera::getNewMat(const int step, const int timeout, const int skip)
     {
         auto lastFrameIndex = m_lastFrameIndex;
         int pastTime = 0;
@@ -2516,7 +2517,7 @@ namespace DirectShowCamera
         }
     }
 
-    cv::Mat UVCCamera::exposureFusion(
+    cv::Mat WinCamera::exposureFusion(
         const ExposureFusionAsyncResult exposureFusionAsyncResult,
         std::vector<cv::Mat>* exposureImages,
         const int minSetExposureDelay
@@ -2527,7 +2528,7 @@ namespace DirectShowCamera
         return exposureFusion(exposures, exposureFusionAsyncResult, exposureImages, minSetExposureDelay);
     }
 
-    cv::Mat UVCCamera::exposureFusion(
+    cv::Mat WinCamera::exposureFusion(
         const std::vector<double> exposures,
         const ExposureFusionAsyncResult exposureFusionAsyncResult,
         std::vector<cv::Mat>* exposureImages,
@@ -2622,27 +2623,27 @@ namespace DirectShowCamera
 
 #pragma endregion Opencv Function
 
-    int UVCCamera::getWidth() const
+    int WinCamera::getWidth() const
     {
         return getDirectShowVideoFormat().getWidth();
     }
 
-    int UVCCamera::getHeight() const
+    int WinCamera::getHeight() const
     {
         return getDirectShowVideoFormat().getHeight();
     }
 
-    int UVCCamera::getFrameSize() const
+    int WinCamera::getFrameSize() const
     {
         return getDirectShowVideoFormat().getTotalSize();
     }
 
-    int UVCCamera::getNumOfBytePerPixel() const
+    int WinCamera::getNumOfBytePerPixel() const
     {
         return getDirectShowVideoFormat().getBitPerPixel() / 8;
     }
 
-    int UVCCamera::getNumOfPixel() const
+    int WinCamera::getNumOfPixel() const
     {
         return getDirectShowVideoFormat().getWidth() * getDirectShowVideoFormat().getHeight();
     }
@@ -2655,7 +2656,7 @@ namespace DirectShowCamera
      * @brief Copy error from DirectShowCamera to this
      * @param success Only copy error if success = false
     */
-    void UVCCamera::copyError(bool success)
+    void WinCamera::copyError(bool success)
     {
         if (!success) m_errorString = m_directShowCamera->getLastError();
     }
@@ -2665,7 +2666,7 @@ namespace DirectShowCamera
      * @param degree Degree to be converted
      * @return Return a degree within -180 and 180
     */
-    int UVCCamera::confirmDegreeRange(int degree)
+    int WinCamera::confirmDegreeRange(int degree)
     {
         int result = 0;
         if (degree % 360 != 0)
@@ -2708,7 +2709,7 @@ namespace DirectShowCamera
      * @param dsValue DirectShow exposure value
      * @return Return exposure in second
     */
-    double UVCCamera::exposureConvertion(const long dsValue) const
+    double WinCamera::exposureConvertion(const long dsValue) const
     {
         if (dsValue < 0)
         {
@@ -2725,7 +2726,7 @@ namespace DirectShowCamera
      * @param second Exposure value in second
      * @return Return DirectShow exposure value
     */
-    long UVCCamera::exposureConvertion(const double second) const
+    long WinCamera::exposureConvertion(const double second) const
     {
         if (second <= 0)
         {

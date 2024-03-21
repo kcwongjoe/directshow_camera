@@ -1,11 +1,8 @@
 #include <gtest/gtest.h>
 
-#include <uvc_camera.h>
+#include "win_camera.h"
 #include <iostream>
-#include <ds_camera_stub.h>
-
-
-using namespace DirectShowCamera;
+#include "directshow_camera/ds_camera_stub.h"
 
 
 class TestUVCCameraStubF : public ::testing::Test {
@@ -20,9 +17,9 @@ protected:
 
     }
 
-    const std::shared_ptr<AbstractDirectShowCamera> stub = std::make_shared<DirectShowCameraStub>();
-    DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCameraStub*>(stub.get());
-    UVCCamera camera = UVCCamera(stub);
+    const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> stub = std::make_shared<DirectShowCamera::DirectShowCameraStub>();
+    DirectShowCamera::DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCamera::DirectShowCameraStub*>(stub.get());
+    WinCamera::WinCamera camera = WinCamera::WinCamera(stub);
 };
 
 /**
@@ -55,11 +52,11 @@ protected:
 TEST_F(TestUVCCameraStubF, TestGetCamera)
 {
     // Get cameras from UVCCamera
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::CameraDevice> cameraDeivceList = camera.getCameras();
 
     // Get expect result
-    std::vector<DirectShowCameraDevice> expectDirectShowCameraDevices;
-    DirectShowCameraStubDefaultSetting::getCamera(&expectDirectShowCameraDevices);    
+    std::vector<DirectShowCamera::DirectShowCameraDevice> expectDirectShowCameraDevices;
+    DirectShowCamera::DirectShowCameraStubDefaultSetting::getCamera(&expectDirectShowCameraDevices);
     
     // Check
     ASSERT_EQ(cameraDeivceList.size(), expectDirectShowCameraDevices.size()) << "Test UVCCamera(DirectShowCameraStub)::getCameras fail.";
@@ -100,12 +97,12 @@ TEST_F(TestUVCCameraStubF, TestGetCamera)
 TEST(TestUVCCameraStub, TestCapture)
 {
     // Create camera
-    const std::shared_ptr<AbstractDirectShowCamera> stub = std::make_shared<DirectShowCameraStub>();
-    DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCameraStub*>(stub.get());
-    UVCCamera camera = UVCCamera(stub);
+    const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> stub = std::make_shared<DirectShowCamera::DirectShowCameraStub>();
+    DirectShowCamera::DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCamera::DirectShowCameraStub*>(stub.get());
+    WinCamera::WinCamera camera = WinCamera::WinCamera(stub);
 
     // Get cameras from UVCCamera
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::CameraDevice> cameraDeivceList = camera.getCameras();
 
     // Open the first camera in the biggest resolution
     std::vector <std::pair<int, int>> resolutions = cameraDeivceList[0].getResolutions();
@@ -132,7 +129,7 @@ TEST(TestUVCCameraStub, TestCapture)
     std::unique_ptr<unsigned char[]> expectByteBuffer(new unsigned char[byteSize]);
     int expectSize = 0;
     unsigned long frameIndex = 0;
-    DirectShowCameraStubDefaultSetting::getFrame(
+    DirectShowCamera::DirectShowCameraStubDefaultSetting::getFrame(
         expectByteBuffer.get(),
         expectSize,
         frameIndex,

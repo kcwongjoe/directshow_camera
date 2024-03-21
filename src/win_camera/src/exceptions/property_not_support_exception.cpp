@@ -1,6 +1,6 @@
 #include "exceptions/property_not_support_exception.h"
 
-namespace DirectShowCamera
+namespace WinCamera
 {
     PropertyNotSupportException::PropertyNotSupportException(const std::string& propertyName) : 
         m_propertyName(propertyName), 
