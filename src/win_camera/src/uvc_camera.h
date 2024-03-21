@@ -1,6 +1,6 @@
 #pragma once
-#ifndef UVC_CAMERA_H
-#define UVC_CAMERA_H
+#ifndef WIN_CAMERA_H
+#define WIN_CAMERA_H
 
 //************Content************
 
@@ -31,7 +31,7 @@
  * @example eg5_disconnect_process.cpp
  * @example eg6_stub.cpp
  */
-namespace DirectShowCamera
+namespace WindowCamera
 {
     /**
      * @brief UVC Camera Class

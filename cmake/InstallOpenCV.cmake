@@ -1,7 +1,7 @@
 # A Macro to install OpenCV
 macro(install_opencv)
 
-    set(OpenCV_DIR "${DIRECTSHOWCAMERA_ROOT_PATH}/dependencies/opencv/build")  # Opencv path
+    set(OpenCV_DIR "${WIN_CAMERA_ROOT_PATH}/dependencies/opencv/build")  # Opencv path
 
     if (EXISTS ${OpenCV_DIR})
         # Install

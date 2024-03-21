@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 #******Project******
-project(directshow_camera LANGUAGES CXX VERSION 1.1.0)
+project(win_camera LANGUAGES CXX VERSION 1.1.0)
 
 #******Setting******
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -14,26 +14,26 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
 
 # Check static library or executable
 if(NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-    set(DIRECTSHOWCAMERA_AS_STATIC_LIBRARY TRUE)
+    set(WIN_CAMERA_AS_STATIC_LIBRARY TRUE)
 endif()
 
 # Get this CMakeLists location
-set(DIRECTSHOWCAMERA_ROOT_PATH ${CMAKE_SOURCE_DIR})
+set(WIN_CAMERA_ROOT_PATH ${CMAKE_SOURCE_DIR})
 
 # Add cmake module
-list(APPEND CMAKE_MODULE_PATH "${DIRECTSHOWCAMERA_ROOT_PATH}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${WIN_CAMERA_ROOT_PATH}/cmake")
 include(InstallOpenCV)
 include(AddWin10SDK)
 
 # Path
-Set(DIRECTSHOWCAMERA_SOURCES_PATH "${DIRECTSHOWCAMERA_ROOT_PATH}/src/directshow_camera")
+Set(WIN_CAMERA_SOURCES_PATH "${WIN_CAMERA_ROOT_PATH}/src/win_camera")
 
 #******Source******
-if (${DIRECTSHOWCAMERA_AS_STATIC_LIBRARY}) 
+if (${WIN_CAMERA_AS_STATIC_LIBRARY}) 
     # ---Static library---
 
     #******Source******
-    add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/src")
+    add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/src")
 
 else()
     # ---Build example and test---
@@ -53,17 +53,17 @@ else()
     link_directories( ${OpenCV_LIB_DIR} )
 
     #******Source******
-    add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/src")
+    add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/src")
 
     #******Example******
-    add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/examples")
+    add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/examples")
 
     #******Test******
 
     include(CTest)
     if(BUILD_TESTING)
         enable_testing()
-        add_subdirectory("${DIRECTSHOWCAMERA_SOURCES_PATH}/test")
+        add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/test")
     endif()
 
 endif()
