@@ -1,4 +1,4 @@
-#include "win_camera_device.h"
+#include "win_camera/win_camera_device.h"
 
 namespace WinCamera
 {

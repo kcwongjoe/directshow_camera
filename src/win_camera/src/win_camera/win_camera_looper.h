@@ -5,7 +5,7 @@
 //************Content************
 
 #include <thread>
-#include "win_camera.h"
+#include "win_camera/win_camera.h"
 
 namespace WinCamera
 {

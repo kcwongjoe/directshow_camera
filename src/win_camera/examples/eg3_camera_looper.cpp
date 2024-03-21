@@ -1,6 +1,6 @@
 #include "eg3_camera_looper.h"
 
-#include "win_camera_looper.h"
+#include "win_camera/win_camera_looper.h"
 #include <iostream>
 
 void eg3_camera_looper()

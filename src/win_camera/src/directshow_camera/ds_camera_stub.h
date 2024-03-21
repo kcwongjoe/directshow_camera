@@ -7,8 +7,7 @@
 #include "directshow_camera/ds_camera_properties.h"
 #include "directshow_camera/ds_camera_stub_default.h"
 #include "directshow_camera/ds_video_format.h"
-
-#include "win_camera_device.h"
+#include "directshow_camera/ds_camera_device.h"
 
 #include <string>
 #include <vector>

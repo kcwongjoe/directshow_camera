@@ -1,4 +1,4 @@
-#include "win_camera.h"
+#include "win_camera/win_camera.h"
 #include "directshow_camera/ds_camera.h"
 
 namespace WinCamera

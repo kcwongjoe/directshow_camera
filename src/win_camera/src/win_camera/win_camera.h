@@ -6,7 +6,7 @@
 
 // Include
 #include "directshow_camera/ds_camera_utils.h"
-#include "win_camera_device.h"
+#include "win_camera/win_camera_device.h"
 #include "directshow_camera/ds_camera.h"
 #include "directshow_camera/abstract_ds_camera.h"
 #include "directshow_camera/ds_libs_setting.h"

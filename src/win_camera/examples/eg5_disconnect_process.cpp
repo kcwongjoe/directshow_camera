@@ -1,6 +1,6 @@
 #include "eg5_disconnect_process.h"
 
-#include "win_camera.h"
+#include "win_camera/win_camera.h"
 #include <iostream>
 
 void eg5_disconnect_process()

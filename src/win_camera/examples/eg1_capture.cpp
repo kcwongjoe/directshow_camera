@@ -1,6 +1,6 @@
 #include "eg1_capture.h"
 
-#include "win_camera.h"
+#include "win_camera/win_camera.h"
 
 #include <iostream>
 

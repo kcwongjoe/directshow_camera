@@ -1,6 +1,6 @@
 #include "eg2_properties.h"
 
-#include "win_camera.h"
+#include "win_camera/win_camera.h"
 #include <iostream>
 
 void eg2_properties()
