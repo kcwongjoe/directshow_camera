@@ -1,17 +1,15 @@
 #include "eg5_disconnect_process.h"
 
-#include <uvc_camera.h>
+#include "win_camera.h"
 #include <iostream>
-
-using namespace WinCamera;
 
 void eg5_disconnect_process()
 {
     // Get a empty camera
-    WinCamera camera = WinCamera();
+    WinCamera::WinCamera camera = WinCamera::WinCamera();
 
     // Print camera list
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
     for (int i = 0; i < cameraDeivceList.size(); i++) {
         std::cout << std::to_string(i) + ": " + cameraDeivceList[i].getFriendlyName() << std::endl;
     }

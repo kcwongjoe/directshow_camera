@@ -52,7 +52,7 @@ protected:
 TEST_F(TestUVCCameraStubF, TestGetCamera)
 {
     // Get cameras from UVCCamera
-    std::vector<WinCamera::CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
 
     // Get expect result
     std::vector<DirectShowCamera::DirectShowCameraDevice> expectDirectShowCameraDevices;
@@ -102,7 +102,7 @@ TEST(TestUVCCameraStub, TestCapture)
     WinCamera::WinCamera camera = WinCamera::WinCamera(stub);
 
     // Get cameras from UVCCamera
-    std::vector<WinCamera::CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
 
     // Open the first camera in the biggest resolution
     std::vector <std::pair<int, int>> resolutions = cameraDeivceList[0].getResolutions();

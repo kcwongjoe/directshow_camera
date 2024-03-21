@@ -13,13 +13,13 @@
 namespace WinCamera
 {
     /**
-     * @brief A class to store UVC Camera Device information
+     * @brief A class to store WinCamera Device information
      */
-    class CameraDevice
+    class WinCameraDevice
     {
     public:
-        CameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCameraDevice);
-        CameraDevice(const CameraDevice& cameraDevice);
+        WinCameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCameraDevice);
+        WinCameraDevice(const WinCameraDevice& cameraDevice);
 
         bool supportMonochrome() const;
         std::vector<std::pair<int, int>> getMonoResolutions();
@@ -36,7 +36,7 @@ namespace WinCamera
 
         // Operator
 
-        CameraDevice& operator=(const CameraDevice& cameraDevice);
+        WinCameraDevice& operator=(const WinCameraDevice& cameraDevice);
 
         // To string
 
@@ -75,7 +75,7 @@ namespace WinCamera
             return result;
         }
 
-        friend std::ostream& operator << (std::ostream& out, const CameraDevice& obj) {
+        friend std::ostream& operator << (std::ostream& out, const WinCameraDevice& obj) {
             return out << (std::string)obj;
         }
 

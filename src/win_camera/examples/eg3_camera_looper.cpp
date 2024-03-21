@@ -1,18 +1,16 @@
 #include "eg3_camera_looper.h"
 
-#include <uvc_camera_looper.h>
+#include "win_camera_looper.h"
 #include <iostream>
-
-using namespace WinCamera;
 
 void eg3_camera_looper()
 {
     // Create a looper
-    WinCameraLooper cameraLooper = WinCameraLooper();
+    WinCamera::WinCameraLooper cameraLooper = WinCamera::WinCameraLooper();
 
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;
-    std::vector<CameraDevice> cameraDeivceList = cameraLooper.getCamera()->getCameras();
+    std::vector<WinCamera::WinCameraDevice> cameraDeivceList = cameraLooper.getCamera()->getCameras();
     cameraLooper.getCamera()->open(cameraDeivceList[0]);
 
     // Set a process to handle the captured image

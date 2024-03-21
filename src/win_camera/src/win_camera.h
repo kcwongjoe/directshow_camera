@@ -6,7 +6,7 @@
 
 // Include
 #include "directshow_camera/ds_camera_utils.h"
-#include "camera_device.h"
+#include "win_camera_device.h"
 #include "directshow_camera/ds_camera.h"
 #include "directshow_camera/abstract_ds_camera.h"
 #include "directshow_camera/ds_libs_setting.h"
@@ -72,7 +72,7 @@ namespace WinCamera
          * @param rgb (Option) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
          * @return Return true if success.
         */
-        bool open(const CameraDevice& device, const int width = -1, const int height = -1, const bool rgb = true);
+        bool open(const WinCameraDevice& device, const int width = -1, const int height = -1, const bool rgb = true);
 
         /**
          * @brief Open camera with the specific DirectShowVideoFormat.
@@ -289,7 +289,7 @@ namespace WinCamera
          * @brief Get the available camera.
          * @return Return the available camera.
         */
-        std::vector<CameraDevice> getCameras();
+        std::vector<WinCameraDevice> getCameras();
 
         //------Properties------
 

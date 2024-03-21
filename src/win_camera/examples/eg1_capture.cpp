@@ -1,19 +1,17 @@
 #include "eg1_capture.h"
 
-#include <uvc_camera.h>
+#include "win_camera.h"
 
 #include <iostream>
-
-using namespace WinCamera;
 
 void eg1_capture()
 {
     // Get a empty camera
-    WinCamera camera = WinCamera();
+    WinCamera::WinCamera camera = WinCamera::WinCamera();
 
     // Get available camera list
     std::cout << "Start to list the available cameras..." << std::endl;
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector< WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
     for (int i = 0; i < cameraDeivceList.size(); i++) {
         std::cout << cameraDeivceList[i] << std::endl;
     }

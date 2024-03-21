@@ -1,10 +1,8 @@
 #include "eg6_stub.h"
 
-#include <uvc_camera.h>
+#include "win_camera.h"
 #include <iostream>
 #include "directshow_camera/ds_camera_stub.h"
-
-using namespace WinCamera;
 
 void eg6_stub()
 {
@@ -22,7 +20,7 @@ void eg6_stub()
     DirectShowCamera::DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCamera::DirectShowCameraStub*>(stub.get());
 
     // Open
-    WinCamera camera = WinCamera(stub);
+    WinCamera::WinCamera camera = WinCamera::WinCamera(stub);
 #else
     // Use normal directshow camera
     UVCCamera camera = UVCCamera();
@@ -30,7 +28,7 @@ void eg6_stub()
 
     // Get available camera list
     std::cout << "Start to list the available cameras..." << std::endl;
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
     for (int i = 0; i < cameraDeivceList.size(); i++) {
         std::cout << cameraDeivceList[i] << std::endl;
     }

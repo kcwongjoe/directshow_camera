@@ -44,7 +44,7 @@ namespace WinCamera
 #pragma region Connection
 
     bool WinCamera::open(
-        const CameraDevice& device,
+        const WinCameraDevice& device,
         const int width,
         const int height,
         const bool rgb
@@ -2290,16 +2290,16 @@ namespace WinCamera
         return result;
     }
 
-    std::vector<CameraDevice> WinCamera::getCameras()
+    std::vector<WinCameraDevice> WinCamera::getCameras()
     {
         // Get DirectShowCameraDevice
         std::vector<DirectShowCamera::DirectShowCameraDevice> directShowCameras = getDirectShowCameras();
 
         // Convert to CameraDevice
-        std::vector<CameraDevice> result;
+        std::vector<WinCameraDevice> result;
         for (int i = 0; i < directShowCameras.size(); i++)
         {
-            result.push_back(CameraDevice(&directShowCameras[i]));
+            result.push_back(WinCameraDevice(&directShowCameras[i]));
         }
 
         return result;

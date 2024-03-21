@@ -1,4 +1,4 @@
-#include "camera_device.h"
+#include "win_camera_device.h"
 
 namespace WinCamera
 {
@@ -9,7 +9,7 @@ namespace WinCamera
      * @brief Constructor
      * @param directShowCamera Directshow Camera
     */
-    CameraDevice::CameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCamera)
+    WinCameraDevice::WinCameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCamera)
     {
         m_friendlyName = directShowCamera->getFriendlyName();
         m_description = directShowCamera->getDescription();
@@ -75,7 +75,7 @@ namespace WinCamera
      * @brief Copy constructor
      * @param cameraDevice CameraDevice
     */
-    CameraDevice::CameraDevice(const CameraDevice& cameraDevice)
+    WinCameraDevice::WinCameraDevice(const WinCameraDevice& cameraDevice)
     {
         *this = cameraDevice;
     }
@@ -88,7 +88,7 @@ namespace WinCamera
      * @brief Return true if camera supported monochrome image
      * @return Return true if camera supported monochrome image
     */
-    bool CameraDevice::supportMonochrome() const
+    bool WinCameraDevice::supportMonochrome() const
     {
         return m_monoResolutions.size() > 0 ? true : false;
     }
@@ -97,7 +97,7 @@ namespace WinCamera
      * @brief Get the supported monochrome image resolution in (width, height)
      * @return Return (width, height)[]
     */
-    std::vector<std::pair<int, int>> CameraDevice::getMonoResolutions()
+    std::vector<std::pair<int, int>> WinCameraDevice::getMonoResolutions()
     {
         return m_monoResolutions;
     }
@@ -110,7 +110,7 @@ namespace WinCamera
      * @brief Return true if camera supported rgb image.
      * @return Return true if camera supported rgb image.
     */
-    bool CameraDevice::supportRGB() const
+    bool WinCameraDevice::supportRGB() const
     {
         return m_rgbResolutions.size() > 0 ? true : false;
     }
@@ -119,7 +119,7 @@ namespace WinCamera
      * @brief Get the supported rgb image resolution in (width, height)
      * @return Return (width, height)[]
     */
-    std::vector<std::pair<int, int>> CameraDevice::getRGBResolutions()
+    std::vector<std::pair<int, int>> WinCameraDevice::getRGBResolutions()
     {
         return m_rgbResolutions;
     }
@@ -128,7 +128,7 @@ namespace WinCamera
      * @brief Get the supported resolution in (width, height)
      * @return Return (width, height)[]
     */
-    std::vector<std::pair<int,int>> CameraDevice::getResolutions()
+    std::vector<std::pair<int,int>> WinCameraDevice::getResolutions()
     {
         if (m_rgbResolutions.size() > 0)
         {
@@ -147,7 +147,7 @@ namespace WinCamera
      * @param height Height
      * @return Return true if existed.
     */
-    bool CameraDevice::containResolution(int width, int height) const
+    bool WinCameraDevice::containResolution(int width, int height) const
     {
         for (int i=0;i< m_monoResolutions.size();i++)
         {
@@ -176,7 +176,7 @@ namespace WinCamera
      * @brief Get camera friendly name
      * @return Return the camera friendly name
     */
-    std::string CameraDevice::getFriendlyName() const
+    std::string WinCameraDevice::getFriendlyName() const
     {
         return m_friendlyName;
     }
@@ -185,7 +185,7 @@ namespace WinCamera
      * @brief Get the camera description
      * @return Return camera description
     */
-    std::string CameraDevice::getDescription() const
+    std::string WinCameraDevice::getDescription() const
     {
         return m_description;
     }
@@ -194,7 +194,7 @@ namespace WinCamera
      * @brief Get the camera device path. It is the camera id.
      * @return Return the camera device path.
     */
-    std::string CameraDevice::getDevicePath() const
+    std::string WinCameraDevice::getDevicePath() const
     {
         return m_devicePath;
     }
@@ -206,7 +206,7 @@ namespace WinCamera
      * @param cameraDevice CameraDevice
      * @return
     */
-    CameraDevice& CameraDevice::operator=(const CameraDevice& cameraDevice)
+    WinCameraDevice& WinCameraDevice::operator=(const WinCameraDevice& cameraDevice)
     {
         if (this != &cameraDevice)
         {

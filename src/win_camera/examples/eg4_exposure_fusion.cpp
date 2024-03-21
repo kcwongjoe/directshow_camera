@@ -1,18 +1,16 @@
 #include "eg4_exposure_fusion.h"
 
-#include <uvc_camera.h>
+#include "win_camera.h"
 #include <iostream>
-
-using namespace WinCamera;
 
 void eg4_exposure_fusion()
 {
     // Get a empty camera
-    WinCamera camera = WinCamera();
+    WinCamera::WinCamera camera = WinCamera::WinCamera();
 
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
     camera.open(cameraDeivceList[0]);
 
     // Start Capture
