@@ -25,7 +25,7 @@ namespace WinCamera
     {
         DirectShowCameraUtils::initCOMLib();
 
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
         m_matConvertor = OpenCVMatConverter();
         m_matConvertor.isBGR = true;
         m_matConvertor.isVerticalFlip = true;
@@ -181,7 +181,7 @@ namespace WinCamera
         // Initialize camera
         result = m_directShowCamera->open(videoInputFilter, videoFormat);
 
-    #ifdef HAS_OPENCV
+    #ifdef WITH_OPENCV2
         if (result)
         {
             AllocateMatBuffer();
@@ -461,7 +461,7 @@ namespace WinCamera
             // Copy error
             copyError(result);
 
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
             AllocateMatBuffer();
 #endif
 
@@ -538,7 +538,7 @@ namespace WinCamera
 
 #pragma region Opencv Function
 
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
 
     void WinCamera::setMatAsBGR(const bool asBGR)
     {

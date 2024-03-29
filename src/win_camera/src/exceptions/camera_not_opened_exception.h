@@ -2,7 +2,7 @@
 #ifndef WIN_CAMERA__EXCEPTIONS__CAMERA_NOT_OPEN_EXCEPTION_H
 #define WIN_CAMERA__EXCEPTIONS__CAMERA_NOT_OPEN_EXCEPTION_H
 
-#pragma once
+//************Content************
 
 #include <exception>
 
@@ -33,7 +33,6 @@ namespace WinCamera
 
     };
 }
-
 
 //*******************************
 

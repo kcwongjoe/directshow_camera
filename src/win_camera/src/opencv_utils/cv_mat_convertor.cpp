@@ -1,6 +1,6 @@
 #include "opencv_utils/cv_mat_convertor.h"
 
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
 
 namespace WinCamera
 {

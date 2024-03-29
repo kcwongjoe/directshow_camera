@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA_DEVICE_H
-#define WIN_CAMERA_DEVICE_H
+#ifndef WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_DEVICE_H
+#define WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_DEVICE_H
 
 //************Content************
 #include <utility>

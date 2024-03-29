@@ -12,8 +12,8 @@ macro(install_opencv)
             opencv_photo
         )
 
-        # Add define HAS_OPENCV
-        add_compile_definitions(HAS_OPENCV)
+        # Add define WITH_OPENCV2
+        add_compile_definitions(WITH_OPENCV2)
     else()
         message("Fail to install OpenCV. Library is not found in ${OpenCV_DIR}.")
     endif()

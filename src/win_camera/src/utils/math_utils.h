@@ -2,6 +2,8 @@
 #ifndef WIN_CAMERA__UTILS__MATH_UTILS_H
 #define WIN_CAMERA__UTILS__MATH_UTILS_H
 
+//************Content************
+
 #include <math.h>
 
 namespace Utils
@@ -17,5 +19,7 @@ namespace Utils
         static int ConfirmDegreeIn180Range(int degree);
     };
 }
+
+//*******************************
 
 #endif

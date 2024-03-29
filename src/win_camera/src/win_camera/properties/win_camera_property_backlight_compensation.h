@@ -2,6 +2,8 @@
 #ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_BACKLIGHT_COMPENSATION_H
 #define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_BACKLIGHT_COMPENSATION_H
 
+//************Content************
+
 #include "win_camera/properties/win_camera_property.h"
 
 namespace WinCamera { class WinCamera; }

@@ -2,7 +2,7 @@
 #ifndef WIN_CAMERA__EXCEPTIONS__RESOLUTION_NOT_SUPPORT_EXCEPTION_H
 #define WIN_CAMERA__EXCEPTIONS__RESOLUTION_NOT_SUPPORT_EXCEPTION_H
 
-#pragma once
+//************Content************
 
 #include <exception>
 

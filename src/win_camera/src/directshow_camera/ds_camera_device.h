@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DS_CAMERA_DEVICE_H
-#define DS_CAMERA_DEVICE_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DS_CAMERA_DEVICE_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__DS_CAMERA_DEVICE_H
 
 //************Content************
 #include "directshow_camera/ds_video_format.h"

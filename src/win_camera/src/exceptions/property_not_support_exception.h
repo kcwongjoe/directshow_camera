@@ -2,7 +2,7 @@
 #ifndef WIN_CAMERA__EXCEPTIONS__PROPERTY_NOT_SUPPORT_EXCEPTION_H
 #define WIN_CAMERA__EXCEPTIONS__PROPERTY_NOT_SUPPORT_EXCEPTION_H
 
-#pragma once
+//************Content************
 
 #include <exception>
 
@@ -39,7 +39,6 @@ namespace WinCamera
         std::string m_errorMessage;
     };
 }
-
 
 //*******************************
 

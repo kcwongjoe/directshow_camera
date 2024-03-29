@@ -2,6 +2,8 @@
 #ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_WHITE_BALANCE_H
 #define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_WHITE_BALANCE_H
 
+//************Content************
+
 #include "win_camera/properties/win_camera_property.h"
 
 namespace WinCamera { class WinCamera; }

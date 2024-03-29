@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DIRECTSHOW_GUID_H
-#define DIRECTSHOW_GUID_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_GUID_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_GUID_H
 
 //************Content************
 #include "directshow_camera/qedit.h"

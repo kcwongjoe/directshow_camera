@@ -1,11 +1,9 @@
 #pragma once
-#ifndef OPENCV_MAT_CONVERTOR_H
-#define OPENCV_MAT_CONVERTOR_H
+#ifndef WIN_CAMERA__OPENCV_UTILS__OPENCV_MAT_CONVERTOR_H
+#define WIN_CAMERA__OPENCV_UTILS__OPENCV_MAT_CONVERTOR_H
 
 //************Content************
-#include "directshow_camera/ds_libs_setting.h"
-
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
 
 #include <opencv2/opencv.hpp>
 

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DIRECTSHOW_CAMERA_STUB_DEFAULT_H
-#define DIRECTSHOW_CAMERA_STUB_DEFAULT_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_STUB_DEFAULT_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_STUB_DEFAULT_H
 
 //************Content************
 #include "directshow_camera/ds_camera_properties.h"

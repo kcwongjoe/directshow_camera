@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DIRECTSHOW_CAMERA_UTILS_H
-#define DIRECTSHOW_CAMERA_UTILS_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_UTILS_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_UTILS_H
 
 //************Content************
 #include <ctime>

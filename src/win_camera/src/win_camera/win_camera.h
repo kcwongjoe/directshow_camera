@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA__WIN_CAMERA_H
-#define WIN_CAMERA__WIN_CAMERA_H
+#ifndef WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_H
+#define WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_H
 
 //************Content************
 
@@ -29,10 +29,9 @@
 #include "directshow_camera/ds_camera_utils.h"
 #include "directshow_camera/ds_camera.h"
 #include "directshow_camera/abstract_ds_camera.h"
-#include "directshow_camera/ds_libs_setting.h"
 
 // Include Opencv
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
 #include "opencv_utils/cv_mat_convertor.h"
 #endif
 
@@ -47,7 +46,7 @@ namespace WinCamera
 
     /**********************Public********************************/
     public:
-#ifdef HAS_OPENCV
+#ifdef WITH_OPENCV2
         typedef std::function<void(cv::Mat image)> ExposureFusionAsyncResult;
 #endif
 
@@ -218,7 +217,7 @@ namespace WinCamera
         */
         int getNumOfPixel() const;
 
-    #ifdef HAS_OPENCV
+    #ifdef WITH_OPENCV2
 
         /**
          * @brief Set as true to return a vertical flip cv::Mat. Default as true.
@@ -364,7 +363,7 @@ namespace WinCamera
         std::shared_ptr<WinCameraPropertyIris> m_iris;
         std::shared_ptr<WinCameraPropertyFocus> m_focus;
 
-    #ifdef HAS_OPENCV
+    #ifdef WITH_OPENCV2
         unsigned char* m_matBuffer = NULL;
         int m_matBufferSize = 0;
         OpenCVMatConverter m_matConvertor;

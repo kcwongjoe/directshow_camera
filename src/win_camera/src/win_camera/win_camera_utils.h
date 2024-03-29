@@ -2,6 +2,8 @@
 #ifndef WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_UTILS_H
 #define WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_UTILS_H
 
+//************Content************
+
 #include <math.h>
 
 namespace WinCamera
@@ -26,5 +28,7 @@ namespace WinCamera
     };
 
 }
+
+//*******************************
 
 #endif
