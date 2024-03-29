@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA_PROPERTY_H
-#define WIN_CAMERA_PROPERTY_H
+#ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_H
+#define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_H
 
 #include <functional>
 
@@ -19,26 +19,100 @@ namespace WinCamera
     public:
         WinCameraProperty(
             const WinCamera& camera,
-            const std::shared_ptr<DirectShowCamera::DirectShowCamera>& ds_camera,
-            const std::shared_ptr<DirectShowCamera::DirectShowCameraProperty>& property
+            const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera>& ds_camera
         );
 
     protected:
-        bool isPropertySupportedInternal() const;
-        std::pair<long, long> getRangeInternal() const;
-        long getStepInternal() const;
-        long getValueInternal() const;
-        void setValueInternal(const long value);
+        enum Mode
+        {
+            Auto,
+            Manual
+        };
 
-        void checkOpening() const;
-        void checkOpeningAndSupported() const;
+    protected:
+
+        /**
+         * @brief Derived class must override this function to specific which property to use.
+         * @return Return the property
+        */
+        virtual std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const
+        {
+            throw std::runtime_error("GetDirectShowProperty() must be overridden.");
+        }
+
+        /**
+        * @brief Check if property being supported by the camera
+        * @return Return true if property is supported
+        **/
+        bool IsPropertySupportedInternal() const;
+
+        /**
+        * @brief Get the range of the property
+        * @return Return the range of the property in (min, max)
+        **/
+        std::pair<long, long> GetRangeInternal() const;
+
+        /**
+        * @brief Get the step of the property
+        * @return Return the step of the property
+        **/
+        long GetStepInternal() const;
+
+        /**
+        * @brief Get the value of the property
+        * @return Return the value of the property
+        **/
+        long GetValueInternal() const;
+
+        /**
+        * @brief Set the value of the property
+        * @param value Value to be set
+        * @param isAuto Set to true if the property is set to auto
+        **/
+        void SetValueInternal(const long value, const bool isAuto = false);
+
+        /**
+        * @brief Check if the property is set to auto
+        * 
+        * @return Return true if the property is set to auto
+        **/
+        bool IsAutoInternal() const;
+
+        /**
+        * @brief Check if the property support auto mode
+        * 
+        * @return Return true if the property support auto mode
+        **/
+        bool SupportAutoModeInternal() const;
+
+        /**
+        * @brief Check if the property support manual mode
+        * 
+        * @return Return true if the property support manual mode
+        **/
+        bool ySupportManualModeInternal() const;
+
+        /**
+        * @brief A method to check if camera is opened. If not, throw an exception.
+        **/
+        void CheckOpening() const;
+
+        /**
+        * @brief A method to check if camera is opened and property is supported. If not, throw an exception.
+        **/
+        void CheckOpeningAndSupported() const;
+
+        /**
+        * @brief A method to check if camera property support the mode. If not, throw an exception.
+        **/
+        void CheckModeSupport(Mode mode) const;
+
+    protected:
+        const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> m_camera;
 
     private:
-        typedef std::function<bool()> IsCameraOpenedFunc;
-        IsCameraOpenedFunc m_isCameraOpenedFunc;
-        
-        const std::shared_ptr<DirectShowCamera::DirectShowCamera> m_camera;
-        const std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> m_property;
+        typedef std::function<bool()> IsCameraOpenedFunction;
+        IsCameraOpenedFunction m_isCameraOpenedFunc;
     };
 }
 

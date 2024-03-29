@@ -55,15 +55,15 @@ void eg6_stub()
 
     // ****** Change exposure******
     std::cout << "Change the exposure in the fake camera..." << std::endl;
-    std::cout << "Exposure: " + std::to_string(camera.getExposure()) + "s" << std::endl;
+    std::cout << "Exposure: " + std::to_string(camera.Exposure()->GetValue()) + "s" << std::endl;
 
     // Set exposure as the largest value
-    std::vector<double> exposures = camera.getPossibleExposureValues();
-    camera.setExposure(exposures[exposures.size()-1]);
+    std::vector<double> exposures = camera.Exposure()->GetPossibleExposureValues();
+    camera.Exposure()->SetValue(exposures[exposures.size()-1]);
     std::cout << "Set exposure to " + std::to_string(exposures[exposures.size() - 1]) + "s" << std::endl;
 
     // Get exposure again
-    std::cout << "Exposure changed to: " + std::to_string(camera.getExposure()) + "s" << std::endl;
+    std::cout << "Exposure changed to: " + std::to_string(camera.Exposure()->GetValue()) + "s" << std::endl;
 
     // ****** Capture******
     std::cout << "Start capture in a fake camera..." << std::endl;

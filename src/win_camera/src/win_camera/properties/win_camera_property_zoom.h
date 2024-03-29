@@ -1,0 +1,57 @@
+#pragma once
+#ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_ZOOM_H
+#define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_ZOOM_H
+
+#include "win_camera/properties/win_camera_property.h"
+
+namespace WinCamera { class WinCamera; }
+
+namespace WinCamera
+{
+    class WinCameraPropertyZoom : public WinCameraProperty
+    {
+    public:
+        WinCameraPropertyZoom(
+            const WinCamera& camera,
+            const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera>& ds_camera
+        );
+
+        /**
+         * @brief Retrun true if property zoom is supported.
+         * @return Retrun true if property zoom is supported.
+        */
+        bool IsSupported() const;
+
+        /**
+         * @brief Get the range of the property - zoom
+         * @return Return (min,max).
+        */
+        std::pair<long, long> GetRange() const;
+
+        /**
+         * @brief Get the step of the property - zoom.
+         * @return Return the step of the zoom.
+        */
+        long GetStep() const;
+
+        /**
+         * @brief Get current zoom
+         * @return Return current zoom.
+        */
+        long GetValue() const;
+
+        /**
+         * @brief Set Zoom
+         * @param millimeter Value to be set in millimeters
+         * @return Return true if success.
+        */
+        void SetValue(const long millimeter);
+
+    protected:
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+    };
+}
+
+//*******************************
+
+#endif

@@ -688,7 +688,6 @@ namespace DirectShowCameraUtils
         }
 
         return SUCCEEDED(hr);
-
     }
 
     /**

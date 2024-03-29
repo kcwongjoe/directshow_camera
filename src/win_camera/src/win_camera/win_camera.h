@@ -5,14 +5,36 @@
 //************Content************
 
 // Include
-#include "directshow_camera/ds_camera_utils.h"
+
 #include "win_camera/win_camera_device.h"
+
+#include "win_camera/properties/win_camera_property_brightness.h"
+#include "win_camera/properties/win_camera_property_contrast.h"
+#include "win_camera/properties/win_camera_property_hue.h"
+#include "win_camera/properties/win_camera_property_saturation.h"
+#include "win_camera/properties/win_camera_property_sharpness.h"
+#include "win_camera/properties/win_camera_property_gamma.h"
+#include "win_camera/properties/win_camera_property_color_enable.h"
+#include "win_camera/properties/win_camera_property_white_balance.h"
+#include "win_camera/properties/win_camera_property_backlight_compensation.h"
+#include "win_camera/properties/win_camera_property_gain.h"
+#include "win_camera/properties/win_camera_property_pan.h"
+#include "win_camera/properties/win_camera_property_tilt.h"
+#include "win_camera/properties/win_camera_property_roll.h"
+#include "win_camera/properties/win_camera_property_zoom.h"
+#include "win_camera/properties/win_camera_property_exposure.h"
+#include "win_camera/properties/win_camera_property_iris.h"
+#include "win_camera/properties/win_camera_property_focus.h"
+
+#include "directshow_camera/ds_camera_utils.h"
 #include "directshow_camera/ds_camera.h"
 #include "directshow_camera/abstract_ds_camera.h"
 #include "directshow_camera/ds_libs_setting.h"
 
 #include "exceptions/camera_not_opened_exception.h"
 #include "exceptions/property_not_support_exception.h"
+
+
 
 // Include Opencv
 #ifdef HAS_OPENCV
@@ -305,162 +327,51 @@ namespace WinCamera
         */
         std::shared_ptr<DirectShowCamera::DirectShowCameraProperties> getDirectShowProperties() const;
 
-        // ---Brightness---
+        void initProperties();
 
-        /**
-         * @brief Retrun true if property brightness is supported.
-         * @return Retrun true if property brightness is supported.
-        */
-        bool supportBrightness() const;
-
-        /**
-         * @brief Get the range of the property - brightness
-         * @return Return (min,max). (0,0) return if error occurred.
-        */
-        std::pair<long, long> getBrightnessRange() const;
-
-        /**
-         * @brief Get the step of the property - Brightness.
-         * @return Return the step of the Brightness. -1 return if error occurred.
-        */
-        long getBrightnessStep() const;
-
-        /**
-         * @brief Get current brightness, from blanking(small value) to pure white(large value)
-         * @return Return current brightness. -1 return if error occurred.
-        */
-        long getBrightness() const;
-
-        /**
-         * @brief Set brightness
-         * @param value Value to be set
-         * @return Return true if success.
-        */
-        bool setBrightness(const long value);
-
-        // Contrast
-        bool supportContrast() const;
-        std::pair<long, long> getContrastRange() const;
-        long getContrastStep() const;
-        long getContrast() const;
-        bool setContrast(const long value);
-
-        // Hue
-        bool supportHue() const;
-        std::pair<long, long> getHueRange() const;
-        long getHueStep() const;
-        long getHue() const;
-        bool setHue(const long degree);
-
-        // Saturation
-        bool supportSaturation() const;
-        std::pair<long, long> getSaturationRange() const;
-        long getSaturationStep() const;
-        long getSaturation() const;
-        bool setSaturation(const long value);
-
-        // Sharpness
-        bool supportSharpness() const;
-        std::pair<long, long> getSharpnessRange() const;
-        long getSharpnessStep() const;
-        long getSharpness() const;
-        bool setSharpness(const long value);
-
-        // Gamma
-        bool supportGamma() const;
-        std::pair<long, long> getGammaRange() const;
-        long getGammaStep() const;
-        long getGamma() const;
-        bool setGamma(const long value);
-
-        // Color Enable
-        bool supportColorEnable() const;
-        bool isColorEnable() const;
-        bool setColorEnable(const bool isOn);
-
-        // WhiteBalance
-        bool supportWhiteBalance() const;
-        std::pair<long, long> getWhiteBalanceRange() const;
-        long getWhiteBalanceStep() const;
-        long getWhiteBalance() const;
-        bool setWhiteBalance(const long kelvin);
-        bool isAutoWhiteBalance() const;
-        bool setAutoWhiteBalance(const bool setToAuto);
-
-        // Backlight Compensation
-        bool supportBacklightCompensation() const;
-        bool isBacklightCompensation() const;
-        bool setBacklightCompensation(const bool isOn);
-
-        // Gain
-        bool supportGain() const;
-        std::pair<long, long> getGainRange() const;
-        long getGainStep() const;
-        long getGain() const;
-        bool setGain(const long value);
-
-        // Pan
-        bool supportPan() const;
-        std::pair<long, long> getPanRange() const;
-        long getPanStep() const;
-        long getPan() const;
-        bool setPan(const long value);
-
-        // Tilt
-        bool supportTilt() const;
-        std::pair<long, long> getTiltRange() const;
-        long getTiltStep() const;
-        long getTilt() const;
-        bool setTilt(const long degree);
-
-        // Roll
-        bool supportRoll() const;
-        std::pair<long, long> getRollRange() const;
-        long getRollStep() const;
-        long getRoll() const;
-        bool setRoll(const long value);
-
-        // Zoom
-        bool supportZoom() const;
-        std::pair<long, long> getZoomRange() const;
-        long getZoomStep() const;
-        long getZoom() const;
-        bool setZoom(const long millimeter);
-
-        // Exposure
-        bool supportExposure() const;
-        std::pair<double, double> getExposureRange() const;
-        double getExposure() const;
-        bool setExposure(const double value);
-        std::vector<double> getPossibleExposureValues() const;
-        int getExposureIndex() const;
-        bool isAutoExposure() const;
-        bool setAutoExposure(const bool setToAuto);
-
-        // Iris
-        bool supportIris() const;
-        std::pair<long, long> getIrisRange() const;
-        long getIrisStep() const;
-        long getIris() const;
-        bool setIris(const long value);
-        bool isAutoIris() const;
-        bool setAutoIris(const bool setToAuto);
-
-        // Focus
-        bool supportFocus() const;
-        std::pair<long, long> getFocusRange() const;
-        long getFocusStep() const;
-        long getFocus() const;
-        bool setFocus(const long value);
-        bool isAutoFocus() const;
-        bool setAutoFocus(const bool setToAuto);
+        std::shared_ptr<WinCameraPropertyBrightness> Brightness();
+        std::shared_ptr<WinCameraPropertyContrast> Contrast();
+        std::shared_ptr<WinCameraPropertyHue> Hue();
+        std::shared_ptr<WinCameraPropertySaturation> Saturation();
+        std::shared_ptr<WinCameraPropertySharpness> Sharpness();
+        std::shared_ptr<WinCameraPropertyGamma> Gamma();
+        std::shared_ptr<WinCameraPropertyColorEnable> ColorEnable();
+        std::shared_ptr<WinCameraPropertyWhiteBalance> WhiteBalance();
+        std::shared_ptr<WinCameraPropertyBacklightCompensation> BacklightCompensation();
+        std::shared_ptr<WinCameraPropertyGain> Gain();
+        std::shared_ptr<WinCameraPropertyPan> Pan();
+        std::shared_ptr<WinCameraPropertyTilt> Tilt();
+        std::shared_ptr<WinCameraPropertyRoll> Roll();
+        std::shared_ptr<WinCameraPropertyZoom> Zoom();
+        std::shared_ptr<WinCameraPropertyExposure> Exposure();
+        std::shared_ptr<WinCameraPropertyIris> Iris();
+        std::shared_ptr<WinCameraPropertyFocus> Focus();
 
     /**********************Private********************************/
     private:
         std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> m_directShowCamera;
+        bool m_isInitialized = false;
 
         unsigned long m_lastFrameIndex = 0;
         std::string m_errorString;
+
+        std::shared_ptr<WinCameraPropertyBrightness> m_brightness;
+        std::shared_ptr<WinCameraPropertyContrast> m_contrast;
+        std::shared_ptr<WinCameraPropertyHue> m_hue;
+        std::shared_ptr<WinCameraPropertySaturation> m_saturation;
+        std::shared_ptr<WinCameraPropertySharpness> m_sharpness;
+        std::shared_ptr<WinCameraPropertyGamma> m_gamma;
+        std::shared_ptr<WinCameraPropertyColorEnable> m_color_enable;
+        std::shared_ptr<WinCameraPropertyWhiteBalance> m_white_balance;
+        std::shared_ptr<WinCameraPropertyBacklightCompensation> m_backlight_compensation;
+        std::shared_ptr<WinCameraPropertyGain> m_gain;
+        std::shared_ptr<WinCameraPropertyPan> m_pan;
+        std::shared_ptr<WinCameraPropertyTilt> m_tilt;
+        std::shared_ptr<WinCameraPropertyRoll> m_roll;
+        std::shared_ptr<WinCameraPropertyZoom> m_zoom;
+        std::shared_ptr<WinCameraPropertyExposure> m_exposure;
+        std::shared_ptr<WinCameraPropertyIris> m_iris;
+        std::shared_ptr<WinCameraPropertyFocus> m_focus;
 
     #ifdef HAS_OPENCV
         unsigned char* m_matBuffer = NULL;
@@ -478,64 +389,6 @@ namespace WinCamera
 
         // Utils
         void copyError(bool success);
-        int confirmDegreeRange(int degree);
-        double exposureConvertion(const long dsValue) const;
-        long exposureConvertion(const double second) const;
-
-        /**
-         * @brief A template to return property whether support.
-         * @tparam Func bool()
-         * @param func[in] Lambda function to return the property whether support.
-         * @param errorDescription[in] Error description, e.g. "Error on supportExposure()"
-         * @return Return true if property support.
-        */
-        bool supportPropertyTemplate(
-            const std::shared_ptr<DirectShowCamera::DirectShowCameraProperty>& property
-        ) const
-        {
-            // Throw if camera is not opened
-            if (!isOpened()) throw CameraNotOpenedException();
-
-            // Get property support
-            return property->isSupported();
-        }
-
-        /**
-         * @brief A template for getPropertyRange()
-         * @tparam Func bool()
-         * @param func[in] Lambda function to return the property or property range or state. Note that ds_error will not be copied if return false, so do copyError() in the lambda function.
-         * @param property[in] property
-         * @param propertyName[in] (Option) Property name for error description. Default as "".
-         * @return Return false if error occurred.
-        */
-        template <typename Func> bool getPropertyTemplate(
-            const Func func,
-            const std::shared_ptr<DirectShowCamera::DirectShowCameraProperty>& property,
-            const std::string propertyName= ""
-        ) const
-        {
-            // Throw if camera is not opened
-            if (!isOpened()) throw CameraNotOpenedException();
-
-            // Throw if property is not support
-            if (!property->isSupported())
-            {
-                if (propertyName.empty())
-                {
-                    throw PropertyNotSupportException(property->getName());
-                }
-                else
-                {
-                    throw PropertyNotSupportException(propertyName);
-                }
-
-            }
-
-            // Get property
-            func();
-
-            return true;
-        }
     };
 }
 

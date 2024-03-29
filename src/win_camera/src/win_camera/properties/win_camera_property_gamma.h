@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_BRIGHTNESS_H
-#define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_BRIGHTNESS_H
+#ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_GAMMA_H
+#define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_GAMMA_H
 
 #include "win_camera/properties/win_camera_property.h"
 
@@ -8,41 +8,41 @@ namespace WinCamera { class WinCamera; }
 
 namespace WinCamera
 {
-    class WinCameraPropertyBrightness : public WinCameraProperty
+    class WinCameraPropertyGamma : public WinCameraProperty
     {
     public:
-        WinCameraPropertyBrightness(
+        WinCameraPropertyGamma(
             const WinCamera& camera,
             const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera>& ds_camera
         );
 
         /**
-         * @brief Retrun true if property brightness is supported.
-         * @return Retrun true if property brightness is supported.
+         * @brief Retrun true if property gamma is supported.
+         * @return Retrun true if property gamma is supported.
         */
         bool IsSupported() const;
 
         /**
-         * @brief Get the range of the property - brightness
+         * @brief Get the range of the property - gamma
          * @return Return (min,max).
         */
         std::pair<long, long> GetRange() const;
 
         /**
-         * @brief Get the step of the property - Brightness.
-         * @return Return the step of the Brightness.
+         * @brief Get the step of the property - Gamma.
+         * @return Return the step of the Gamma.
         */
         long GetStep() const;
 
         /**
-         * @brief Get current brightness, from blanking(small value) to pure white(large value)
-         * @return Return current brightness.
+         * @brief Get current gamma
+         * @return Return current gamma.
         */
         long GetValue() const;
 
         /**
-         * @brief Set brightness
-         * @param[in] value Value to be set
+         * @brief Set Gamma
+         * @param value Value to be set
          * @return Return true if success.
         */
         void SetValue(const long value);
