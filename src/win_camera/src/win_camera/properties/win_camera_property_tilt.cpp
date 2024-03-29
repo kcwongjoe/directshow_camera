@@ -14,37 +14,37 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyTilt::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyTilt::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getTilt();
     }
 
-    bool WinCameraPropertyTilt::IsSupported() const
+    bool WinCameraPropertyTilt::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyTilt::GetRange() const
+    std::pair<long, long> WinCameraPropertyTilt::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyTilt::GetStep() const
+    long WinCameraPropertyTilt::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyTilt::GetValue() const
+    long WinCameraPropertyTilt::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyTilt::SetValue(const long degree)
+    void WinCameraPropertyTilt::setValue(const long degree)
     {
         // Make sure the degree is in the range of -180 to 180
         const auto degreeIn180 = Utils::MathUtils::ConfirmDegreeIn180Range(degree);
 
         // Set value
-        SetValueInternal(degreeIn180);
+        setValueInternal(degreeIn180);
     }
 }

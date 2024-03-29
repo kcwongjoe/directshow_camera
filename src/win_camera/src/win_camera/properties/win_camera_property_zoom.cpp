@@ -12,33 +12,33 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyZoom::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyZoom::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getZoom();
     }
 
-    bool WinCameraPropertyZoom::IsSupported() const
+    bool WinCameraPropertyZoom::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyZoom::GetRange() const
+    std::pair<long, long> WinCameraPropertyZoom::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyZoom::GetStep() const
+    long WinCameraPropertyZoom::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyZoom::GetValue() const
+    long WinCameraPropertyZoom::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyZoom::SetValue(const long millimeter)
+    void WinCameraPropertyZoom::setValue(const long millimeter)
     {
-        SetValueInternal(millimeter);
+        setValueInternal(millimeter);
     }
 }

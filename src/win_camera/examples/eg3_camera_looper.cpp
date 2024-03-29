@@ -11,7 +11,7 @@ void eg3_camera_looper()
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;
     std::vector<WinCamera::WinCameraDevice> cameraDeivceList = cameraLooper.getCamera()->getCameras();
-    cameraLooper.getCamera()->open(cameraDeivceList[0]);
+    cameraLooper.getCamera()->Open(cameraDeivceList[0]);
 
     // Set a process to handle the captured image
     cameraLooper.setCapturedProcess(

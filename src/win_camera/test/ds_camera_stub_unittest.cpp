@@ -108,7 +108,7 @@ TEST(TestUVCCameraStub, TestCapture)
     std::vector <std::pair<int, int>> resolutions = cameraDeivceList[0].getResolutions();
     int width = resolutions[resolutions.size() - 1].first;
     int height = resolutions[resolutions.size() - 1].second;
-    ASSERT_TRUE(camera.open(cameraDeivceList[0],
+    ASSERT_TRUE(camera.Open(cameraDeivceList[0],
             width,
             height
         )
@@ -116,7 +116,7 @@ TEST(TestUVCCameraStub, TestCapture)
     EXPECT_TRUE(camera.isOpened()) << "Fail: camera.isOpened()";
 
     // Start capture
-    EXPECT_TRUE(camera.startCapture()) << "Fail: camera.startCapture()";
+    EXPECT_TRUE(camera.StartCapture()) << "Fail: camera.startCapture()";
     EXPECT_TRUE(camera.isCapturing()) << "Fail: camera.isCapturing()";
 
     // Get getFrame
@@ -152,7 +152,7 @@ TEST(TestUVCCameraStub, TestCapture)
     EXPECT_TRUE(sameByte) << "Fail: camera.getFrame()";
 
     // Close
-    EXPECT_TRUE(camera.close()) << "Fail: camera.close()";
+    EXPECT_TRUE(camera.Close()) << "Fail: camera.close()";
     EXPECT_FALSE(camera.isOpened()) << "Fail: camera.close()";
     EXPECT_FALSE(camera.isCapturing()) << "Fail: camera.close()";
 

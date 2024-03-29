@@ -20,35 +20,35 @@ namespace WinCamera
          * @brief Retrun true if property contrast is supported.
          * @return Retrun true if property contrast is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get the range of the property - contrast
          * @return Return (min,max).
         */
-        std::pair<long, long> GetRange() const;
+        std::pair<long, long> getRange() const;
 
         /**
          * @brief Get the step of the property - contrast.
          * @return Return the step of the contrast.
         */
-        long GetStep() const;
+        long getStep() const;
 
         /**
          * @brief Get current contrast
          * @return Return current contrast.
         */
-        long GetValue() const;
+        long getValue() const;
 
         /**
          * @brief Set contrast
          * @param[in] value Value to be set
          * @return Return true if success.
         */
-        void SetValue(const long value);
+        void setValue(const long value);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

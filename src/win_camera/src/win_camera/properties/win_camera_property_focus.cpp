@@ -12,47 +12,47 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyFocus::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyFocus::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getFocus();
     }
 
-    bool WinCameraPropertyFocus::IsSupported() const
+    bool WinCameraPropertyFocus::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyFocus::GetRange() const
+    std::pair<long, long> WinCameraPropertyFocus::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyFocus::GetStep() const
+    long WinCameraPropertyFocus::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyFocus::GetValue() const
+    long WinCameraPropertyFocus::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyFocus::SetValue(const long millimeter)
+    void WinCameraPropertyFocus::setValue(const long millimeter)
     {
-        SetValueInternal(millimeter);
+        setValueInternal(millimeter);
     }
 
-    bool WinCameraPropertyFocus::IsAuto() const
+    bool WinCameraPropertyFocus::isAuto() const
     {
-        return IsAutoInternal();
+        return isAutoInternal();
     }
 
-    void WinCameraPropertyFocus::SetAuto(const bool setToAuto)
+    void WinCameraPropertyFocus::setAuto(const bool setToAuto)
     {
         // Check mode support
         CheckModeSupport(setToAuto ? Mode::Auto : Mode::Manual);
 
         // Set value
-        SetValueInternal(GetValueInternal(), setToAuto);
+        setValueInternal(getValueInternal(), setToAuto);
     }
 }

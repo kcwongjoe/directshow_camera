@@ -10,7 +10,7 @@ namespace WinCamera
     WinCamera::WinCamera() :
         m_directShowCamera(std::make_shared<DirectShowCamera::DirectShowCamera>())
     {
-        constructor();
+        Constructor();
     }
 
     WinCamera::WinCamera(
@@ -18,10 +18,10 @@ namespace WinCamera
     ) :
         m_directShowCamera(abstractDirectShowCamera)
     {
-        constructor();
+        Constructor();
     }
 
-    void WinCamera::constructor()
+    void WinCamera::Constructor()
     {
         DirectShowCameraUtils::initCOMLib();
 
@@ -30,12 +30,12 @@ namespace WinCamera
         m_matConvertor.isBGR = true;
         m_matConvertor.isVerticalFlip = true;
 #endif
-        initProperties();
+        InitProperties();
     }
 
     WinCamera::~WinCamera()
     {
-        close();
+        Close();
         
         // Uninitialize COM Library
         DirectShowCameraUtils::uninitCOMLib();
@@ -45,7 +45,7 @@ namespace WinCamera
 
 #pragma region Connection
 
-    bool WinCamera::open(
+    bool WinCamera::Open(
         const WinCameraDevice& device,
         const int width,
         const int height,
@@ -74,7 +74,7 @@ namespace WinCamera
             if (width <= 0 || height <= 0)
             {
                 // No specific format
-                result = open(possibleCamera[cameraIndex], NULL);
+                result = Open(possibleCamera[cameraIndex], NULL);
             }
             else
             {
@@ -128,7 +128,7 @@ namespace WinCamera
                     if (videoFormatIndex >= 0)
                     {
                         // Open
-                        result = open(possibleCamera[cameraIndex], &possibleVideoFormat[videoFormatIndex]);
+                        result = Open(possibleCamera[cameraIndex], &possibleVideoFormat[videoFormatIndex]);
                     }
                     else
                     {
@@ -157,7 +157,7 @@ namespace WinCamera
         return result;
     }
 
-    bool WinCamera::open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat)
+    bool WinCamera::Open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat)
     {
         bool result = false;
 
@@ -168,7 +168,7 @@ namespace WinCamera
         // Open
         if (result)
         {
-            result = open(&videoInputFilter, videoFormat);
+            result = Open(&videoInputFilter, videoFormat);
         }
         else
         {
@@ -181,7 +181,7 @@ namespace WinCamera
         return result;
     }
 
-    bool WinCamera::open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat)
+    bool WinCamera::Open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat)
     {
         bool result = false;
 
@@ -191,7 +191,7 @@ namespace WinCamera
     #ifdef HAS_OPENCV
         if (result)
         {
-            allocateMatBuffer();
+            AllocateMatBuffer();
         }
     #endif
 
@@ -208,14 +208,14 @@ namespace WinCamera
             return false;
     }
 
-    bool WinCamera::close()
+    bool WinCamera::Close()
     {
         bool result = true;
         if (m_directShowCamera)
         {
             if (this && result && isCapturing())
             {
-                result = stopCapture();
+                result = StopCapture();
             }
 
             if (this && result && isOpened())
@@ -228,7 +228,7 @@ namespace WinCamera
         return result;
     }
 
-    bool WinCamera::checkDisconnection()
+    bool WinCamera::CheckDisconnection()
     {
         return m_directShowCamera->checkDisconnection();
     }
@@ -242,7 +242,7 @@ namespace WinCamera
 
 #pragma region Capture
 
-    bool WinCamera::startCapture()
+    bool WinCamera::StartCapture()
     {
         if (m_directShowCamera->isOpening())
         {
@@ -259,7 +259,7 @@ namespace WinCamera
         }
     }
 
-    bool WinCamera::stopCapture()
+    bool WinCamera::StopCapture()
     {
         if (m_directShowCamera->isOpening())
         {
@@ -293,7 +293,7 @@ namespace WinCamera
 
 #pragma region Properties
 
-    void WinCamera::resetProperties(const bool asAuto)
+    void WinCamera::ResetProperties(const bool asAuto)
     {
         m_directShowCamera->resetDefault(asAuto);
     }
@@ -303,7 +303,7 @@ namespace WinCamera
         return m_directShowCamera->getProperties();
     }
 
-    void WinCamera::initProperties() 
+    void WinCamera::InitProperties() 
     {
         m_brightness = std::make_shared<WinCameraPropertyBrightness>( *this, m_directShowCamera);
         m_brightness = std::make_shared<WinCameraPropertyBrightness>(*this, m_directShowCamera);
@@ -469,7 +469,7 @@ namespace WinCamera
             copyError(result);
 
 #ifdef HAS_OPENCV
-            allocateMatBuffer();
+            AllocateMatBuffer();
 #endif
 
             // Restart capturing
@@ -552,12 +552,12 @@ namespace WinCamera
         m_matConvertor.isBGR = asBGR;
     }
 
-    void WinCamera::vecticalFlipMat(const bool verticalFlip)
+    void WinCamera::VecticalFlipMat(const bool verticalFlip)
     {
         m_matConvertor.isVerticalFlip = verticalFlip;
     }
 
-    bool WinCamera::allocateMatBuffer()
+    bool WinCamera::AllocateMatBuffer()
     {
         bool result = false;
 
@@ -593,7 +593,7 @@ namespace WinCamera
         // Reallocate frame buffer size if changed
         if (m_matBufferSize != m_directShowCamera->getFrameTotalSize())
         {
-            allocateMatBuffer();
+            AllocateMatBuffer();
         }
 
         // Get frame
@@ -656,7 +656,7 @@ namespace WinCamera
         }
     }
 
-    cv::Mat WinCamera::exposureFusion(
+    cv::Mat WinCamera::ExposureFusion(
         const ExposureFusionAsyncResult exposureFusionAsyncResult,
         std::vector<cv::Mat>* exposureImages,
         const int minSetExposureDelay
@@ -664,10 +664,10 @@ namespace WinCamera
     {
         std::vector<double> exposures = Exposure()->GetPossibleExposureValues();
         
-        return exposureFusion(exposures, exposureFusionAsyncResult, exposureImages, minSetExposureDelay);
+        return ExposureFusion(exposures, exposureFusionAsyncResult, exposureImages, minSetExposureDelay);
     }
 
-    cv::Mat WinCamera::exposureFusion(
+    cv::Mat WinCamera::ExposureFusion(
         const std::vector<double> exposures,
         const ExposureFusionAsyncResult exposureFusionAsyncResult,
         std::vector<cv::Mat>* exposureImages,
@@ -675,8 +675,8 @@ namespace WinCamera
     )
     {
         // Save current exposure
-        double currentExposure = Exposure()->GetValue();
-        bool isAutoExposureNow = Exposure()->IsAuto();
+        double currentExposure = Exposure()->getValue();
+        bool isAutoExposureNow = Exposure()->isAuto();
 
         bool releaseExposureImages = false;
         if (!exposureImages)
@@ -688,7 +688,7 @@ namespace WinCamera
         // Get images in different exposure
         for (int i = 0; i < exposures.size(); i++)
         {
-            Exposure()->SetValue(exposures[i]);
+            Exposure()->setValue(exposures[i]);
 
             std::this_thread::sleep_for(std::chrono::milliseconds(minSetExposureDelay + (int)(exposures[i] * 1000)));
 
@@ -702,11 +702,11 @@ namespace WinCamera
         // Recovery exposure
         if (isAutoExposureNow)
         {
-            Exposure()->SetAuto(true);
+            Exposure()->setAuto(true);
         }
         else
         {
-            Exposure()->SetValue(currentExposure);
+            Exposure()->setValue(currentExposure);
         }
 
         // Run exposure fusion	

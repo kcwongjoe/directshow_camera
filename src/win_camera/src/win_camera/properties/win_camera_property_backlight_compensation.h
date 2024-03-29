@@ -20,7 +20,7 @@ namespace WinCamera
          * @brief Retrun true if property backlight compensation is supported.
          * @return Retrun true if property backlight compensation is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get current backlight compensation
@@ -36,7 +36,7 @@ namespace WinCamera
         void setBacklightCompensation(const bool isOn);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

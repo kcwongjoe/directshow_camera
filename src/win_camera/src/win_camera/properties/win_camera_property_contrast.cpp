@@ -12,33 +12,33 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyContrast::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyContrast::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getContrast();
     }
 
-    bool WinCameraPropertyContrast::IsSupported() const
+    bool WinCameraPropertyContrast::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyContrast::GetRange() const
+    std::pair<long, long> WinCameraPropertyContrast::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyContrast::GetStep() const
+    long WinCameraPropertyContrast::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyContrast::GetValue() const
+    long WinCameraPropertyContrast::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyContrast::SetValue(const long value)
+    void WinCameraPropertyContrast::setValue(const long value)
     {
-        SetValueInternal(value);
+        setValueInternal(value);
     }
 }

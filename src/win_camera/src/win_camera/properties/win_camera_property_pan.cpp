@@ -14,37 +14,37 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyPan::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyPan::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getPan();
     }
 
-    bool WinCameraPropertyPan::IsSupported() const
+    bool WinCameraPropertyPan::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyPan::GetRange() const
+    std::pair<long, long> WinCameraPropertyPan::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyPan::GetStep() const
+    long WinCameraPropertyPan::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyPan::GetValue() const
+    long WinCameraPropertyPan::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyPan::SetValue(const long degree)
+    void WinCameraPropertyPan::setValue(const long degree)
     {
         // Make sure the degree is in the range of -180 to 180
         const auto degreeIn180 = Utils::MathUtils::ConfirmDegreeIn180Range(degree);
 
         // Set value
-        SetValueInternal(degree);
+        setValueInternal(degree);
     }
 }

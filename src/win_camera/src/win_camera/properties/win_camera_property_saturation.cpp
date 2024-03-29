@@ -12,33 +12,33 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertySaturation::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertySaturation::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getSaturation();
     }
 
-    bool WinCameraPropertySaturation::IsSupported() const
+    bool WinCameraPropertySaturation::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertySaturation::GetRange() const
+    std::pair<long, long> WinCameraPropertySaturation::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertySaturation::GetStep() const
+    long WinCameraPropertySaturation::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertySaturation::GetValue() const
+    long WinCameraPropertySaturation::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertySaturation::SetValue(const long value)
+    void WinCameraPropertySaturation::setValue(const long value)
     {
-        SetValueInternal(value);
+        setValueInternal(value);
     }
 }

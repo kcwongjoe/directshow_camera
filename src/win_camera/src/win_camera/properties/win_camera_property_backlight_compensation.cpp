@@ -12,19 +12,19 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyBacklightCompensation::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyBacklightCompensation::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getBacklightCompensation();
     }
 
-    bool WinCameraPropertyBacklightCompensation::IsSupported() const
+    bool WinCameraPropertyBacklightCompensation::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
     bool WinCameraPropertyBacklightCompensation::isBacklightCompensation() const
     {
-        bool isBacklightCompensation = GetValueInternal() == 0 ? false : true; // 0(off), 1(on)
+        bool isBacklightCompensation = getValueInternal() == 0 ? false : true; // 0(off), 1(on)
 
         return isBacklightCompensation;
     }
@@ -33,6 +33,6 @@ namespace WinCamera
     {
         long value = isOn ? 1 : 0; // 0(off), 1(on)
 
-        SetValueInternal(value);
+        setValueInternal(value);
     }
 }

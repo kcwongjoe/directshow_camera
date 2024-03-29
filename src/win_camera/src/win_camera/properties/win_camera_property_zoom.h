@@ -20,35 +20,35 @@ namespace WinCamera
          * @brief Retrun true if property zoom is supported.
          * @return Retrun true if property zoom is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get the range of the property - zoom
          * @return Return (min,max).
         */
-        std::pair<long, long> GetRange() const;
+        std::pair<long, long> getRange() const;
 
         /**
          * @brief Get the step of the property - zoom.
          * @return Return the step of the zoom.
         */
-        long GetStep() const;
+        long getStep() const;
 
         /**
          * @brief Get current zoom
          * @return Return current zoom.
         */
-        long GetValue() const;
+        long getValue() const;
 
         /**
          * @brief Set Zoom
          * @param millimeter Value to be set in millimeters
          * @return Return true if success.
         */
-        void SetValue(const long millimeter);
+        void setValue(const long millimeter);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

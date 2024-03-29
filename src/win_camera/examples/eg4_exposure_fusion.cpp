@@ -11,24 +11,24 @@ void eg4_exposure_fusion()
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;
     std::vector<WinCamera::WinCameraDevice> cameraDeivceList = camera.getCameras();
-    camera.open(cameraDeivceList[0]);
+    camera.Open(cameraDeivceList[0]);
 
     // Start Capture
     std::cout << "Start capture..." << std::endl;
-    camera.startCapture();
+    camera.StartCapture();
 
     // Wait for 1 second
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     // Capture a exposure fusion image
     std::cout << "Start to capture in exposure fusion..." << std::endl;
-    cv::Mat frame = camera.exposureFusion();
+    cv::Mat frame = camera.ExposureFusion();
     cv::imwrite("image.jpg", frame);
 
     // Processing exposure fusion image is time consumed. Use async mode to capture.
     std::cout << "Use a async mode to capture image in exposure fusion..." << std::endl;
     std::atomic<bool> calculatedFusion = false;
-    camera.exposureFusion(
+    camera.ExposureFusion(
         [&calculatedFusion](cv::Mat fusionImage)
         {
             std::cout << "Captured in async mode." << std::endl;
@@ -48,8 +48,8 @@ void eg4_exposure_fusion()
     }    
 
     // Stop Capture
-    camera.stopCapture();
+    camera.StopCapture();
 
     // Close the camera.
-    camera.close();
+    camera.Close();
 }

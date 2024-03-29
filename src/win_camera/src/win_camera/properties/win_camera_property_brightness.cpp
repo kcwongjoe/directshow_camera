@@ -12,33 +12,33 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyBrightness::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyBrightness::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getBrightness();
     }
 
-    bool WinCameraPropertyBrightness::IsSupported() const
+    bool WinCameraPropertyBrightness::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyBrightness::GetRange() const
+    std::pair<long, long> WinCameraPropertyBrightness::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyBrightness::GetStep() const
+    long WinCameraPropertyBrightness::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyBrightness::GetValue() const
+    long WinCameraPropertyBrightness::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyBrightness::SetValue(const long value)
+    void WinCameraPropertyBrightness::setValue(const long value)
     {
-        SetValueInternal(value);
+        setValueInternal(value);
     }
 }

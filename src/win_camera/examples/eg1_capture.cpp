@@ -18,11 +18,11 @@ void eg1_capture()
 
     // Open the first camera
     std::cout << "Open the first camera..." << std::endl;
-    camera.open(cameraDeivceList[0]);
+    camera.Open(cameraDeivceList[0]);
 
     // Start Capture
     std::cout << "Start capture..." << std::endl;
-    camera.startCapture();
+    camera.StartCapture();
 
     // Wait for 1 second
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -39,13 +39,13 @@ void eg1_capture()
 
     // You can vectical flip the image. The camera is default to vectical flip the image.
     std::cout << "Stop to vectical flip the image." << std::endl;
-    camera.vecticalFlipMat(false);
+    camera.VecticalFlipMat(false);
     frame = camera.getNewMat();
     cv::imwrite("image3.jpg", frame);
 
     // Stop Capture
-    camera.stopCapture();
+    camera.StopCapture();
 
     // Close the camera.
-    camera.close();
+    camera.Close();
 }

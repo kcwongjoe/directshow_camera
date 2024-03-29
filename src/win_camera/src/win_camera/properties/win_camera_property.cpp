@@ -16,46 +16,46 @@ namespace WinCamera
         
     }
 
-    bool WinCameraProperty::IsPropertySupportedInternal() const
+    bool WinCameraProperty::isPropertySupportedInternal() const
     {
         // Throw if camera is not opened
         CheckOpening();
 
         // Get property support
-        return GetDirectShowProperty()->isSupported();
+        return getDirectShowProperty()->isSupported();
     }
 
-    std::pair<long, long> WinCameraProperty::GetRangeInternal() const
+    std::pair<long, long> WinCameraProperty::getRangeInternal() const
     {
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return GetDirectShowProperty()->getRange();
+        return getDirectShowProperty()->getRange();
     }
 
-    long WinCameraProperty::GetStepInternal() const
+    long WinCameraProperty::getStepInternal() const
     {
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return GetDirectShowProperty()->getStep();
+        return getDirectShowProperty()->getStep();
     }
 
-    long WinCameraProperty::GetValueInternal() const
+    long WinCameraProperty::getValueInternal() const
     {
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return GetDirectShowProperty()->getValue();
+        return getDirectShowProperty()->getValue();
     }
 
-    void WinCameraProperty::SetValueInternal(const long value, const bool isAuto)
+    void WinCameraProperty::setValueInternal(const long value, const bool isAuto)
     {
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
         // Set value
-        const bool result = m_camera->setValue(GetDirectShowProperty(), value, isAuto);
+        const bool result = m_camera->setValue(getDirectShowProperty(), value, isAuto);
 
         // Throw if error
         if (!result)
@@ -65,12 +65,12 @@ namespace WinCamera
         }
     }
 
-    bool WinCameraProperty::IsAutoInternal() const
+    bool WinCameraProperty::isAutoInternal() const
     {
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return GetDirectShowProperty()->isAuto();
+        return getDirectShowProperty()->isAuto();
     }
 
     bool WinCameraProperty::SupportAutoModeInternal() const
@@ -78,7 +78,7 @@ namespace WinCamera
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return GetDirectShowProperty()->supportAutoMode();
+        return getDirectShowProperty()->supportAutoMode();
     }
 
     bool WinCameraProperty::ySupportManualModeInternal() const
@@ -86,7 +86,7 @@ namespace WinCamera
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return GetDirectShowProperty()->supportManualMode();
+        return getDirectShowProperty()->supportManualMode();
     }
 
     void WinCameraProperty::CheckOpening() const
@@ -101,9 +101,9 @@ namespace WinCamera
         if (!m_isCameraOpenedFunc()) throw CameraNotOpenedException();
 
         // Throw if property is not support
-        if (!GetDirectShowProperty()->isSupported())
+        if (!getDirectShowProperty()->isSupported())
         {
-            throw PropertyNotSupportException(GetDirectShowProperty()->getName());
+            throw PropertyNotSupportException(getDirectShowProperty()->getName());
         }
     }
     void WinCameraProperty::CheckModeSupport(Mode mode) const
@@ -111,13 +111,13 @@ namespace WinCamera
         // Throw if property does not support auto mode
         if (mode == Mode::Auto && !SupportAutoModeInternal())
         {
-            throw PropertyNotSupportException("Auto " + GetDirectShowProperty()->getName());
+            throw PropertyNotSupportException("Auto " + getDirectShowProperty()->getName());
         }
 
         // Throw if property does not support manual mode
         if (mode == Mode::Manual && !ySupportManualModeInternal())
         {
-            throw PropertyNotSupportException("Manual " + GetDirectShowProperty()->getName());
+            throw PropertyNotSupportException("Manual " + getDirectShowProperty()->getName());
         }
     }
 }

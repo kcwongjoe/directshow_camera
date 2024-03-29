@@ -20,48 +20,48 @@ namespace WinCamera
          * @brief Retrun true if property iris is supported.
          * @return Retrun true if property iris is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get the range of the property - iris in units of f_stop * 10.
          * @return Return (min,max).
         */
-        std::pair<long, long> GetRange() const;
+        std::pair<long, long> getRange() const;
 
         /**
          * @brief Get the step of the property - iris in units of f_stop * 10.
          * @return Return the step of the iris.
         */
-        long GetStep() const;
+        long getStep() const;
 
         /**
          * @brief Get current iris in units of f_stop * 10.
          * @return Return current iris.
         */
-        long GetValue() const;
+        long getValue() const;
 
         /**
          * @brief Set Iris
          * @param value Value to be set in units of f_stop * 10.
          * @return Return true if success.
         */
-        void SetValue(const long value);
+        void setValue(const long value);
 
         /**
          * @brief Retrun true if iris is auto mode, return false if it is manual mode.
          * @return Retrun true if iris is auto mode, return false if it is manual mode or error occurred.
         */
-        bool IsAuto() const;
+        bool isAuto() const;
 
         /**
          * @brief Set iris to auto or manual mode
          * @param setToAuto Set it as true if you want to set as auto mode. Manual mode as false.
          * @return Return true if success.
         */
-        void SetAuto(const bool setToAuto);
+        void setAuto(const bool setToAuto);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

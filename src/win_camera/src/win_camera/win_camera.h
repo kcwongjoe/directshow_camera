@@ -77,7 +77,7 @@ namespace WinCamera
          * @brief Constructor
          * @param abstractDirectShowCamera Abstract DirectShow Camera
         */
-        void constructor();
+        void Constructor();
 
         /**
          * @brief Destructor
@@ -94,7 +94,7 @@ namespace WinCamera
          * @param rgb (Option) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
          * @return Return true if success.
         */
-        bool open(const WinCameraDevice& device, const int width = -1, const int height = -1, const bool rgb = true);
+        bool Open(const WinCameraDevice& device, const int width = -1, const int height = -1, const bool rgb = true);
 
         /**
          * @brief Open camera with the specific DirectShowVideoFormat.
@@ -102,7 +102,7 @@ namespace WinCamera
          * @param videoFormat (Option) Video format. Default as NULL which use the default video format.
          * @return Return true if success.
         */
-        bool open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
+        bool Open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
 
         /**
          * @brief Return true if the camera is opened.
@@ -113,13 +113,13 @@ namespace WinCamera
         /**
          * @brief Close
         */
-        bool close();
+        bool Close();
 
         /**
          * @brief Return true if camera is disconnected.
          * @return Return true if camera is disconnected.
          */
-        bool checkDisconnection();
+        bool CheckDisconnection();
 
         /**
          * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run.
@@ -133,13 +133,13 @@ namespace WinCamera
          * @brief Start capture
          * @return Return true if success
         */
-        bool startCapture();
+        bool StartCapture();
 
         /**
          * @brief Stop capture
          * @return Return true if success
         */
-        bool stopCapture();
+        bool StopCapture();
 
         /**
          * @brief Return true if camera is capturing.
@@ -233,7 +233,7 @@ namespace WinCamera
          * @brief Set as true to return a vertical flip cv::Mat. Default as true.
          * @param verticalFlip Set it as true to return a vertical flip cv::Mat.
         */
-        void vecticalFlipMat(const bool verticalFlip);
+        void VecticalFlipMat(const bool verticalFlip);
 
         /**
          * @brief Set as true to return a BGR cv::Mat. Default as false which return a RGB Mat.
@@ -245,7 +245,7 @@ namespace WinCamera
          * @brief Allocate frame buffer
          * @return Return true if success
         */
-        bool allocateMatBuffer();
+        bool AllocateMatBuffer();
 
         /**
          * @brief Get cv::Mat of the current frame
@@ -277,7 +277,7 @@ namespace WinCamera
          * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
          * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
         */
-        cv::Mat exposureFusion(
+        cv::Mat ExposureFusion(
             const ExposureFusionAsyncResult exposureFusionAsyncResult = nullptr,
             std::vector<cv::Mat>* exposureImages = NULL,
             const int minSetExposureDelay = 200
@@ -291,7 +291,7 @@ namespace WinCamera
          * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
          * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
         */
-        cv::Mat exposureFusion(
+        cv::Mat ExposureFusion(
             const std::vector<double> exposures,
             const ExposureFusionAsyncResult exposureFusionAsyncResult = nullptr,
             std::vector<cv::Mat>* exposureImages = NULL,
@@ -319,7 +319,7 @@ namespace WinCamera
          * @brief Reset camera properties as default value.
          * @param asAuto Set as true if you want to use auto mode as default value.
         */
-        void resetProperties(const bool asAuto = true);
+        void ResetProperties(const bool asAuto = true);
 
         /**
          * @brief Get directshow properties pointer. It is a advance option.
@@ -327,7 +327,7 @@ namespace WinCamera
         */
         std::shared_ptr<DirectShowCamera::DirectShowCameraProperties> getDirectShowProperties() const;
 
-        void initProperties();
+        void InitProperties();
 
         std::shared_ptr<WinCameraPropertyBrightness> Brightness();
         std::shared_ptr<WinCameraPropertyContrast> Contrast();
@@ -385,7 +385,7 @@ namespace WinCamera
          * @param videoFormat Video format
          * @return Return true if success.
         */
-        bool open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
+        bool Open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
 
         // Utils
         void copyError(bool success);

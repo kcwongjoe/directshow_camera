@@ -12,47 +12,47 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyWhiteBalance::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyWhiteBalance::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getWhiteBalance();
     }
 
-    bool WinCameraPropertyWhiteBalance::IsSupported() const
+    bool WinCameraPropertyWhiteBalance::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyWhiteBalance::GetRange() const
+    std::pair<long, long> WinCameraPropertyWhiteBalance::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyWhiteBalance::GetStep() const
+    long WinCameraPropertyWhiteBalance::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyWhiteBalance::GetValue() const
+    long WinCameraPropertyWhiteBalance::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyWhiteBalance::SetValue(const long kelvin)
+    void WinCameraPropertyWhiteBalance::setValue(const long kelvin)
     {
-        SetValueInternal(kelvin);
+        setValueInternal(kelvin);
     }
 
-    bool WinCameraPropertyWhiteBalance::IsAuto() const
+    bool WinCameraPropertyWhiteBalance::isAuto() const
     {
-        return IsAutoInternal();
+        return isAutoInternal();
     }
 
-    void WinCameraPropertyWhiteBalance::SetAuto(const bool setToAuto)
+    void WinCameraPropertyWhiteBalance::setAuto(const bool setToAuto)
     {
         // Check mode support
         CheckModeSupport(setToAuto ? Mode::Auto : Mode::Manual);
 
         // Set value
-        SetValueInternal(GetValueInternal(), setToAuto);
+        setValueInternal(getValueInternal(), setToAuto);
     }
 }

@@ -62,7 +62,7 @@ namespace WinCamera
         {
             // Start Capture
             if (startCapture && m_camera->isOpened())
-                m_camera->startCapture();
+                m_camera->StartCapture();
 
             // Start the thread
             m_stopThread = false;
@@ -198,7 +198,7 @@ namespace WinCamera
         // Stop capture
         if (m_stopCapture)
         {
-            m_camera->stopCapture();
+            m_camera->StopCapture();
             m_stopCapture = false;
         }
 

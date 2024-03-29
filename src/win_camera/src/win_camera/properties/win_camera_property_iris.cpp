@@ -12,47 +12,47 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyIris::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyIris::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getIris();
     }
 
-    bool WinCameraPropertyIris::IsSupported() const
+    bool WinCameraPropertyIris::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<long, long> WinCameraPropertyIris::GetRange() const
+    std::pair<long, long> WinCameraPropertyIris::getRange() const
     {
-        return GetRangeInternal();
+        return getRangeInternal();
     }
 
-    long WinCameraPropertyIris::GetStep() const
+    long WinCameraPropertyIris::getStep() const
     {
-        return GetStepInternal();
+        return getStepInternal();
     }
 
-    long WinCameraPropertyIris::GetValue() const
+    long WinCameraPropertyIris::getValue() const
     {
-        return GetValueInternal();
+        return getValueInternal();
     }
 
-    void WinCameraPropertyIris::SetValue(const long value)
+    void WinCameraPropertyIris::setValue(const long value)
     {
-        SetValueInternal(value);
+        setValueInternal(value);
     }
 
-    bool WinCameraPropertyIris::IsAuto() const
+    bool WinCameraPropertyIris::isAuto() const
     {
-        return IsAutoInternal();
+        return isAutoInternal();
     }
 
-    void WinCameraPropertyIris::SetAuto(const bool setToAuto)
+    void WinCameraPropertyIris::setAuto(const bool setToAuto)
     {
         // Check mode support
         CheckModeSupport(setToAuto ? Mode::Auto : Mode::Manual);
 
         // Set value
-        SetValueInternal(GetValueInternal(), setToAuto);
+        setValueInternal(getValueInternal(), setToAuto);
     }
 }

@@ -20,35 +20,35 @@ namespace WinCamera
          * @brief Retrun true if property saturation is supported.
          * @return Retrun true if property saturation is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get the range of the property - saturation
          * @return Return (min,max)
         */
-        std::pair<long, long> GetRange() const;
+        std::pair<long, long> getRange() const;
 
         /**
          * @brief Get the step of the property - Saturation.
          * @return Return the step of the Saturation
         */
-        long GetStep() const;
+        long getStep() const;
 
         /**
          * @brief Get current saturation
          * @return Return current saturation.
         */
-        long GetValue() const;
+        long getValue() const;
 
         /**
          * @brief Set Saturation
          * @param value Value to be set
          * @return Return true if success.
         */
-        void SetValue(const long value);
+        void setValue(const long value);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

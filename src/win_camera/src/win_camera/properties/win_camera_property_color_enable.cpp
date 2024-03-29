@@ -12,19 +12,19 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyColorEnable::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyColorEnable::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getColorEnable();
     }
 
-    bool WinCameraPropertyColorEnable::IsSupported() const
+    bool WinCameraPropertyColorEnable::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
     bool WinCameraPropertyColorEnable::isColorEnable() const
     {
-        bool isColorEnable = GetValueInternal() == 0 ? false : true; // 0(off), 1(on)
+        bool isColorEnable = getValueInternal() == 0 ? false : true; // 0(off), 1(on)
 
         return isColorEnable;
     }
@@ -32,10 +32,10 @@ namespace WinCamera
     void WinCameraPropertyColorEnable::setColorEnable(const bool isOn)
     {
         // Get value
-        const auto range = GetRangeInternal();
+        const auto range = getRangeInternal();
         long value = isOn ? range.second : range.first; // 0(off), 1(on)
 
         // Set
-        SetValueInternal(value);
+        setValueInternal(value);
     }
 }

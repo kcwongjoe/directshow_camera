@@ -20,35 +20,35 @@ namespace WinCamera
          * @brief Retrun true if property tilt is supported.
          * @return Retrun true if property tilt is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get the range of the property - tilt
          * @return Return (min,max).
         */
-        std::pair<long, long> GetRange() const;
+        std::pair<long, long> getRange() const;
 
         /**
          * @brief Get the step of the property - tilt.
          * @return Return the step of the tilt.
         */
-        long GetStep() const;
+        long getStep() const;
 
         /**
          * @brief Get current tilt
          * @return Return current tilt.
         */
-        long GetValue() const;
+        long getValue() const;
 
         /**
          * @brief Set Tilt
          * @param degree Value to be set in degree
          * @return Return true if success.
         */
-        void SetValue(const long degree);
+        void setValue(const long degree);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

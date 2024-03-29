@@ -36,7 +36,7 @@ void eg6_stub()
     // Open the first camera in the biggest resolution
     std::cout << "Open the first camera..." << std::endl;
     std::vector <std::pair<int, int>> resolutions = cameraDeivceList[0].getResolutions();
-    camera.open(cameraDeivceList[0],
+    camera.Open(cameraDeivceList[0],
         resolutions[resolutions.size() - 1].first,
         resolutions[resolutions.size() - 1].second
     );
@@ -55,19 +55,19 @@ void eg6_stub()
 
     // ****** Change exposure******
     std::cout << "Change the exposure in the fake camera..." << std::endl;
-    std::cout << "Exposure: " + std::to_string(camera.Exposure()->GetValue()) + "s" << std::endl;
+    std::cout << "Exposure: " + std::to_string(camera.Exposure()->getValue()) + "s" << std::endl;
 
     // Set exposure as the largest value
     std::vector<double> exposures = camera.Exposure()->GetPossibleExposureValues();
-    camera.Exposure()->SetValue(exposures[exposures.size()-1]);
+    camera.Exposure()->setValue(exposures[exposures.size()-1]);
     std::cout << "Set exposure to " + std::to_string(exposures[exposures.size() - 1]) + "s" << std::endl;
 
     // Get exposure again
-    std::cout << "Exposure changed to: " + std::to_string(camera.Exposure()->GetValue()) + "s" << std::endl;
+    std::cout << "Exposure changed to: " + std::to_string(camera.Exposure()->getValue()) + "s" << std::endl;
 
     // ****** Capture******
     std::cout << "Start capture in a fake camera..." << std::endl;
-    camera.startCapture();
+    camera.StartCapture();
 
     // Wait for 1 second
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -129,6 +129,6 @@ void eg6_stub()
 #endif
 
     // Close the camera.
-    camera.close();
+    camera.Close();
 
 }

@@ -23,18 +23,18 @@ void eg2_properties()
 
     // Open the first camera in the biggest resolution
     std::cout << "Open the first camera..." << std::endl;
-    camera.open(cameraDeivceList[0], 
+    camera.Open(cameraDeivceList[0], 
         resolutions[resolutions.size() - 1].first,
         resolutions[resolutions.size() - 1].second
     );
 
     // Get exposure in second
-    if (camera.Exposure()->IsSupported())
+    if (camera.Exposure()->isSupported())
     {
-        std::cout << "Exposure: " + std::to_string(camera.Exposure()->GetValue()) + "s" << std::endl;
+        std::cout << "Exposure: " + std::to_string(camera.Exposure()->getValue()) + "s" << std::endl;
         // Set exposure as the largest value
         std::vector<double> exposures = camera.Exposure()->GetPossibleExposureValues();
-        camera.Exposure()->SetValue(exposures[exposures.size() - 1]);
+        camera.Exposure()->setValue(exposures[exposures.size() - 1]);
         std::cout << "Set exposure to " + std::to_string(exposures[exposures.size() - 1]) + "s" << std::endl;
 
     }else
@@ -45,9 +45,9 @@ void eg2_properties()
 
     // Reset all properties to default
     std::cout << "Reset properties to default..." << std::endl;
-    camera.resetProperties();
+    camera.ResetProperties();
 
     // Close the camera.
-    camera.close();
+    camera.Close();
     
 }

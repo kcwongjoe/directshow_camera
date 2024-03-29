@@ -35,48 +35,48 @@ namespace WinCamera
          * @brief Derived class must override this function to specific which property to use.
          * @return Return the property
         */
-        virtual std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const
+        virtual std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const
         {
-            throw std::runtime_error("GetDirectShowProperty() must be overridden.");
+            throw std::runtime_error("getDirectShowProperty() must be overridden.");
         }
 
         /**
         * @brief Check if property being supported by the camera
         * @return Return true if property is supported
         **/
-        bool IsPropertySupportedInternal() const;
+        bool isPropertySupportedInternal() const;
 
         /**
         * @brief Get the range of the property
         * @return Return the range of the property in (min, max)
         **/
-        std::pair<long, long> GetRangeInternal() const;
+        std::pair<long, long> getRangeInternal() const;
 
         /**
         * @brief Get the step of the property
         * @return Return the step of the property
         **/
-        long GetStepInternal() const;
+        long getStepInternal() const;
 
         /**
         * @brief Get the value of the property
         * @return Return the value of the property
         **/
-        long GetValueInternal() const;
+        long getValueInternal() const;
 
         /**
         * @brief Set the value of the property
         * @param value Value to be set
         * @param isAuto Set to true if the property is set to auto
         **/
-        void SetValueInternal(const long value, const bool isAuto = false);
+        void setValueInternal(const long value, const bool isAuto = false);
 
         /**
         * @brief Check if the property is set to auto
         * 
         * @return Return true if the property is set to auto
         **/
-        bool IsAutoInternal() const;
+        bool isAutoInternal() const;
 
         /**
         * @brief Check if the property support auto mode

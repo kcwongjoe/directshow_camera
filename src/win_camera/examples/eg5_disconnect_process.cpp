@@ -21,7 +21,7 @@ void eg5_disconnect_process()
 
     // Open the camera
     std::cout << "Open the camera..." << std::endl;
-    camera.open(cameraDeivceList[cameraIndex]);
+    camera.Open(cameraDeivceList[cameraIndex]);
 
     camera.setDisconnectionProcess(
         []()
@@ -32,15 +32,15 @@ void eg5_disconnect_process()
 
     // Start Capture
     std::cout << "Start capture..." << std::endl;
-    camera.startCapture();
+    camera.StartCapture();
 
     // Wait for 2 second
     std::cout << "You can unplug the USB camera now." << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
     // Stop Capture
-    camera.stopCapture();
+    camera.StopCapture();
 
     // Close the camera.
-    camera.close();
+    camera.Close();
 }

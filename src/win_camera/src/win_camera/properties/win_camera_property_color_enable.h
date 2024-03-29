@@ -20,7 +20,7 @@ namespace WinCamera
          * @brief Retrun true if property brightness is supported.
          * @return Retrun true if property brightness is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get current color enable
@@ -35,7 +35,7 @@ namespace WinCamera
         void setColorEnable(const bool isOn);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

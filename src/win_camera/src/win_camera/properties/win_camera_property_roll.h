@@ -20,35 +20,35 @@ namespace WinCamera
          * @brief Retrun true if property roll is supported.
          * @return Retrun true if property roll is supported.
         */
-        bool IsSupported() const;
+        bool isSupported() const;
 
         /**
          * @brief Get the range of the property - roll
          * @return Return (min,max).
         */
-        std::pair<long, long> GetRange() const;
+        std::pair<long, long> getRange() const;
 
         /**
          * @brief Get the step of the property - roll.
          * @return Return the step of the roll.
         */
-        long GetStep() const;
+        long getStep() const;
 
         /**
          * @brief Get current Roll
          * @return Return current Roll.
         */
-        long GetValue() const;
+        long getValue() const;
 
         /**
          * @brief Set Roll
          * @param degree Value to be set in degree
          * @return Return true if success.
         */
-        void SetValue(const long degree);
+        void setValue(const long degree);
 
     protected:
-        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> GetDirectShowProperty() const override;
+        std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> getDirectShowProperty() const override;
     };
 }
 

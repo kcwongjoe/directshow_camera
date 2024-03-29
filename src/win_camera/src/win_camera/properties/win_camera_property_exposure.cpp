@@ -13,19 +13,19 @@ namespace WinCamera
 
     }
 
-    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyExposure::GetDirectShowProperty() const
+    std::shared_ptr<DirectShowCamera::DirectShowCameraProperty> WinCameraPropertyExposure::getDirectShowProperty() const
     {
         return m_camera->getProperties()->getExposure();
     }
 
-    bool WinCameraPropertyExposure::IsSupported() const
+    bool WinCameraPropertyExposure::isSupported() const
     {
-        return IsPropertySupportedInternal();
+        return isPropertySupportedInternal();
     }
 
-    std::pair<double, double> WinCameraPropertyExposure::GetRange() const
+    std::pair<double, double> WinCameraPropertyExposure::getRange() const
     {
-        const auto range = GetRangeInternal();
+        const auto range = getRangeInternal();
 
         // Convert to second
         std::pair<double, double> result;
@@ -35,9 +35,9 @@ namespace WinCamera
         return result;
     }
 
-    double WinCameraPropertyExposure::GetValue() const
+    double WinCameraPropertyExposure::getValue() const
     {
-        const auto dsValue = GetValueInternal();
+        const auto dsValue = getValueInternal();
 
         // Convert to second
         const auto result = WinCameraUtils::DSExposureValueToSec(dsValue);
@@ -45,34 +45,34 @@ namespace WinCamera
         return result;
     }
 
-    void WinCameraPropertyExposure::SetValue(const double second)
+    void WinCameraPropertyExposure::setValue(const double second)
     {
         // Convert to DirectShow value
         long dsValue = WinCameraUtils::DSExposureSecToValue(second);
 
         // Set value
-        SetValueInternal(dsValue);
+        setValueInternal(dsValue);
     }
 
-    bool WinCameraPropertyExposure::IsAuto() const
+    bool WinCameraPropertyExposure::isAuto() const
     {
-        return IsAutoInternal();
+        return isAutoInternal();
     }
 
-    void WinCameraPropertyExposure::SetAuto(const bool setToAuto)
+    void WinCameraPropertyExposure::setAuto(const bool setToAuto)
     {
         // Check mode support
         CheckModeSupport(setToAuto ? Mode::Auto : Mode::Manual);
 
         // Set value
-        SetValueInternal(GetValueInternal(), setToAuto);
+        setValueInternal(getValueInternal(), setToAuto);
     }
 
     std::vector<double> WinCameraPropertyExposure::GetPossibleExposureValues() const
     {
         // Get range and step
-        const auto range = GetRangeInternal();
-        const auto step = GetStepInternal();
+        const auto range = getRangeInternal();
+        const auto step = getStepInternal();
 
         // Add possible value to list
         std::vector<double> result;
@@ -107,7 +107,7 @@ namespace WinCamera
     int WinCameraPropertyExposure::GetExposureIndex() const
     {
         const auto exposureList = GetPossibleExposureValues();
-        const auto exposureValue = GetValue();
+        const auto exposureValue = getValue();
         int result = -1;
 
         if (exposureList.size() > 0)
