@@ -1,6 +1,6 @@
 #include "win_camera/win_camera.h"
-#include "directshow_camera/ds_camera.h"
-#include "properties/win_camera_property_brightness.h"
+
+#include "exceptions/resolution_not_support_exception.h"
 
 namespace WinCamera
 {
@@ -134,14 +134,7 @@ namespace WinCamera
                     {
                         // Not Found the size
                         result = false;
-                        if (rgb)
-                        {
-                            m_errorString = "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + " x 3).";
-                        }
-                        else
-                        {
-                            m_errorString = "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + " x 1).";
-                        }
+                        throw ResolutionNotSupportException(device.getFriendlyName(), width, height, rgb);
 
                     }
                 }
@@ -149,7 +142,7 @@ namespace WinCamera
                 {
                     // Not Found the size
                     result = false;
-                    m_errorString = "Camera" + device.getFriendlyName() + " does not supported size (" + std::to_string(width) + " x " + std::to_string(height) + ").";
+                    throw ResolutionNotSupportException(device.getFriendlyName(), width, height, false);
                 }
             }
         }

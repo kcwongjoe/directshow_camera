@@ -2,6 +2,9 @@
 
 #include "win_camera/win_camera.h"
 
+#include "exceptions/camera_not_opened_exception.h"
+#include "exceptions/property_not_support_exception.h"
+
 namespace WinCamera
 {
     WinCameraProperty::WinCameraProperty(

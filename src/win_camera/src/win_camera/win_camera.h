@@ -31,11 +31,6 @@
 #include "directshow_camera/abstract_ds_camera.h"
 #include "directshow_camera/ds_libs_setting.h"
 
-#include "exceptions/camera_not_opened_exception.h"
-#include "exceptions/property_not_support_exception.h"
-
-
-
 // Include Opencv
 #ifdef HAS_OPENCV
 #include "opencv_utils/cv_mat_convertor.h"
