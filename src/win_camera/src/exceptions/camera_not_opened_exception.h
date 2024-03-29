@@ -24,7 +24,7 @@ namespace WinCamera
         /**
          * @brief Get the error message
         */
-        std::string GetErrorMessage() const;
+        std::string getErrorMessage() const;
 
         const char* what() const noexcept override;
 

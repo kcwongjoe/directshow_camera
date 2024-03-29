@@ -9,12 +9,12 @@ namespace WinCamera
 
     }
 
-    std::string PropertyNotSupportException::GetPropertyName() const
+    std::string PropertyNotSupportException::getPropertyName() const
     {
         return m_propertyName;
     }
 
-    std::string PropertyNotSupportException::GetErrorMessage() const
+    std::string PropertyNotSupportException::getErrorMessage() const
     {
         return m_errorMessage;
     }

@@ -26,12 +26,12 @@ namespace WinCamera
          * @brief Get the name of the property that is not supported
          * @return The name of the property that is not supported
         */
-        std::string GetPropertyName() const;
+        std::string getPropertyName() const;
 
         /**
          * @brief Get the error message
         */
-        std::string GetErrorMessage() const;
+        std::string getErrorMessage() const;
 
         const char* what() const noexcept override;
     private:

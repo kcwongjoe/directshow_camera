@@ -10,7 +10,7 @@ namespace WinCamera
     */
     WinCameraLooper::WinCameraLooper()
     {
-        reset();
+        Reset();
         m_camera = new WinCamera();
     }
 
@@ -20,7 +20,7 @@ namespace WinCamera
     */
     WinCameraLooper::WinCameraLooper(WinCamera* camera)
     {
-        reset();
+        Reset();
         m_camera = camera;
     }
 
@@ -29,7 +29,7 @@ namespace WinCamera
     */
     WinCameraLooper::~WinCameraLooper()
     {
-        stop(false);
+        Stop(false);
 
         if (this)
         {
@@ -40,7 +40,7 @@ namespace WinCamera
     /**
      * @brief Reset variables
     */
-    void WinCameraLooper::reset()
+    void WinCameraLooper::Reset()
     {
         m_stopThread = false;
         m_stopCapture = false;
@@ -56,7 +56,7 @@ namespace WinCamera
      * @brief Start looper
      * @param startCapture Set it as true if you want to run startCapture() on the camera. Default as true. 
     */
-    void WinCameraLooper::start(bool startCapture)
+    void WinCameraLooper::Start(bool startCapture)
     {
         if (!m_isRunning)
         {
@@ -66,7 +66,7 @@ namespace WinCamera
 
             // Start the thread
             m_stopThread = false;
-            m_thread = std::thread(&WinCameraLooper::run, this);
+            m_thread = std::thread(&WinCameraLooper::Run, this);
             m_thread.detach();
 
         }
@@ -79,7 +79,7 @@ namespace WinCamera
      * @param stopCapture Set it as true if you want to run stopCapture() after looper is stopped. Default as true. 
      * @return Return true if success to close. Return false if timeout.
     */
-    bool WinCameraLooper::stop(bool async, bool stopCapture)
+    bool WinCameraLooper::Stop(bool async, bool stopCapture)
     {
         if (this && m_isRunning)
         {
@@ -128,7 +128,7 @@ namespace WinCamera
     /**
      * @brief Run
     */
-    void WinCameraLooper::run()
+    void WinCameraLooper::Run()
     {
         // Set as running
         m_isRunning = true;
@@ -218,7 +218,7 @@ namespace WinCamera
 
 #pragma endregion Looper control
 
-#pragma region Wait for stop timeout
+#pragma region Wait for Stop timeout
 
     /**
      * @brief Set the wait for stopping timeout
@@ -244,7 +244,7 @@ namespace WinCamera
         return m_waitForStopTimeout;
     }
 
-#pragma endregion Wait for stop timeout
+#pragma endregion Wait for Stop timeout
 
 #pragma region Save Image
 
@@ -262,7 +262,7 @@ namespace WinCamera
      * @param enable Set as true to save image.
      * @param saveInAsync (Option) Set as true to save image in async mode. Default as true;
     */
-    void WinCameraLooper::enableSaveImage(bool enable, bool saveInAsync)
+    void WinCameraLooper::EnableSaveImage(bool enable, bool saveInAsync)
     {
         m_saveImage = enable;
         m_saveImageInAsync = saveInAsync;

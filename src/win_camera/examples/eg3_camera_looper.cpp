@@ -22,21 +22,21 @@ void eg3_camera_looper()
 
     // Start looper to capture image continously
     std::cout << "Start looper..." << std::endl;
-    cameraLooper.start();
+    cameraLooper.Start();
 
     // 1 second
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
     // You can save image automatically
     std::cout << "Start to save images..." << std::endl;
-    cameraLooper.enableSaveImage(true);
+    cameraLooper.EnableSaveImage(true);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(400));
 
     std::cout << "Stop to save images..." << std::endl;
-    cameraLooper.enableSaveImage(false);
+    cameraLooper.EnableSaveImage(false);
 
     // Stop looper
     std::cout << "Stop looper..." << std::endl;
-    cameraLooper.stop();
+    cameraLooper.Stop();
 }

@@ -8,7 +8,7 @@ namespace WinCamera
 
     }
 
-    std::string CameraNotOpenedException::GetErrorMessage() const
+    std::string CameraNotOpenedException::getErrorMessage() const
     {
         return m_errorMessage;
     }

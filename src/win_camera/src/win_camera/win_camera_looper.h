@@ -26,10 +26,10 @@ namespace WinCamera
 
         void setCapturedProcess(CapturedProcess capturedProcess);
         void setSaveImagePath(std::string path);
-        void enableSaveImage(bool enable, bool saveInAsync = true);
+        void EnableSaveImage(bool enable, bool saveInAsync = true);
 
-        void start(bool startCapture = true);
-        bool stop(bool async = false, bool stopCapture = true);
+        void Start(bool startCapture = true);
+        bool Stop(bool async = false, bool stopCapture = true);
         bool isRunning();
 
         void setWaitForStopTimeout(int timeout);
@@ -54,8 +54,8 @@ namespace WinCamera
         cv::Mat m_capturedImage;
         CapturedProcess m_capturedProcess = NULL;
 
-        void run();
-        void reset();
+        void Run();
+        void Reset();
     };
 }
 
