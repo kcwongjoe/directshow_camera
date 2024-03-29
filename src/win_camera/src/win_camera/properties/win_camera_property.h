@@ -2,8 +2,6 @@
 #ifndef WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_H
 #define WIN_CAMERA__WIN_CAMERA__PROPERTIES__WIN_CAMERA_PROPERTY_H
 
-#include <functional>
-
 #include "directshow_camera/ds_camera.h"
 #include "directshow_camera/ds_camera_property.h"
 

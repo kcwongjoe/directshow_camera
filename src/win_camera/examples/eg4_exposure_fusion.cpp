@@ -1,7 +1,6 @@
 #include "eg4_exposure_fusion.h"
 
 #include "win_camera/win_camera.h"
-#include <iostream>
 
 void eg4_exposure_fusion()
 {

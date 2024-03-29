@@ -3,8 +3,6 @@
 #define WIN_CAMERA_DEVICE_H
 
 //************Content************
-#include <string>
-#include <vector>
 #include <utility>
 
 #include "directshow_camera/ds_camera_device.h"

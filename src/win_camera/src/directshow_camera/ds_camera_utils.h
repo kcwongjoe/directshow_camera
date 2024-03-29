@@ -3,8 +3,6 @@
 #define DIRECTSHOW_CAMERA_UTILS_H
 
 //************Content************
-#include <string>
-
 #include <ctime>
 #include <chrono>
 

@@ -3,6 +3,11 @@ file(GLOB_RECURSE DIRECTSHOW_CAMERA_SOURCE_FILES
     "*.h" "*.hpp" "*.cpp"
 )
 
+# Pre-compile header
+set(PRECOMPILE_HEADERS
+    stdafx.h
+)
+
 # Create static library
 add_library(${PROJECT_NAME} SHARED STATIC ${DIRECTSHOW_CAMERA_SOURCE_FILES})
 
@@ -10,6 +15,11 @@ add_library(${PROJECT_NAME} SHARED STATIC ${DIRECTSHOW_CAMERA_SOURCE_FILES})
 target_include_directories (${PROJECT_NAME}
     PUBLIC
         ./
+)
+
+# Add pre-compile header
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    ${PRECOMPILE_HEADERS}
 )
 
 # Group source files

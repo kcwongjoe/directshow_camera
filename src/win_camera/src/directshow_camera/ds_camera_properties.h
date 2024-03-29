@@ -8,9 +8,6 @@
 
 #include "directshow_camera/ds_camera_property.h"
 
-#include <string>
-#include <iostream>
-
 namespace DirectShowCamera
 {
     /**

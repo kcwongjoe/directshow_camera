@@ -6,9 +6,6 @@
 
 #include "directshow_camera/ds_camera_utils.h"
 
-#include <string>
-#include <iostream>
-
 namespace DirectShowCamera
 {
     /**

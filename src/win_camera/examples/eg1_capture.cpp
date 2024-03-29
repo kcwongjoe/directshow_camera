@@ -2,8 +2,6 @@
 
 #include "win_camera/win_camera.h"
 
-#include <iostream>
-
 void eg1_capture()
 {
     // Get a empty camera

@@ -5,9 +5,6 @@
 //************Content************
 #include "directshow_camera/ds_video_format.h"
 
-#include <string>
-#include <vector>
-
 namespace DirectShowCamera
 {
     /**

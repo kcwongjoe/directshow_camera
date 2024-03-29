@@ -15,6 +15,11 @@ FetchContent_MakeAvailable(googletest)
 # Get example files
 file(GLOB_RECURSE MY_TEST_FILES "*.cpp")
 
+# Pre-compile header
+set(TEST_PRECOMPILE_HEADERS
+    stdafx.h
+)
+
 # Add sources files
 add_executable(${TEST_PROJECT_NAME} ${MY_TEST_FILES})
 
@@ -22,6 +27,11 @@ add_executable(${TEST_PROJECT_NAME} ${MY_TEST_FILES})
 target_include_directories(${TEST_PROJECT_NAME}
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Add pre-compile header
+target_precompile_headers(${TEST_PROJECT_NAME} PRIVATE
+    ${TEST_PRECOMPILE_HEADERS}
 )
 
 # Link source library and doctest

@@ -1,7 +1,6 @@
 #include "eg6_stub.h"
 
 #include "win_camera/win_camera.h"
-#include <iostream>
 #include "directshow_camera/ds_camera_stub.h"
 
 void eg6_stub()

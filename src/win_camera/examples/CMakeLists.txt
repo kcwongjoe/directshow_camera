@@ -4,6 +4,11 @@ set(EXAMPLE_PROJECT_NAME ${PROJECT_NAME}_examples)
 # Get example files
 file(GLOB_RECURSE MY_EXAMPLE_FILES "*.h" "*.hpp" "*.cpp")
 
+# Pre-compile header
+set(EXAMPLE_PRECOMPILE_HEADERS
+    stdafx.h
+)
+
 # Add sources files
 add_executable(${EXAMPLE_PROJECT_NAME} ${MY_EXAMPLE_FILES})
 
@@ -11,6 +16,11 @@ add_executable(${EXAMPLE_PROJECT_NAME} ${MY_EXAMPLE_FILES})
 target_include_directories(${EXAMPLE_PROJECT_NAME}
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Add pre-compile header
+target_precompile_headers(${EXAMPLE_PROJECT_NAME} PRIVATE
+    ${EXAMPLE_PRECOMPILE_HEADERS}
 )
 
 # Link source library

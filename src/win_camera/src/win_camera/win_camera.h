@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA_H
-#define WIN_CAMERA_H
+#ifndef WIN_CAMERA__WIN_CAMERA_H
+#define WIN_CAMERA__WIN_CAMERA_H
 
 //************Content************
 
@@ -40,10 +40,6 @@
 #ifdef HAS_OPENCV
 #include "opencv_utils/cv_mat_convertor.h"
 #endif
-
-#include <string>
-#include <math.h>
-#include <vector>
 
 namespace WinCamera
 {

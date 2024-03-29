@@ -4,7 +4,6 @@
 
 //************Content************
 
-#include <string>
 #include <mutex>
 #include <chrono>
 

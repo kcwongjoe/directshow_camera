@@ -7,9 +7,6 @@
 #include "directshow_camera/ds_video_format.h"
 #include "directshow_camera/ds_camera_device.h"
 
-#include <string>
-#include <vector>
-#include <functional>
 #include <thread>
 
 namespace DirectShowCamera
