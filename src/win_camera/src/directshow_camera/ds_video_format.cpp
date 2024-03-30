@@ -1,5 +1,7 @@
 #include "directshow_camera/ds_video_format.h"
 
+#include "directshow_camera/utils/check_hresult_utils.h"
+
 namespace DirectShowCamera
 {
 
@@ -43,11 +45,16 @@ namespace DirectShowCamera
      * @param[in] streamConfig IAMStreamConfig
      * @param[out] videoFormats Video format
      * @param[in] keepAmMediaType Set as true if you want to keep the AmMediaType
-     * @param[out] errorString (Option) Error string, set as NULL to disabled.
+     * @param[out] errorString Error string
      * @param[out] supportVideoTypes (Option) Support video type. It will only add Video format matched supportVideoTypes, set as NULL to disabled.
      * @return Return true if success.
     */
-    bool DirectShowVideoFormat::getVideoFormats(IAMStreamConfig* streamConfig, std::vector<DirectShowVideoFormat*>* videoFormats, bool keepAmMediaType, std::string* errorString, std::vector<GUID>* supportVideoTypes)
+    bool DirectShowVideoFormat::getVideoFormats(
+        IAMStreamConfig* streamConfig,
+        std::vector<DirectShowVideoFormat*>* videoFormats,
+        const bool keepAmMediaType, std::string& errorString,
+        std::vector<GUID>* supportVideoTypes
+    )
     {
         HRESULT hr = NO_ERROR;
         bool result = true;
@@ -56,7 +63,7 @@ namespace DirectShowCamera
 
         // Get number of resolution
         hr = streamConfig->GetNumberOfCapabilities(&numOfResolution, &configSize);
-        result = DirectShowCameraUtils::checkIAMSCGetNumberOfCapabilitiesResult(hr, errorString, "Error on checking number of resolution");
+        result = CheckHResultUtils::CheckIAMSCGetNumberOfCapabilitiesResult(hr, errorString, "Error on checking number of resolution");
 
         if (result)
         {

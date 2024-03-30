@@ -3,7 +3,7 @@
 #define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_H
 
 //************Content************
-#include "directshow_camera/ds_camera_utils.h"
+#include "directshow_camera/utils/ds_camera_utils.h"
 
 #include "directshow_camera/abstract_ds_camera.h"
 #include "directshow_camera/ds_camera_properties.h"

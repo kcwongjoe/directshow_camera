@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_UTILS_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_UTILS_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__DIRECTSHOW_CAMERA_UTILS_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__DIRECTSHOW_CAMERA_UTILS_H
 
 //************Content************
 #include <ctime>
@@ -11,6 +11,7 @@
 
 #include "directshow_camera/ds_guid.h"
 #include <atlconv.h>
+#include "directshow_camera/utils/check_hresult_utils.h"
 
 // Direct show is native code, complier it in unmanaged
 #pragma managed(push, off)
@@ -20,18 +21,6 @@
 
 namespace DirectShowCameraUtils
 {
-    // ******Get error string******
-    bool checkCoCreateInstanceResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on CoCreateInstance()");
-    bool checkCreateClassEnumeratorResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on CreateClassEnumerator()");
-    bool checkICGB2SetFiltergraphResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on ICaptureGraphBuilder2::SetFiltergraph()");
-    bool checkIGBAddFilterResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on IGraphBuilder::AddFilter()");
-    bool checkICGB2FindInterfaceResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on ICaptureGraphBuilder2::FindInterface()");
-    bool checkICGB2RenderStreamResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on ICaptureGraphBuilder2::RenderStream()");
-    bool checkIIAMSCGetFormatResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on IAMStreamConfig::GetFormat()");
-    bool checkIIAMSCSetFormatResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on IAMStreamConfig::SetFormat()");
-    bool checkIAMSCGetNumberOfCapabilitiesResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on IAMStreamConfig::GetNumberOfCapabilities()");
-    bool checkQueryInterfaceResult(HRESULT hr, std::string* errorString = NULL, std::string errorDescription = "Error on IUnknown::QueryInterface()");
-
     // ******To String******
     std::string bstrToString(BSTR bstr, int cp = CP_UTF8);
     std::string to_string(GUID guid);
@@ -69,12 +58,16 @@ namespace DirectShowCameraUtils
      * @brief A decorator to extract IMoniker and IPropertyBag. This can be use to retreve the camera information by setting clsid as CLSID_VideoInputDeviceCategory.
      *
      * @tparam Func void(IMoniker*, IPropertyBag*)
-     * @param clsid Category of IEnumMoniker
-     * @param func Lambda function to process IMoniker and IPropertyBag
-     * @param errorString Error String
+     * @param[in] clsid Category of IEnumMoniker
+     * @param[in] func Lambda function to process IMoniker and IPropertyBag
+     * @param[out] errorString Error String
      * @return bool Return true if success.
     */
-    template <typename Func> bool iPropertyDecorator(GUID clsid, Func func, std::string* errorString = NULL)
+    template <typename Func> bool iPropertyDecorator(
+        GUID clsid,
+        Func func,
+        std::string& errorString
+    )
     {
         bool result = true;
 
@@ -83,7 +76,7 @@ namespace DirectShowCameraUtils
         if (result)
         {
             HRESULT hr = CoCreateInstance(CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&iCreateDevEnum));
-            result = checkCoCreateInstanceResult(hr, errorString, "Error on creating the ICreateDevEnum");
+            result = DirectShowCamera::CheckHResultUtils::CheckCoCreateInstanceResult(hr, errorString, "Error on creating the ICreateDevEnum");
         }
 
         // Obtain a class enumerator for the video input category.
@@ -91,7 +84,7 @@ namespace DirectShowCameraUtils
         if (result)
         {
             HRESULT hr = iCreateDevEnum->CreateClassEnumerator(clsid, &iEnumMoniker, 0);
-            result = checkCreateClassEnumeratorResult(hr, errorString, "Error on obtaining the IEnumMoniker");
+            result = DirectShowCamera::CheckHResultUtils::CheckCreateClassEnumeratorResult(hr, errorString, "Error on obtaining the IEnumMoniker");
         }
 
         // Enumerate the monikers
@@ -105,7 +98,10 @@ namespace DirectShowCameraUtils
                 while (iEnumMoniker->Next(1, &moniker, NULL) == S_OK)
                 {
                     // Get a pointer to the IPropertyBag interface
-                    HRESULT hr = moniker->BindToStorage(0, 0, IID_PPV_ARGS(&propertyBag));
+#pragma warning( push )
+#pragma warning( disable : 6387)
+                    HRESULT hr = moniker->BindToStorage(NULL, NULL, IID_PPV_ARGS(&propertyBag));
+#pragma warning( pop )
                     if (FAILED(hr))
                     {
                         SafeRelease(&moniker);
@@ -146,12 +142,16 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to extract IPin and PIN_INFO from IMoniker. Use iPropertyDecorator() and amMediaTypeDecorator() can retrieve the video format from cameras.
      * @tparam Func void(IPin*, PIN_INFO*)
-     * @param iMoniker IMoniker
-     * @param func Lambda function to process IPin and PIN_INFO
-     * @param errorString Error String
+     * @param[in] iMoniker IMoniker
+     * @param[in] func Lambda function to process IPin and PIN_INFO
+     * @param[out] errorString Error String
      * @return Return true if success.
     */
-    template <typename Func> bool iPinDecorator(IMoniker* iMoniker, Func func, std::string* errorString = NULL)
+    template <typename Func> bool iPinDecorator(
+        IMoniker* iMoniker,
+        Func func,
+        std::string& errorString
+    )
     {
         if (!iMoniker) return false;
 
@@ -161,7 +161,10 @@ namespace DirectShowCameraUtils
         IBaseFilter* iBaseFilter;
         if (result)
         {
+#pragma warning( push )
+#pragma warning( disable : 6387)
             HRESULT hr = iMoniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)&iBaseFilter);
+#pragma warning( pop )
             if (FAILED(hr))
             {
                 result = false;
@@ -226,13 +229,18 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to process AM_MEDIA_TYPE from IPin.
      * @tparam Func void(AM_MEDIA_TYPE*)
-     * @param iPin IPin
-     * @param func Lambda function to process AM_MEDIA_TYPE
-     * @param errorString Error String
-     * @param releaseAMMediaType Set as false if you want to release AMMediaType in your function. Default as true which AMMediaType will be released internally after your funciton processed.
+     * @param[in] iPin IPin
+     * @param[in] func Lambda function to process AM_MEDIA_TYPE
+     * @param[out] errorString Error String
+     * @param[in] (Optional) releaseAMMediaType Set as false if you want to release AMMediaType in your function. Default as true which AMMediaType will be released internally after your funciton processed.
      * @return Return true if success.
     */
-    template <typename Func> bool amMediaTypeDecorator(IPin* iPin, Func func, std::string* errorString = NULL, bool releaseAMMediaType = true)
+    template <typename Func> bool amMediaTypeDecorator(
+        IPin* iPin,
+        Func func,
+        std::string& errorString,
+        bool releaseAMMediaType = true
+    )
     {
         if (!iPin) return false;
 
@@ -282,12 +290,16 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to process AM_MediaType
      * @tparam func void(AM_MEDIA_TYPE*)
-     * @param streamConfig StreamConfig to get the AM_MediaType
-     * @param func Lambda funciton for processing AM_MediaType
-     * @param errorString Error String
+     * @param[in] streamConfig StreamConfig to get the AM_MediaType
+     * @param[in] func Lambda funciton for processing AM_MediaType
+     * @param[out] errorString Error String
      * @return bool Return true if success.
     */
-    template <typename MediaTypeFunc> bool amMediaTypeDecorator(IAMStreamConfig* streamConfig, MediaTypeFunc func, std::string* errorString = NULL)
+    template <typename MediaTypeFunc> bool amMediaTypeDecorator(
+        IAMStreamConfig* streamConfig,
+        MediaTypeFunc func,
+        std::string& errorString
+    )
     {
         bool result = true;
         HRESULT hr = NO_ERROR;
@@ -296,7 +308,7 @@ namespace DirectShowCameraUtils
         if (result)
         {
             hr = streamConfig->GetFormat(&amMediaType);
-            result = checkIIAMSCGetFormatResult(hr, errorString, "Error on getting media type");
+            result = DirectShowCamera::CheckHResultUtils::CheckIIAMSCGetFormatResult(hr, errorString, "Error on getting media type");
         }
 
         //Run the function
@@ -324,19 +336,23 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to process IAMVideoProcAmp
      * @tparam func void(IAMVideoProcAmp*)
-     * @param videoInputFilter Video Input Filter to get the IAMVideoProcAmp
-     * @param func Lambda funciton for processing IAMVideoProcAmp
-     * @param errorString Error String
+     * @param[in] videoInputFilter Video Input Filter to get the IAMVideoProcAmp
+     * @param[in] func Lambda funciton for processing IAMVideoProcAmp
+     * @param[out] errorString Error String
      * @return bool Return true if success.
     */
-    template <typename amVideoProcAmpFunc> bool amVideoProcAmpDecorator(IBaseFilter* videoInputFilter, amVideoProcAmpFunc func, std::string* errorString = NULL)
+    template <typename amVideoProcAmpFunc> bool amVideoProcAmpDecorator(
+        IBaseFilter* videoInputFilter,
+        amVideoProcAmpFunc func,
+        std::string& errorString
+    )
     {
         bool success;
         HRESULT hr = NO_ERROR;
 
         IAMVideoProcAmp* amVideoProcAmp = NULL;
         hr = videoInputFilter->QueryInterface(IID_IAMVideoProcAmp, (void**)&amVideoProcAmp);
-        success = checkQueryInterfaceResult(hr, errorString, "Error on getting IAMVideoProcAmp");
+        success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting IAMVideoProcAmp");
 
         //Run the function
         if (success)
@@ -368,19 +384,19 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to process IAMCameraControl
      * @tparam func void(IAMCameraControl*)
-     * @param videoInputFilter Video Input Filter to get the IAMCameraControl
-     * @param func Lambda funciton for processing IAMCameraControl
-     * @param errorString Error String
+     * @param[in] videoInputFilter Video Input Filter to get the IAMCameraControl
+     * @param[in] func Lambda funciton for processing IAMCameraControl
+     * @param[out] errorString Error String
      * @return bool Return true if success.
      */
-    template <typename CameraControlFunc> bool amCameraControlDecorator(IBaseFilter* videoInputFilter, CameraControlFunc func, std::string* errorString = NULL)
+    template <typename CameraControlFunc> bool amCameraControlDecorator(IBaseFilter* videoInputFilter, CameraControlFunc func, std::string& errorString = NULL)
     {
         bool success;
         HRESULT hr = NO_ERROR;
 
         IAMCameraControl* amCameraControl = NULL;
         hr = videoInputFilter->QueryInterface(IID_IAMCameraControl, (void**)&amCameraControl);
-        success = checkQueryInterfaceResult(hr, errorString, "Error on getting camera control");
+        success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting camera control");
 
         //Run the function
         if (success)

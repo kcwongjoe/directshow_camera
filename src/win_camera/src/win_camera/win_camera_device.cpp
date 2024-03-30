@@ -147,7 +147,7 @@ namespace WinCamera
      * @param height Height
      * @return Return true if existed.
     */
-    bool WinCameraDevice::containResolution(int width, int height) const
+    bool WinCameraDevice::ContainResolution(int width, int height) const
     {
         for (int i=0;i< m_monoResolutions.size();i++)
         {

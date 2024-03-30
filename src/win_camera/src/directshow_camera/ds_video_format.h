@@ -4,8 +4,7 @@
 
 //************Content************
 
-#include "directshow_camera/ds_camera_utils.h"
-
+#include "directshow_camera/utils/ds_camera_utils.h"
 #include <algorithm>
 
 namespace DirectShowCamera
@@ -20,7 +19,7 @@ namespace DirectShowCamera
     public:
 
         static void sortAndUnique(std::vector<DirectShowVideoFormat>* directShowVideoFormats);
-        static bool getVideoFormats(IAMStreamConfig* streamConfig, std::vector<DirectShowVideoFormat*>* videoFormat, bool keepAmMediaType, std::string* errorString = NULL, std::vector<GUID>* supportVideoTypes = NULL);
+        static bool getVideoFormats(IAMStreamConfig* streamConfig, std::vector<DirectShowVideoFormat*>* videoFormat, const bool keepAmMediaType, std::string& errorString, std::vector<GUID>* supportVideoTypes = NULL);
         static void release(std::vector<DirectShowVideoFormat*>* m_resolutions);
 
         static std::string to_string(std::vector<DirectShowVideoFormat>* directShowVideoFormats, bool detail = false);

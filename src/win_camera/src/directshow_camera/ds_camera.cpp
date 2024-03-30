@@ -1,5 +1,7 @@
 #include "directshow_camera/ds_camera.h"
 
+#include "directshow_camera/utils/check_hresult_utils.h"
+
 namespace DirectShowCamera
 {
     
@@ -129,14 +131,14 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = CoCreateInstance(CLSID_CaptureGraphBuilder2, NULL, CLSCTX_INPROC_SERVER, IID_ICaptureGraphBuilder2, (void**)&m_captureGraphBuilder);
-                result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Capture Graph Builder");
+                result = CheckHResultUtils::CheckCoCreateInstanceResult(hr, m_errorString, "Error on creating the Capture Graph Builder");
             }
 
             // Create the Filter Graph Manager.
             if (result)
             {
                 hr = CoCreateInstance(CLSID_FilterGraph, 0, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&m_filterGraphManager);
-                result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Filter Graph Manager");
+                result = CheckHResultUtils::CheckCoCreateInstanceResult(hr, m_errorString, "Error on creating the Filter Graph Manager");
             }
 
             // Set a media event. We can use this to check device disconnection.
@@ -154,7 +156,7 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = m_captureGraphBuilder->SetFiltergraph(m_filterGraphManager);
-                result = DirectShowCameraUtils::checkICGB2SetFiltergraphResult(hr, &m_errorString, "Error on setting the Filter Graph Manager to Capture Graph Builder");
+                result = CheckHResultUtils::CheckICGB2SetFiltergraphResult(hr, m_errorString, "Error on setting the Filter Graph Manager to Capture Graph Builder");
             }
 
             // Set the media control
@@ -172,14 +174,14 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = m_filterGraphManager->AddFilter(m_videoInputFilter, NULL);
-                result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding video input filter");
+                result = CheckHResultUtils::CheckIGBAddFilterResult(hr, m_errorString, "Error on adding video input filter");
             }
 
             // Set capture pin
             if (result)
             {
                 hr = m_captureGraphBuilder->FindInterface(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, IID_IAMStreamConfig, (void**)&m_streamConfig);
-                result = DirectShowCameraUtils::checkICGB2FindInterfaceResult(hr, &m_errorString, "Error on setting capture pin");
+                result = CheckHResultUtils::CheckICGB2FindInterfaceResult(hr, m_errorString, "Error on setting capture pin");
             }
 
             // Get media type
@@ -206,21 +208,21 @@ namespace DirectShowCamera
 
                 // Get format
                 hr = m_streamConfig->GetFormat(&amMediaType);
-                result = DirectShowCameraUtils::checkIIAMSCGetFormatResult(hr, &m_errorString, "Error on getting media type");
+                result = CheckHResultUtils::CheckIIAMSCGetFormatResult(hr, m_errorString, "Error on getting media type");
             }
 
             // Create the Sample Grabber.
             if (result)
             {
                 hr = CoCreateInstance(CLSID_SampleGrabber, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&m_grabberFilter);
-                result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the Sample Grabber");
+                result = CheckHResultUtils::CheckCoCreateInstanceResult(hr, m_errorString, "Error on creating the Sample Grabber");
             }
 
             // Add Sample Grabber
             if (result)
             {
                 hr = m_filterGraphManager->AddFilter(m_grabberFilter, L"Sample Grabber");
-                result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding Sample Grabber");
+                result = CheckHResultUtils::CheckIGBAddFilterResult(hr, m_errorString, "Error on adding Sample Grabber");
             }
 
             // Connect Sample Grabber
@@ -257,21 +259,21 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = CoCreateInstance(CLSID_NullRenderer, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)(&m_nullRendererFilter));
-                result = DirectShowCameraUtils::checkCoCreateInstanceResult(hr, &m_errorString, "Error on creating the null renderer filter");
+                result = CheckHResultUtils::CheckCoCreateInstanceResult(hr, m_errorString, "Error on creating the null renderer filter");
             }
 
             // Add null renderer filter to graph
             if (result)
             {
                 hr = m_filterGraphManager->AddFilter(m_nullRendererFilter, L"NullRenderer");
-                result = DirectShowCameraUtils::checkIGBAddFilterResult(hr, &m_errorString, "Error on adding Null Renderer filter");
+                result = CheckHResultUtils::CheckIGBAddFilterResult(hr, m_errorString, "Error on adding Null Renderer filter");
             }
 
             //  Connect all filter as stream : Video Input Filter - Grabber Filter - Null Renderer Filter
             if (result)
             {
                 hr = m_captureGraphBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, m_grabberFilter, m_nullRendererFilter);
-                result = DirectShowCameraUtils::checkICGB2RenderStreamResult(hr, &m_errorString, "Error on connecting filter (Video Input Filter - Grabber Filter - Null Renderer Filter)");
+                result = CheckHResultUtils::CheckICGB2RenderStreamResult(hr, m_errorString, "Error on connecting filter (Video Input Filter - Grabber Filter - Null Renderer Filter)");
             }
 
             // get video format of connected grabber filter
@@ -309,7 +311,7 @@ namespace DirectShowCamera
 
                 // Get property
                 if (m_property != nullptr) m_property.reset();
-                m_property = std::make_shared<DirectShowCameraProperties>(m_videoInputFilter, &m_errorString);
+                m_property = std::make_shared<DirectShowCameraProperties>(m_videoInputFilter, m_errorString);
 
                 // Update video format
                 updateVideoFormatList();
@@ -660,7 +662,7 @@ namespace DirectShowCamera
                         mediaSubType = mediaType->subtype;
                     }
                 },
-                &m_errorString
+                m_errorString
             );
 
             // Set grabber media type
@@ -708,7 +710,7 @@ namespace DirectShowCamera
             std::vector<DirectShowVideoFormat*>* videoFormats = new std::vector<DirectShowVideoFormat*>();
 
             // Get
-            result = DirectShowVideoFormat::getVideoFormats(m_streamConfig, videoFormats, true, &m_errorString);
+            result = DirectShowVideoFormat::getVideoFormats(m_streamConfig, videoFormats, true, m_errorString);
 
             if (result)
             {
@@ -738,7 +740,7 @@ namespace DirectShowCamera
                 {
                     m_currentVideoFormatIndex = getVideoFormatIndex(mediaType);
                 },
-                &m_errorString
+                m_errorString
             );
         }
         else
@@ -892,7 +894,7 @@ namespace DirectShowCamera
             {
                 // Set
                 hr = m_streamConfig->SetFormat(m_videoFormats->at(videoFormatIndex)->getAMMediaType());
-                result = DirectShowCameraUtils::checkIIAMSCSetFormatResult(hr, &m_errorString, "Error on setting camera resolution");
+                result = CheckHResultUtils::CheckIIAMSCSetFormatResult(hr, m_errorString, "Error on setting camera resolution");
 
                 if (result)
                 {
@@ -916,7 +918,7 @@ namespace DirectShowCamera
     {
         if (m_isOpening && m_property != nullptr)
         {
-            m_property->refresh(m_videoInputFilter, &m_errorString);
+            m_property->refresh(m_videoInputFilter, m_errorString);
         }
     }
 
@@ -938,7 +940,7 @@ namespace DirectShowCamera
     {
         if (m_videoInputFilter != NULL && m_property != nullptr)
         {
-            m_property->resetDefault(m_videoInputFilter, asAuto);
+            m_property->resetDefault(m_videoInputFilter, m_errorString, asAuto);
         }
     }
 
@@ -957,7 +959,7 @@ namespace DirectShowCamera
     {
         if (m_videoInputFilter != NULL)
         {
-            return property->setValue(m_videoInputFilter, value, isAuto, &m_errorString);
+            return property->setValue(m_videoInputFilter, value, isAuto, m_errorString);
         }
         else
         {
@@ -1031,10 +1033,10 @@ namespace DirectShowCamera
                             {
                                 videoFormats.push_back(DirectShowVideoFormat(amMediaType, false));
                             },
-                            &m_errorString
+                            m_errorString
                         );
                     },
-                    &m_errorString
+                    m_errorString
                 );
 
                 // Sort and erase duplicates
@@ -1046,7 +1048,7 @@ namespace DirectShowCamera
                 // Push into device
                 cameraDevices->push_back(DirectShowCameraDevice(friendlyName, description, devicePath, videoFormats));
             },
-            &m_errorString
+            m_errorString
         );
 
         return success;
@@ -1069,14 +1071,17 @@ namespace DirectShowCamera
                 // Found, obtain the video input filter
                 if (count == cameraIndex)
                 {
+#pragma warning( push )
+#pragma warning( disable : 6387)
                     moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+#pragma warning( pop )
                     found = true;
                 }
 
                 // Move to next
                 count++;
             },
-            &m_errorString
+            m_errorString
         );
 
         return success && found;
@@ -1111,12 +1116,15 @@ namespace DirectShowCamera
                     if (currentDevicePath == devicePath)
                     {
                         // Get device name
+#pragma warning( push )
+#pragma warning( disable : 6387)
                         moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+#pragma warning( pop )
                         found = true;
                     }
                 }
             },
-            &m_errorString
+            m_errorString
         );
 
         return success && found;
@@ -1152,12 +1160,15 @@ namespace DirectShowCamera
 
                         if (friendly_name == device.getFriendlyName())
                         {
+#pragma warning( push )
+#pragma warning( disable : 6387)
                             moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+#pragma warning( pop )
                             found = true;
                         }
                     }
                 },
-                &m_errorString
+                m_errorString
             );
         }
         return found;

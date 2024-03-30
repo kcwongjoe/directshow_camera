@@ -289,14 +289,7 @@ namespace DirectShowCamera
 
 #pragma region Setter
 
-    /**
-     * @brief Set the property to default value.
-     * @param videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
-     * @param asAuto The property will try to set as auto mode if this value is true.
-     * @param errorString Error string
-     * @return Return true if success
-    */
-    bool DirectShowCameraProperty::setAsDefault(IBaseFilter* videoInputFilter, bool asAuto, std::string* errorString)
+    bool DirectShowCameraProperty::setAsDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto)
     {
         // Get auto mode
         bool isAutoMode = false;
@@ -307,15 +300,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Set property
-     * @param videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
-     * @param value Value to be set
-     * @param isAutoMode Set as auto mode?
-     * @param errorString Error String
-     * @return Return true if success.
-    */
-    bool DirectShowCameraProperty::setValue(IBaseFilter* videoInputFilter, long value, bool isAutoMode, std::string* errorString)
+    bool DirectShowCameraProperty::setValue(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString)
     {
         bool result = true;
         
@@ -326,11 +311,7 @@ namespace DirectShowCamera
             if (value < m_min || value > m_max)
             {
                 result = false;
-
-                if (errorString)
-                {
-                    *errorString = "Set " + m_name + " property error: Value(" + std::to_string(value) + ") is Out of range(" + std::to_string(m_min) + ", " + std::to_string(m_max) + ").";
-                }
+                errorString = "Set " + m_name + " property error: Value(" + std::to_string(value) + ") is Out of range(" + std::to_string(m_min) + ", " + std::to_string(m_max) + ").";
 
             }
 
@@ -339,25 +320,22 @@ namespace DirectShowCamera
                 (!isAutoMode && !m_supportManual))
             {
                 // Append error on next line
-                if (errorString)
+                if (!result)
                 {
-                    if (!result)
-                    {
-                        *errorString += "\n";
-                    }
-                    else
-                    {
-                        *errorString = "";
-                    }
+                    errorString += "\n";
+                }
+                else
+                {
+                    errorString = "";
+                }
 
-                    if (isAutoMode)
-                    {
-                        *errorString += "Set " + m_name + " property error: Auto mode is not supported.";
-                    }
-                    else
-                    {
-                        *errorString += "Set " + m_name + " property error: Manual mode is not supported.";
-                    }
+                if (isAutoMode)
+                {
+                    errorString += "Set " + m_name + " property error: Auto mode is not supported.";
+                }
+                else
+                {
+                    errorString += "Set " + m_name + " property error: Manual mode is not supported.";
                 }
 
                 result = false;
@@ -419,10 +397,7 @@ namespace DirectShowCamera
         {
             // Property not supported
             result = false;
-            if (errorString)
-            {
-                *errorString = "Property " + m_name + " is not supported.";
-            }
+            errorString = "Property " + m_name + " is not supported.";
         }	
 
         return result;

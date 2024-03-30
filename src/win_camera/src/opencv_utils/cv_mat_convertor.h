@@ -7,8 +7,6 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "directshow_camera/ds_camera_utils.h"
-
 #include "directshow_camera/ds_video_format.h"
 
 namespace WinCamera

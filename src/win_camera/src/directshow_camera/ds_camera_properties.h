@@ -4,8 +4,6 @@
 
 //************Content************
 
-#include "directshow_camera/ds_camera_utils.h"
-
 #include "directshow_camera/ds_camera_property.h"
 
 namespace DirectShowCamera
@@ -20,12 +18,12 @@ namespace DirectShowCamera
 
         // Constructor
         DirectShowCameraProperties();
-        DirectShowCameraProperties(IBaseFilter* videoInputFilter, std::string* errorString = NULL);
+        DirectShowCameraProperties(IBaseFilter* videoInputFilter, std::string& errorString);
         ~DirectShowCameraProperties();
 
         void reset();
-        void resetDefault(IBaseFilter* videoInputFilter, bool asAuto = true);
-        void refresh(IBaseFilter* videoInputFilter, std::string* errorString);
+        void resetDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto);
+        void refresh(IBaseFilter* videoInputFilter, std::string& errorString);
         void markAsInitialized();
 
         // Getter
@@ -87,6 +85,12 @@ namespace DirectShowCamera
 
     private:
         void construct();
+        bool PropertySetAsDefault(
+            std::shared_ptr<DirectShowCameraProperty>& property,
+            IBaseFilter* videoInputFilter,
+            std::string& errorString,
+            const bool asAuto
+        );
     private:
 
         // Properties

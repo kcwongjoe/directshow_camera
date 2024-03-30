@@ -4,7 +4,7 @@
 
 //************Content************
 
-#include "directshow_camera/ds_camera_utils.h"
+#include "directshow_camera/utils/ds_camera_utils.h"
 
 namespace DirectShowCamera
 {
@@ -110,8 +110,24 @@ namespace DirectShowCamera
             }
         }
 
-        bool setAsDefault(IBaseFilter* videoInputFilter, bool asAuto = true, std::string* errorString = NULL);
-        bool setValue(IBaseFilter* videoInputFilter, long value, bool isAutoMode, std::string* errorString = NULL);
+        /**
+         * @brief Set the property to default value.
+         * @param[in] videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
+         * @param[out] errorString Error string
+         * @param[in] asAuto (Optional) The property will try to set as auto mode if this value is true. Default is true.
+         * @return Return true if success
+        */
+        bool setAsDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto = true);
+
+        /**
+         * @brief Set property
+         * @param[in] videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
+         * @param[in] value Value to be set
+         * @param[in] isAutoMode Set as auto mode?
+         * @param[out] errorString Error String
+         * @return Return true if success.
+        */
+        bool setValue(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString);
 
         // Getter
         std::string getName() const;

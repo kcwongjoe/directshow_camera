@@ -1,6 +1,7 @@
 #include "win_camera/win_camera.h"
 
 #include "exceptions/resolution_not_support_exception.h"
+#include "exceptions/device_not_found_exception.h"
 
 namespace WinCamera
 {
@@ -52,9 +53,7 @@ namespace WinCamera
         const bool rgb
     )
     {
-        bool result = false;
-
-        // Get DirectShowCameraDevice
+        // Find the DirectShowCameraDevice
         std::vector<DirectShowCamera::DirectShowCameraDevice> possibleCamera = getDirectShowCameras();
         int cameraIndex = -1;
         for (int i = 0; i < possibleCamera.size(); i++)
@@ -63,87 +62,85 @@ namespace WinCamera
             {
                 // Found
                 cameraIndex = i;
-                result = true;
                 break;
             }
         }
+        if (cameraIndex == -1) throw DeviceNotFoundException(device.getFriendlyName());
 
         // Get DirectShowVideoFormat
-        if (result)
+        bool result = false;
+        if (width <= 0 || height <= 0)
         {
-            if (width <= 0 || height <= 0)
-            {
-                // No specific format
-                result = Open(possibleCamera[cameraIndex], NULL);
-            }
-            else
-            {
-                // Lookup format
-                std::vector<DirectShowCamera::DirectShowVideoFormat> videoFormats = possibleCamera[cameraIndex].getDirectShowVideoFormats();
+            // No specific format
+            result = Open(possibleCamera[cameraIndex], NULL);
+        }
+        else
+        {
+            // Lookup format
+            std::vector<DirectShowCamera::DirectShowVideoFormat> videoFormats = possibleCamera[cameraIndex].getDirectShowVideoFormats();
 
-                // Lookup size
-                std::vector<DirectShowCamera::DirectShowVideoFormat> possibleVideoFormat;
-                for (int i = 0; i < videoFormats.size(); i++)
+            // Lookup size
+            std::vector<DirectShowCamera::DirectShowVideoFormat> possibleVideoFormat;
+            for (int i = 0; i < videoFormats.size(); i++)
+            {
+                if (videoFormats[i].getWidth() == width && videoFormats[i].getHeight() == height)
                 {
-                    if (videoFormats[i].getWidth() == width && videoFormats[i].getHeight() == height)
-                    {
-                        possibleVideoFormat.push_back(videoFormats[i]);
-                    }
+                    possibleVideoFormat.push_back(videoFormats[i]);
+                }
+            }
+
+            if (possibleVideoFormat.size() > 0)
+            {
+                // Get media type list
+                int videoFormatIndex = -1;
+                std::vector<GUID> mediaType;
+                if (rgb)
+                {
+                    // RGB
+                    mediaType = DirectShowCamera::DirectShowVideoFormat::getSupportRGBSubType();
+                }
+                else
+                {
+                    // MonoChrome
+                    mediaType = DirectShowCamera::DirectShowVideoFormat::getMonochromeSubType();
                 }
 
-                if (possibleVideoFormat.size() > 0)
+                // Match with list
+                for (int i = 0; i < mediaType.size(); i++)
                 {
-                    // Get media type list
-                    int videoFormatIndex = -1;
-                    std::vector<GUID> mediaType;
-                    if (rgb)
+                    for (int j = 0; j < possibleVideoFormat.size(); j++)
                     {
-                        // RGB
-                        mediaType = DirectShowCamera::DirectShowVideoFormat::getSupportRGBSubType();
-                    }
-                    else
-                    {
-                        // MonoChrome
-                        mediaType = DirectShowCamera::DirectShowVideoFormat::getMonochromeSubType();
-                    }
-
-                    // Match with list
-                    for (int i = 0; i < mediaType.size(); i++)
-                    {
-                        for (int j = 0; j < possibleVideoFormat.size(); j++)
+                        if (possibleVideoFormat[j].getVideoType() == mediaType[i])
                         {
-                            if (possibleVideoFormat[j].getVideoType() == mediaType[i])
-                            {
-                                // Found
-                                videoFormatIndex = j;
-                                break;
-                            }
+                            // Found
+                            videoFormatIndex = j;
+                            break;
                         }
-
-                        // Exit if found
-                        if (videoFormatIndex >= 0) break;
                     }
 
-                    // If success
-                    if (videoFormatIndex >= 0)
-                    {
-                        // Open
-                        result = Open(possibleCamera[cameraIndex], &possibleVideoFormat[videoFormatIndex]);
-                    }
-                    else
-                    {
-                        // Not Found the size
-                        result = false;
-                        throw ResolutionNotSupportException(device.getFriendlyName(), width, height, rgb);
+                    // Exit if found
+                    if (videoFormatIndex >= 0) break;
+                }
 
-                    }
+                // If success
+                if (videoFormatIndex >= 0)
+                {
+                    // Open
+                    result = Open(possibleCamera[cameraIndex], &possibleVideoFormat[videoFormatIndex]);
                 }
                 else
                 {
                     // Not Found the size
                     result = false;
-                    throw ResolutionNotSupportException(device.getFriendlyName(), width, height, false);
+                    throw ResolutionNotSupportException(device.getFriendlyName(), width, height, rgb);
+
                 }
+            }
+            else
+            {
+                // Not Found the size
+                result = false;
+                throw ResolutionNotSupportException(device.getFriendlyName(), width, height, false);
             }
         }
 

@@ -26,7 +26,7 @@ namespace WinCamera
         std::vector<std::pair<int,int>> getRGBResolutions();
 
         std::vector<std::pair<int,int>> getResolutions();
-        bool containResolution(int width, int height) const;
+        bool ContainResolution(int width, int height) const;
 
         std::string getFriendlyName() const;
         std::string getDescription() const;
