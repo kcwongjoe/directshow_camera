@@ -22,7 +22,7 @@ namespace DirectShowCamera
         ~DirectShowCameraProperties();
 
         void reset();
-        void resetDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto);
+        void resetDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto = true);
         void refresh(IBaseFilter* videoInputFilter, std::string& errorString);
         void markAsInitialized();
 
