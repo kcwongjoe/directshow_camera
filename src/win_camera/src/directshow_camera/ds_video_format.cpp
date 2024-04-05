@@ -332,7 +332,7 @@ namespace DirectShowCamera
             else if (majortype == MEDIATYPE_URL_STREAM)		result += "(MEDIATYPE_URL_STREAM) " + to_string(majortype);
             else if (majortype == MEDIATYPE_Video)			result += "(MEDIATYPE_Video) " + to_string(majortype);
 
-            else result += DirectShowCameraUtils::to_string(majortype);
+            else result += DirectShowCameraUtils::ToString(majortype);
             result += "\n";
 
             // Sub Type
@@ -444,7 +444,7 @@ namespace DirectShowCamera
             else if (subtype == MEDIASUBTYPE_VPVBI)					result += "(MEDIASUBTYPE_VPVBI) " + to_string(subtype);
             else if (subtype == MEDIASUBTYPE_VPVideo)				result += "(MEDIASUBTYPE_VPVideo) " + to_string(subtype);
             else if (subtype == MEDIASUBTYPE_WAKE)					result += "(MEDIASUBTYPE_WAKE) " + to_string(subtype);
-            else result += DirectShowCameraUtils::to_string(majortype);
+            else result += DirectShowCameraUtils::ToString(majortype);
             result += "\n";
 
             // Fix sample size
@@ -470,7 +470,7 @@ namespace DirectShowCamera
             else if (formatType == FORMAT_VideoInfo2)			result += "(FORMAT_VideoInfo2) VIDEOINFOHEADER2.";
             else if (formatType == FORMAT_WaveFormatEx)			result += "(FORMAT_WaveFormatEx) WAVEFORMATEX.";
             else if (formatType == GUID_NULL)		result += "(GUID_NULL) None.";
-            else result += DirectShowCameraUtils::to_string(formatType);
+            else result += DirectShowCameraUtils::ToString(formatType);
             result += "\n";
 
             //Sample Size
@@ -633,7 +633,7 @@ namespace DirectShowCamera
             // does not keep AM_MEDIA_TYPE
             if (!m_isEmpty && !keepAmMediaType)
             {
-                DirectShowCameraUtils::deleteMediaType(&m_AmMediaType);
+                DirectShowCameraUtils::DeleteMediaType(&m_AmMediaType);
             }
         }
     }
@@ -683,7 +683,7 @@ namespace DirectShowCamera
     {
         if (m_AmMediaType != NULL)
         {
-            DirectShowCameraUtils::deleteMediaType(&m_AmMediaType);
+            DirectShowCameraUtils::DeleteMediaType(&m_AmMediaType);
         }	
     }
 

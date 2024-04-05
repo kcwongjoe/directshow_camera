@@ -130,7 +130,7 @@ namespace DirectShowCamera
         bool success = true;
 
         // Get properties
-        success = DirectShowCameraUtils::amVideoProcAmpDecorator(videoInputFilter,
+        success = DirectShowCameraUtils::AmVideoProcAmpDecorator(videoInputFilter,
             [this, errorString](IAMVideoProcAmp* videoProcAmp)
             {
                 // Import property
@@ -148,7 +148,7 @@ namespace DirectShowCamera
             errorString
         );
 
-        success = DirectShowCameraUtils::amCameraControlDecorator(videoInputFilter,
+        success = DirectShowCameraUtils::AmCameraControlDecorator(videoInputFilter,
             [this, errorString](IAMCameraControl* cameraControl)
             {
                 // Import property

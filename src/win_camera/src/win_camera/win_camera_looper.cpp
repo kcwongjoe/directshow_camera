@@ -1,5 +1,7 @@
 #include "win_camera/win_camera_looper.h"
 
+#include "utils/time_utils.h"
+
 namespace WinCamera
 {
     
@@ -155,7 +157,7 @@ namespace WinCamera
                             time_t nowTimet = std::chrono::system_clock::to_time_t(now);
 
                             // Create image name
-                            std::string imageName = DirectShowCameraUtils::to_string(nowTimet, "%Y_%m_%d_%H_%M_%S") + "_" + std::to_string(DirectShowCameraUtils::getMilliseconds(now)) + ".jpg";
+                            std::string imageName = Utils::TimeUtils::ToString(nowTimet, "%Y_%m_%d_%H_%M_%S") + "_" + std::to_string(Utils::TimeUtils::GetMilliseconds(now)) + ".jpg";
                             std::string imagePath = (m_saveImagePath.empty()) ? imageName : m_saveImagePath + "/" + imageName;
 
                             // Save

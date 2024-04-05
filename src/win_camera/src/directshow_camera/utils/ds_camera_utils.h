@@ -3,9 +3,6 @@
 #define WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__DIRECTSHOW_CAMERA_UTILS_H
 
 //************Content************
-#include <ctime>
-#include <chrono>
-
 #include <windows.h>
 #include <windef.h>
 
@@ -22,18 +19,14 @@
 namespace DirectShowCameraUtils
 {
     // ******To String******
-    std::string bstrToString(BSTR bstr, int cp = CP_UTF8);
-    std::string to_string(GUID guid);
-
-    // ******Time******
-    std::string to_string(time_t time, std::string format = "%Y-%m-%d %H:%M:%S");
-    int getMilliseconds(std::chrono::system_clock::time_point time);
+    std::string BSTRToString(BSTR bstr, int cp = CP_UTF8);
+    std::string ToString(GUID guid);
 
     // ******Release******
-    void freeMediaType(AM_MEDIA_TYPE& amMediaType);
-    void deleteMediaType(AM_MEDIA_TYPE** amMediaType);
-    void destroyGraph(IGraphBuilder* iGraphBuilder);
-    void nukeDownStream(IGraphBuilder* iGraphBuilder, IBaseFilter* iBaseFilter);
+    void FreeMediaType(AM_MEDIA_TYPE& amMediaType);
+    void DeleteMediaType(AM_MEDIA_TYPE** amMediaType);
+    void DestroyGraph(IGraphBuilder* iGraphBuilder);
+    void NukeDownStream(IGraphBuilder* iGraphBuilder, IBaseFilter* iBaseFilter);
 
     /**
      * @brief Safe release COM interface pointers. e.g. IBaseFilter* iBaseFilter; SafeRelease(&iBaseFilter);
@@ -49,11 +42,6 @@ namespace DirectShowCameraUtils
         }
     }
 
-    // ******COM library******
-    static bool s_isInitializedCOMLib = false;
-    bool initCOMLib();
-    void uninitCOMLib();
-
     /**
      * @brief A decorator to extract IMoniker and IPropertyBag. This can be use to retreve the camera information by setting clsid as CLSID_VideoInputDeviceCategory.
      *
@@ -63,7 +51,7 @@ namespace DirectShowCameraUtils
      * @param[out] errorString Error String
      * @return bool Return true if success.
     */
-    template <typename Func> bool iPropertyDecorator(
+    template <typename Func> bool IPropertyDecorator(
         GUID clsid,
         Func func,
         std::string& errorString
@@ -131,23 +119,19 @@ namespace DirectShowCameraUtils
             // Release
             SafeRelease(&iEnumMoniker);
             SafeRelease(&iCreateDevEnum);
-
         }
-
-
-
         return result;
     }
 
     /**
-     * @brief A decorator to extract IPin and PIN_INFO from IMoniker. Use iPropertyDecorator() and amMediaTypeDecorator() can retrieve the video format from cameras.
+     * @brief A decorator to extract IPin and PIN_INFO from IMoniker. Use IPropertyDecorator() and AmMediaTypeDecorator() can retrieve the video format from cameras.
      * @tparam Func void(IPin*, PIN_INFO*)
      * @param[in] iMoniker IMoniker
      * @param[in] func Lambda function to process IPin and PIN_INFO
      * @param[out] errorString Error String
      * @return Return true if success.
     */
-    template <typename Func> bool iPinDecorator(
+    template <typename Func> bool IPinDecorator(
         IMoniker* iMoniker,
         Func func,
         std::string& errorString
@@ -235,7 +219,7 @@ namespace DirectShowCameraUtils
      * @param[in] (Optional) releaseAMMediaType Set as false if you want to release AMMediaType in your function. Default as true which AMMediaType will be released internally after your funciton processed.
      * @return Return true if success.
     */
-    template <typename Func> bool amMediaTypeDecorator(
+    template <typename Func> bool AmMediaTypeDecorator(
         IPin* iPin,
         Func func,
         std::string& errorString,
@@ -266,13 +250,13 @@ namespace DirectShowCameraUtils
                     func(amMediaType);
 
                     //Release
-                    if (releaseAMMediaType) deleteMediaType(&amMediaType);
+                    if (releaseAMMediaType) DeleteMediaType(&amMediaType);
                 }
             }
             catch (...)
             {
                 // Release
-                if (releaseAMMediaType) deleteMediaType(&amMediaType);
+                if (releaseAMMediaType) DeleteMediaType(&amMediaType);
                 SafeRelease(&iEnumMediaType);
 
                 // Rethrow
@@ -280,7 +264,7 @@ namespace DirectShowCameraUtils
             }
 
             // Release
-            if (releaseAMMediaType) deleteMediaType(&amMediaType);
+            if (releaseAMMediaType) DeleteMediaType(&amMediaType);
             SafeRelease(&iEnumMediaType);
         }
 
@@ -295,7 +279,7 @@ namespace DirectShowCameraUtils
      * @param[out] errorString Error String
      * @return bool Return true if success.
     */
-    template <typename MediaTypeFunc> bool amMediaTypeDecorator(
+    template <typename MediaTypeFunc> bool AmMediaTypeDecorator(
         IAMStreamConfig* streamConfig,
         MediaTypeFunc func,
         std::string& errorString
@@ -321,12 +305,12 @@ namespace DirectShowCameraUtils
             catch (...)
             {
                 //Delete media type
-                deleteMediaType(&amMediaType);
+                DeleteMediaType(&amMediaType);
                 throw;
             }
 
             //Delete media type
-            deleteMediaType(&amMediaType);
+            DeleteMediaType(&amMediaType);
         }
 
         return result;
@@ -341,9 +325,9 @@ namespace DirectShowCameraUtils
      * @param[out] errorString Error String
      * @return bool Return true if success.
     */
-    template <typename amVideoProcAmpFunc> bool amVideoProcAmpDecorator(
+    template <typename AmVideoProcAmpFunc> bool AmVideoProcAmpDecorator(
         IBaseFilter* videoInputFilter,
-        amVideoProcAmpFunc func,
+        AmVideoProcAmpFunc func,
         std::string& errorString
     )
     {
@@ -389,7 +373,11 @@ namespace DirectShowCameraUtils
      * @param[out] errorString Error String
      * @return bool Return true if success.
      */
-    template <typename CameraControlFunc> bool amCameraControlDecorator(IBaseFilter* videoInputFilter, CameraControlFunc func, std::string& errorString = NULL)
+    template <typename CameraControlFunc> bool AmCameraControlDecorator(
+        IBaseFilter* videoInputFilter,
+        CameraControlFunc func,
+        std::string& errorString = NULL
+    )
     {
         bool success;
         HRESULT hr = NO_ERROR;

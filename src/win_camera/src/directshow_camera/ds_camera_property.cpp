@@ -368,7 +368,7 @@ namespace DirectShowCamera
                         }
 
                         // Am_VideoProcAmp
-                        result = DirectShowCameraUtils::amVideoProcAmpDecorator(videoInputFilter,
+                        result = DirectShowCameraUtils::AmVideoProcAmpDecorator(videoInputFilter,
                             [this, &success, value, isAutoMode](IAMVideoProcAmp* videoProcAmp)
                             {
                                 success = setValueTemplate(videoProcAmp, value, isAutoMode);
@@ -379,7 +379,7 @@ namespace DirectShowCamera
                     else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
                     {
                         // Am_CameraControl
-                        result = DirectShowCameraUtils::amCameraControlDecorator(videoInputFilter,
+                        result = DirectShowCameraUtils::AmCameraControlDecorator(videoInputFilter,
                             [this, &success, value, isAutoMode](IAMCameraControl* cameraControl)
                             {
                                 success = setValueTemplate(cameraControl, value, isAutoMode);

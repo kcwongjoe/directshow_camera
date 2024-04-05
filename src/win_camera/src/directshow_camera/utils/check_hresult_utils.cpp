@@ -5,7 +5,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckCoCreateInstanceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -38,7 +38,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckCreateClassEnumeratorResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -68,7 +68,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckICGB2SetFiltergraphResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -94,7 +94,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckIGBAddFilterResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr) && hr != VFW_S_DUPLICATE_NAME)
+        if (hr != S_OK && hr != VFW_S_DUPLICATE_NAME)
         {
             result = false;
 
@@ -132,7 +132,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckICGB2FindInterfaceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -162,7 +162,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckICGB2RenderStreamResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr) && hr != VFW_S_DUPLICATE_NAME)
+        if (hr != S_OK && hr != VFW_S_DUPLICATE_NAME)
         {
             result = false;
 
@@ -200,7 +200,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckIIAMSCGetFormatResult(const HRESULT hr, std::string& errorString, const  std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -234,7 +234,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckIIAMSCSetFormatResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -280,7 +280,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckIAMSCGetNumberOfCapabilitiesResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -306,7 +306,7 @@ namespace DirectShowCamera
     bool CheckHResultUtils::CheckQueryInterfaceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 

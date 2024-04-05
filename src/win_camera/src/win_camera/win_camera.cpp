@@ -1,5 +1,7 @@
 #include "win_camera/win_camera.h"
 
+#include "directshow_camera/utils/com_lib_utils.h"
+
 #include "exceptions/resolution_not_support_exception.h"
 #include "exceptions/device_not_found_exception.h"
 
@@ -24,7 +26,7 @@ namespace WinCamera
 
     void WinCamera::Constructor()
     {
-        DirectShowCameraUtils::initCOMLib();
+        COMLibUtils::COMLibUtils::InitCOMLib();
 
 #ifdef WITH_OPENCV2
         m_matConvertor = OpenCVMatConverter();
@@ -39,7 +41,7 @@ namespace WinCamera
         Close();
         
         // Uninitialize COM Library
-        DirectShowCameraUtils::uninitCOMLib();
+        COMLibUtils::COMLibUtils::UninitCOMLib();
     }
 
 #pragma endregion Constructor and Destructor
