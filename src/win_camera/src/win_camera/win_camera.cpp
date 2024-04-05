@@ -74,7 +74,7 @@ namespace WinCamera
         if (width <= 0 || height <= 0)
         {
             // No specific format
-            result = Open(possibleCamera[cameraIndex], NULL);
+            result = Open(possibleCamera[cameraIndex]);
         }
         else
         {
@@ -128,7 +128,7 @@ namespace WinCamera
                 if (videoFormatIndex >= 0)
                 {
                     // Open
-                    result = Open(possibleCamera[cameraIndex], &possibleVideoFormat[videoFormatIndex]);
+                    result = Open(possibleCamera[cameraIndex], possibleVideoFormat[videoFormatIndex]);
                 }
                 else
                 {
@@ -149,7 +149,10 @@ namespace WinCamera
         return result;
     }
 
-    bool WinCamera::Open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat)
+    bool WinCamera::Open(
+        const DirectShowCamera::DirectShowCameraDevice& device,
+        std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat
+    )
     {
         bool result = false;
 
@@ -173,7 +176,10 @@ namespace WinCamera
         return result;
     }
 
-    bool WinCamera::Open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat)
+    bool WinCamera::Open(
+        IBaseFilter** videoInputFilter,
+        std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat
+    )
     {
         bool result = false;
 
@@ -445,7 +451,7 @@ namespace WinCamera
         return m_directShowCamera->getVideoFormatList();
     }
 
-    bool WinCamera::setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat* videoFormat)
+    bool WinCamera::setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat videoFormat)
     {
         if (m_directShowCamera->isOpening())
         {

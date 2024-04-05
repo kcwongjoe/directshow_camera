@@ -88,10 +88,13 @@ namespace WinCamera
         /**
          * @brief Open camera with the specific DirectShowVideoFormat.
          * @param device The camera to be opened.
-         * @param videoFormat (Option) Video format. Default as NULL which use the default video format.
+         * @param videoFormat (Option) Video format. Default as nullopt which use the default video format.
          * @return Return true if success.
         */
-        bool Open(const DirectShowCamera::DirectShowCameraDevice& device, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
+        bool Open(
+            const DirectShowCamera::DirectShowCameraDevice& device,
+            std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat = std::nullopt
+        );
 
         /**
          * @brief Return true if the camera is opened.
@@ -161,7 +164,7 @@ namespace WinCamera
          * @param videoFormat DirectShowVideoFormat
          * @return Return true if success.
         */
-        bool setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat* videoFormat);
+        bool setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat videoFormat);
 
         // ------Frame------
 
@@ -374,7 +377,10 @@ namespace WinCamera
          * @param videoFormat Video format
          * @return Return true if success.
         */
-        bool Open(IBaseFilter** videoInputFilter, DirectShowCamera::DirectShowVideoFormat* videoFormat = NULL);
+        bool Open(
+            IBaseFilter** videoInputFilter,
+            std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat = std::nullopt
+        );
 
         // Utils
         void copyError(bool success);

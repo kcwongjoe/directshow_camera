@@ -11,7 +11,12 @@ namespace DirectShowCamera
      * @param devicePath Device Path
      * @param videoFormats Video Formats
      */
-    DirectShowCameraDevice::DirectShowCameraDevice(std::string friendlyName, std::string description, std::string devicePath, std::vector<DirectShowVideoFormat> videoFormats)
+    DirectShowCameraDevice::DirectShowCameraDevice(
+        std::string friendlyName,
+        std::string description,
+        std::string devicePath,
+        std::vector<DirectShowVideoFormat> videoFormats
+    )
     {
         m_videoFormats = videoFormats;
         m_friendlyName = friendlyName;

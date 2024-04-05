@@ -65,21 +65,15 @@ namespace DirectShowCamera
          * @brief Get Video formats
          * @param videoFormats 
         */
-        static void getVideoFormat(std::vector<DirectShowVideoFormat*>** videoFormats)
+        static std::vector<DirectShowVideoFormat> getVideoFormat()
         {
-            // Clear if necessary
-            DirectShowVideoFormat::release(*videoFormats);
-            *videoFormats = NULL;
+            std::vector<DirectShowVideoFormat> videoFormats = {
+                DirectShowVideoFormat(MEDIASUBTYPE_MJPG, 320, 240, 24, 320 * 240 * 24 / 8),
+                DirectShowVideoFormat(MEDIASUBTYPE_YUY2, 640, 480, 16, 640 * 480 * 16 / 8),
+                DirectShowVideoFormat(MEDIASUBTYPE_MJPG, 1280, 720, 24, 1280 * 720 * 24 / 8)
+            };
 
-            // Push data
-            *videoFormats = new std::vector<DirectShowVideoFormat*>();
-            for (int i=0;i< getVideFormatSize();i++)
-            {
-                int width = getVideoFormatWidth(i);
-                int height = getVideoFormatHeight(i);
-                int bitPerPixel = getVideoFormatBitPerPixel(i);
-                (*videoFormats)->push_back(new DirectShowVideoFormat(getVideoFormatFormat(i), width, height, bitPerPixel, width * height * bitPerPixel / 8));
-            }
+            return videoFormats;
         }
 
         /**
@@ -93,14 +87,7 @@ namespace DirectShowCamera
             cameraDevices->clear();
 
             // Get video format
-            std::vector<DirectShowVideoFormat> videoFormats;
-            for (int i = 0; i < getVideFormatSize(); i++)
-            {
-                int width = getVideoFormatWidth(i);
-                int height = getVideoFormatHeight(i);
-                int bitPerPixel = getVideoFormatBitPerPixel(i);
-                videoFormats.push_back(DirectShowVideoFormat(getVideoFormatFormat(i), width, height, bitPerPixel, width * height * bitPerPixel / 8));
-            }
+            std::vector<DirectShowVideoFormat> videoFormats = getVideoFormat();
 
             // Add camera
             cameraDevices->push_back(DirectShowCameraDevice("Integrated Camera", 
@@ -179,62 +166,6 @@ namespace DirectShowCamera
                     frame[pixelIndex+2] = rColorArray[colorIndex]; 
                 }
             }
-        }
-    private:
-
-        // Video Format Setting
-
-        /**
-         * @brief Number of video format
-         * @return
-        */
-        static int getVideFormatSize()
-        {
-            return 3;
-        }
-
-        /**
-         * @brief Video format
-         * @param index Index
-         * @return
-        */
-        static GUID getVideoFormatFormat(int index)
-        {
-            GUID videoFormatFormat[3] = { MEDIASUBTYPE_MJPG , MEDIASUBTYPE_YUY2, MEDIASUBTYPE_MJPG };
-            return videoFormatFormat[index];
-        }
-
-        /**
-         * @brief Video width
-         * @param index Index
-         * @return
-        */
-        static int getVideoFormatWidth(int index)
-        {
-            int videoFormatWidth[3] = { 320 , 640, 1280 };
-            return videoFormatWidth[index];
-        }
-
-        /**
-         * @brief Video height
-         * @param index Index
-         * @return
-        */
-        static int getVideoFormatHeight(int index)
-        {
-            int videoFormatHeight[3] = { 240 , 480, 720 };
-            return videoFormatHeight[index];
-        }
-
-        /**
-         * @brief Video bit per pixel
-         * @param index Index
-         * @return
-        */
-        static int getVideoFormatBitPerPixel(int index)
-        {
-            int videoFormatBitPerPixel[3] = { 24 , 16, 24 };
-            return videoFormatBitPerPixel[index];
         }
     };
 }

@@ -2,10 +2,34 @@
 
 #include "directshow_camera/utils/check_hresult_utils.h"
 
+#include <algorithm>
+
 namespace DirectShowCamera
 {
 
 #pragma region Static Function
+
+    DirectShowVideoFormat DirectShowVideoFormat::Create(const AM_MEDIA_TYPE* amMediaType)
+    {
+        if (amMediaType->majortype == MEDIATYPE_Video)
+        {
+            // Get Video Type
+            const auto videoType = amMediaType->subtype;
+            const auto totalSize = amMediaType->lSampleSize;
+
+            // Get the width and height
+            VIDEOINFOHEADER* videoInfoHeader = reinterpret_cast<VIDEOINFOHEADER*>(amMediaType->pbFormat);
+            const auto width = videoInfoHeader->bmiHeader.biWidth;
+            const auto height = videoInfoHeader->bmiHeader.biHeight;
+            const auto bitPerPixel = videoInfoHeader->bmiHeader.biBitCount;
+
+            return DirectShowVideoFormat(videoType, width, height, bitPerPixel, totalSize);
+        }
+        else
+        {
+            return DirectShowVideoFormat();
+        }
+    }
 
     /**
      * @brief Sort and unique the video format list.
@@ -38,94 +62,6 @@ namespace DirectShowCamera
         // Sort
         directShowVideoFormats->assign(videoFormatTemp.begin(), videoFormatTemp.end());
         std::sort(directShowVideoFormats->begin(), directShowVideoFormats->end());
-    }
-
-    /**
-     * @brief Collect all video format from IAMStreamConfig
-     * @param[in] streamConfig IAMStreamConfig
-     * @param[out] videoFormats Video format
-     * @param[in] keepAmMediaType Set as true if you want to keep the AmMediaType
-     * @param[out] errorString Error string
-     * @param[out] supportVideoTypes (Option) Support video type. It will only add Video format matched supportVideoTypes, set as NULL to disabled.
-     * @return Return true if success.
-    */
-    bool DirectShowVideoFormat::getVideoFormats(
-        IAMStreamConfig* streamConfig,
-        std::vector<DirectShowVideoFormat*>* videoFormats,
-        const bool keepAmMediaType, std::string& errorString,
-        std::vector<GUID>* supportVideoTypes
-    )
-    {
-        HRESULT hr = NO_ERROR;
-        bool result = true;
-        int numOfResolution = 0;
-        int configSize = 0;
-
-        // Get number of resolution
-        hr = streamConfig->GetNumberOfCapabilities(&numOfResolution, &configSize);
-        result = CheckHResultUtils::CheckIAMSCGetNumberOfCapabilitiesResult(hr, errorString, "Error on checking number of resolution");
-
-        if (result)
-        {
-            // Confirm that this is a video structure.
-            if (configSize == sizeof(VIDEO_STREAM_CONFIG_CAPS))
-            {
-                // Use the video capabilities structure.
-                for (int i = 0; i < numOfResolution; i++)
-                {
-                    DirectShowVideoFormat* videoFormat = new DirectShowVideoFormat(streamConfig, i, keepAmMediaType);
-
-                    // Check empty and suppport video types
-                    bool addVideoFormat = true;
-                    if (videoFormat->isEmpty())
-                    {
-                        addVideoFormat = false;
-                    }
-                    else if(supportVideoTypes)
-                    {
-                        // Check support video types
-                        if (std::count(supportVideoTypes->begin(), supportVideoTypes->end(), videoFormat->m_videoType) <= 0)
-                        {
-                            addVideoFormat = false;
-                        }
-                    }
-
-                    if (addVideoFormat)
-                    {
-
-                        // Add
-                        videoFormats->push_back(videoFormat);
-                    }
-                    else
-                    {
-                        delete videoFormat;
-                    }					
-                }
-
-                // Todo: sort and unique videoFormats(std::vector<DirectShowVideoFormat*>*) here. how to handle the m_AmMediaType(AM_MEDIA_TYPE*) ?
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * @brief Release memory of the video formats
-     * @param videoFormats Video format to be release
-    */
-    void DirectShowVideoFormat::release(std::vector<DirectShowVideoFormat*>* videoFormats)
-    {
-        if (videoFormats && videoFormats->size() > 0)
-        {
-            for (int i=0;i< videoFormats->size();i++)
-            {
-                delete videoFormats->at(i);
-                videoFormats->at(i) = NULL;
-            }
-
-            videoFormats->clear();
-            delete videoFormats;
-        }
     }
 
     /**
@@ -260,41 +196,6 @@ namespace DirectShowCamera
         else if (guid == MEDIASUBTYPE_WAKE)					result += "MJPG format produced by some cards. (FOURCC 'WAKE').";
 
         return result;
-    }
-
-    /**
-     * @brief Convert the DirectShowVideoFormat list to string.
-     * @param directShowVideoFormats The list of DirectShowVideoFormat
-     * @param printAMMediaTypeDetail Set as true if you want to print the detail of the AM_MediaType.
-     * @return Return the converted string.
-    */
-    std::string DirectShowVideoFormat::to_string(std::vector<DirectShowVideoFormat>* directShowVideoFormats, bool printAMMediaTypeDetail)
-    {
-        if (directShowVideoFormats && directShowVideoFormats->size() > 0)
-        {
-            std::string result = "\n";
-            for (int i = 0; i < directShowVideoFormats->size(); i++)
-            {
-                result += "Index: " + std::to_string(i) + "\n";
-
-                AM_MEDIA_TYPE* amMediaType = directShowVideoFormats->at(i).getAMMediaType();
-                if (printAMMediaTypeDetail && !amMediaType)
-                {				
-                    result += DirectShowVideoFormat::to_string(amMediaType);
-                }
-                else
-                {
-                    result += std::string(directShowVideoFormats->at(i)) + "\n";
-                }			
-            }
-
-            return result;
-        }
-        else
-        {
-            return "null";
-        }
-        
     }
 
     /**
@@ -607,101 +508,11 @@ namespace DirectShowCamera
     }
 
     /**
-     * @brief Constructor
-     * @param amMediaType AM_MediaType
-     * @param keepAmMediaType Set as true to include the AM_MediaType pointer in this object.
-    */
-    DirectShowVideoFormat::DirectShowVideoFormat(AM_MEDIA_TYPE* amMediaType, bool keepAmMediaType)
-    {
-        constructor(amMediaType, keepAmMediaType);
-    }
-
-    /**
-     * @brief Constructor
-     * @param streamConfig IAMStreamConfig
-     * @param videoFormatIndex Index in the IAMStreamConfig
-     * @param keepAmMediaType Set as true to include the AM_MediaType pointer in this object.
-    */
-    DirectShowVideoFormat::DirectShowVideoFormat(IAMStreamConfig* streamConfig, int videoFormatIndex, bool keepAmMediaType)
-    {
-        VIDEO_STREAM_CONFIG_CAPS scc;
-        HRESULT hr = streamConfig->GetStreamCaps(videoFormatIndex, &m_AmMediaType, (BYTE*)&scc);
-        if (SUCCEEDED(hr))
-        {
-            constructor(m_AmMediaType, false);
-
-            // does not keep AM_MEDIA_TYPE
-            if (!m_isEmpty && !keepAmMediaType)
-            {
-                DirectShowCameraUtils::DeleteMediaType(&m_AmMediaType);
-            }
-        }
-    }
-
-    /**
-     * @brief Constructor
-     * @param amMediaType AM_MediaType
-     * @param keepAmMediaType Set as true to include the AM_MediaType pointer in this object. If the pointer is kept, it will be released when this object be destoryed.
-    */
-    void DirectShowVideoFormat::constructor(AM_MEDIA_TYPE* amMediaType, bool keepAmMediaType)
-    {
-        if (amMediaType->majortype == MEDIATYPE_Video)
-        {
-            // Get Video Type
-            m_videoType = amMediaType->subtype;
-            m_totalSize = amMediaType->lSampleSize;
-
-            // Get the width and height
-            VIDEOINFOHEADER* videoInfoHeader = reinterpret_cast<VIDEOINFOHEADER*>(amMediaType->pbFormat);
-            m_width = videoInfoHeader->bmiHeader.biWidth;
-            m_height = videoInfoHeader->bmiHeader.biHeight;
-            m_bitPerPixel = videoInfoHeader->bmiHeader.biBitCount;
-
-            m_isEmpty = false;
-        }
-
-        // Store AM_MediaType
-        if (keepAmMediaType)
-        {
-            m_AmMediaType = amMediaType;
-        }
-    }
-
-    /**
-     * @brief Copy constructor
-     * @param directShowVideoFormat DirectShowVideoFormat
-    */
-    DirectShowVideoFormat::DirectShowVideoFormat(const DirectShowVideoFormat& directShowVideoFormat)
-    {
-        *this = directShowVideoFormat;
-    }
-
-    /**
      * @brief Destructor
     */
     DirectShowVideoFormat::~DirectShowVideoFormat()
     {
-        if (m_AmMediaType != NULL)
-        {
-            DirectShowCameraUtils::DeleteMediaType(&m_AmMediaType);
-        }	
-    }
 
-    /**
-     * @brief Clone
-     * @param keepAmMediaType Set as true to pass the AM_MediaType pointer to the new DirectShowVideoFormat. Otherwise the AM_MediaType in the new DirectShowVideoFormat will be NULL.
-     * @return Return the copy of this DirectShowVideoFormat
-    */
-    DirectShowVideoFormat DirectShowVideoFormat::clone(bool keepAmMediaType)
-    {
-        DirectShowVideoFormat result = *this;
-
-        if (!keepAmMediaType)
-        {
-            result.m_AmMediaType = NULL;
-        }
-        
-        return result;
     }
 
 #pragma endregion constructor and destructor
@@ -762,15 +573,6 @@ namespace DirectShowCamera
         return m_videoType;
     }
 
-    /**
-     * @brief Return the AM_MediaType pointer. 
-     * @return Return the AM_MediaType pointer.
-    */
-    AM_MEDIA_TYPE* DirectShowVideoFormat::getAMMediaType() const
-    {
-        return m_AmMediaType;
-    }
-
 #pragma endregion Getter
 
 #pragma region Operator
@@ -786,7 +588,6 @@ namespace DirectShowCamera
         {
             if (!directShowVideoFormat.m_isEmpty)
             {
-                m_AmMediaType = directShowVideoFormat.m_AmMediaType;
                 m_videoType = directShowVideoFormat.m_videoType;
                 m_bitPerPixel = directShowVideoFormat.m_bitPerPixel;
                 m_totalSize = directShowVideoFormat.m_totalSize;
@@ -805,7 +606,7 @@ namespace DirectShowCamera
     }
 
     /**
-     * @brief less than operator
+     * @brief Compare two video format in size, compare width first, then height, then bit per pixel
      * @param videoFormat DirectShowVideoFormat
      * @return 
     */
@@ -862,7 +663,7 @@ namespace DirectShowCamera
     }
 
     /**
-     * @brief larger than operator
+     * @brief Compare two video format in size, compare width first, then height, then bit per pixel
      * @param videoFormat DirectShowVideoFormat
      * @return
     */

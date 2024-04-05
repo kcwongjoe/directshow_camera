@@ -1,11 +1,10 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_RESOLUTION_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_RESOLUTION_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_VIDEO_FORMAT_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_VIDEO_FORMAT_H
 
 //************Content************
 
 #include "directshow_camera/utils/ds_camera_utils.h"
-#include <algorithm>
 
 namespace DirectShowCamera
 {
@@ -18,11 +17,10 @@ namespace DirectShowCamera
     // Static function
     public:
 
-        static void sortAndUnique(std::vector<DirectShowVideoFormat>* directShowVideoFormats);
-        static bool getVideoFormats(IAMStreamConfig* streamConfig, std::vector<DirectShowVideoFormat*>* videoFormat, const bool keepAmMediaType, std::string& errorString, std::vector<GUID>* supportVideoTypes = NULL);
-        static void release(std::vector<DirectShowVideoFormat*>* m_resolutions);
+        static DirectShowVideoFormat Create(const AM_MEDIA_TYPE* amMediaType);
 
-        static std::string to_string(std::vector<DirectShowVideoFormat>* directShowVideoFormats, bool detail = false);
+        static void sortAndUnique(std::vector<DirectShowVideoFormat>* directShowVideoFormats);
+
         static std::string to_string(AM_MEDIA_TYPE* amMediaType);
         static std::string to_string(GUID guid);
 
@@ -36,15 +34,8 @@ namespace DirectShowCamera
         // Constuctor
         DirectShowVideoFormat();
         DirectShowVideoFormat(GUID mediaType, int width, int height, int bitPerPixel, int totalSize);
-        DirectShowVideoFormat(AM_MEDIA_TYPE* m_AmMediaType, bool keepAmMediaType);
-        DirectShowVideoFormat(IAMStreamConfig* streamConfig, int videoFormatIndex, bool keepAmMediaType);
-        void constructor(AM_MEDIA_TYPE* m_AmMediaType, bool keepAmMediaType);
-
-        DirectShowVideoFormat(const DirectShowVideoFormat& directShowVideoFormat);
 
         ~DirectShowVideoFormat();
-
-        DirectShowVideoFormat clone(bool keepAmMediaType);
 
         // Getter
         bool isEmpty() const;
@@ -53,7 +44,6 @@ namespace DirectShowCamera
         int getBitPerPixel() const;
         long getTotalSize() const;
         GUID getVideoType() const;
-        AM_MEDIA_TYPE* getAMMediaType() const;
 
         // Operator
 
@@ -90,7 +80,6 @@ namespace DirectShowCamera
         }
 
     private:
-        AM_MEDIA_TYPE* m_AmMediaType = NULL;
         GUID m_videoType = MEDIASUBTYPE_None;
         int m_bitPerPixel = 0;
         long m_totalSize = 0;

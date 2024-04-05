@@ -6,8 +6,10 @@
 #include "directshow_camera/abstract_ds_camera.h"
 #include "directshow_camera/ds_camera_properties.h"
 #include "directshow_camera/ds_camera_stub_default.h"
-#include "directshow_camera/ds_video_format.h"
+#include "directshow_camera/ds_video_format_list.h"
 #include "directshow_camera/ds_camera_device.h"
+
+#include <thread>
 
 namespace DirectShowCamera
 {
@@ -21,14 +23,24 @@ namespace DirectShowCamera
         /**
          * @brief Get Frame function
         */
-        typedef std::function<void(unsigned char* pixels, int& numOfBytes, unsigned long& frameIndex,const bool copyNewFrameOnly,const unsigned long previousFrameIndex)> GetFrameFunc;
+        typedef std::function<
+            void(
+                unsigned char* pixels,
+                int& numOfBytes,
+                unsigned long& frameIndex,
+                const bool copyNewFrameOnly,
+                const unsigned long previousFrameIndex
+            )> GetFrameFunc;
     public:
 
         DirectShowCameraStub();
         ~DirectShowCameraStub();
         void release() override;
 
-        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL) override;
+        bool open(
+            IBaseFilter** videoInputFilter,
+            std::optional<const DirectShowVideoFormat> videoFormat = std::nullopt
+        ) override;
         void close() override;
         bool isOpening() const override;
         bool checkDisconnection() override;
@@ -69,8 +81,8 @@ namespace DirectShowCamera
         DirectShowVideoFormat getCurrentVideoFormat() const override;
         DirectShowVideoFormat getCurrentGrabberFormat() const override;
 
-        bool setVideoFormat(DirectShowVideoFormat* videoFormat) override;
-        bool setVideoFormat(int videoFormatIndex) override;
+        bool setVideoFormat(const DirectShowVideoFormat videoFormat) override;
+        bool setVideoFormat(const int videoFormatIndex) override;
 
         // Property
         void refreshProperties() override;
@@ -95,7 +107,7 @@ namespace DirectShowCamera
         // Config
         std::shared_ptr<DirectShowCameraProperties> m_properties = nullptr;
 
-        std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;
+        DirectShowVideoFormatList m_videoFormats = DirectShowVideoFormatList();
         int m_currentVideoFormatIndex = -1;
 
         bool m_isOpening = false;
@@ -114,7 +126,7 @@ namespace DirectShowCamera
         GetFrameFunc m_getFrameFunc = NULL;
 
         bool updateVideoFormatList();
-        int getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const;
+        int getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const;
 
     };
 }

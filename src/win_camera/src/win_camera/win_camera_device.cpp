@@ -1,5 +1,7 @@
 #include "win_camera/win_camera_device.h"
 
+#include <algorithm>
+
 namespace WinCamera
 {
 

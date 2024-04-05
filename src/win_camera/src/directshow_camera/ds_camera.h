@@ -9,6 +9,7 @@
 #include "directshow_camera/ds_camera_properties.h"
 #include "directshow_camera/ds_video_format.h"
 #include "directshow_camera/ds_grabber_callback.h"
+#include "directshow_camera/ds_video_format_list.h"
 
 namespace DirectShowCamera
 {
@@ -24,7 +25,10 @@ namespace DirectShowCamera
         ~DirectShowCamera();
         void release() override;
 
-        bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL) override;
+        bool open(
+            IBaseFilter** videoInputFilter,
+            std::optional<const DirectShowVideoFormat> videoFormat = std::nullopt
+        ) override;
         void close() override;
         bool isOpening() const override;
         bool checkDisconnection() override;
@@ -63,8 +67,8 @@ namespace DirectShowCamera
         DirectShowVideoFormat getCurrentVideoFormat() const override;
         DirectShowVideoFormat getCurrentGrabberFormat() const override;
 
-        bool setVideoFormat(DirectShowVideoFormat* videoFormat) override;
-        bool setVideoFormat(int videoFormatIndex) override;
+        bool setVideoFormat(const DirectShowVideoFormat videoFormat) override;
+        bool setVideoFormat(const int videoFormatIndex) override;
 
         // Property
         void refreshProperties() override;
@@ -98,7 +102,7 @@ namespace DirectShowCamera
         IAMStreamConfig* m_streamConfig = NULL;
         std::shared_ptr<DirectShowCameraProperties> m_property = nullptr;
 
-        std::vector<DirectShowVideoFormat*>* m_videoFormats = NULL;
+        DirectShowVideoFormatList m_videoFormats = DirectShowVideoFormatList();
         int m_currentVideoFormatIndex = -1;
 
         // Callback
@@ -125,7 +129,7 @@ namespace DirectShowCamera
         void updateVideoFormatIndex();
 
         int getVideoFormatIndex(AM_MEDIA_TYPE* mediaType) const;
-        int getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const;
+        int getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const;
 
     };
 }

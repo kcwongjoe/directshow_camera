@@ -33,8 +33,7 @@ namespace DirectShowCamera
             stop();
 
             // Release video format
-            DirectShowVideoFormat::release(m_videoFormats);
-            m_videoFormats = NULL;
+            m_videoFormats.Clear();
             m_currentVideoFormatIndex = -1;
 
             //Release Properties
@@ -51,10 +50,13 @@ namespace DirectShowCamera
     /**
      * @brief Build the directshow graph
      * @param videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
-     * @param videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
+     * @param[in] videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
      * @return Return true if success
     */
-    bool DirectShowCameraStub::open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat)
+    bool DirectShowCameraStub::open(
+        IBaseFilter** videoInputFilter,
+        std::optional<const DirectShowVideoFormat> videoFormat
+    )
     {
         m_isOpening = true;
 
@@ -63,7 +65,13 @@ namespace DirectShowCamera
 
         // Update video format
         updateVideoFormatList();
-        m_currentVideoFormatIndex = getVideoFormatIndex(videoFormat);
+        if (videoFormat != std::nullopt && videoFormat.has_value()) {
+            m_currentVideoFormatIndex = getVideoFormatIndex(videoFormat.value());
+        }
+        else
+        {
+            throw std::exception("DirectShowVideoFormat can't be null");
+        }
 
         return true;
     }
@@ -265,8 +273,8 @@ namespace DirectShowCamera
                     frame,
                     numOfBytes,
                     frameIndex,
-                    m_videoFormats->at(m_currentVideoFormatIndex)->getWidth(),
-                    m_videoFormats->at(m_currentVideoFormatIndex)->getHeight(),
+                    m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getWidth(),
+                    m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getHeight(),
                     previousFrameIndex
                 );
             }
@@ -314,7 +322,9 @@ namespace DirectShowCamera
 
         if (m_isCapturing)
         {
-            int result = m_videoFormats->at(m_currentVideoFormatIndex)->getHeight() * m_videoFormats->at(m_currentVideoFormatIndex)->getWidth() * 3;
+            const auto heigth = m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getHeight();
+            const auto width = m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getWidth();
+            const int result = heigth * width * 3;
             return result;
         }
         else
@@ -342,7 +352,8 @@ namespace DirectShowCamera
     bool DirectShowCameraStub::updateVideoFormatList()
     {
         // Create video format
-        DirectShowCameraStubDefaultSetting::getVideoFormat(&m_videoFormats);
+        const auto videoFormat = DirectShowCameraStubDefaultSetting::getVideoFormat();
+        m_videoFormats = DirectShowVideoFormatList(videoFormat);
 
         return true;
     }
@@ -352,18 +363,15 @@ namespace DirectShowCamera
      * @param videoFormat
      * @return Return -1 if not found
     */
-    int DirectShowCameraStub::getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const
+    int DirectShowCameraStub::getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const
     {
         int result = -1;
-        if (m_videoFormats)
+        for (int i = 0; i < m_videoFormats.Size(); i++)
         {
-            for (int i = 0; i < m_videoFormats->size(); i++)
+            if (m_videoFormats.getVideoFormat(i) == videoFormat)
             {
-                if (*m_videoFormats->at(i) == *videoFormat)
-                {
-                    result = i;
-                    break;
-                }
+                result = i;
+                break;
             }
         }
 
@@ -387,7 +395,7 @@ namespace DirectShowCamera
     {
         if (m_currentVideoFormatIndex >= 0)
         {
-            return m_videoFormats->at(m_currentVideoFormatIndex)->clone(false);
+            return m_videoFormats.getVideoFormat(m_currentVideoFormatIndex);
         }
         else
         {
@@ -408,23 +416,10 @@ namespace DirectShowCamera
     /**
      * @brief Get current video format list of this opened camera.
      * @return
-    */
+    */ 
     std::vector<DirectShowVideoFormat> DirectShowCameraStub::getVideoFormatList() const
     {
-        if (m_videoFormats)
-        {
-            std::vector<DirectShowVideoFormat> result;
-            for (int i = 0; i < m_videoFormats->size(); i++)
-            {
-                result.push_back(m_videoFormats->at(i)->clone(false));
-
-            }
-            return result;
-        }
-        else
-        {
-            return std::vector<DirectShowVideoFormat>();
-        }
+        return m_videoFormats.getVideoFormatList();
     }
 
     /**
@@ -432,7 +427,7 @@ namespace DirectShowCamera
      * @param videoFormat Video format to be set
      * @return Return true if success.
     */
-    bool DirectShowCameraStub::setVideoFormat(DirectShowVideoFormat* videoFormat)
+    bool DirectShowCameraStub::setVideoFormat(const DirectShowVideoFormat videoFormat)
     {
         bool result = false;
         updateVideoFormatList();
@@ -462,10 +457,10 @@ namespace DirectShowCamera
                 result = false;
                 m_errorString = "Graph is not initialized, please call initialize().";
             }
-            else if (videoFormatIndex < 0 || videoFormatIndex >= m_videoFormats->size())
+            else if (videoFormatIndex < 0 || videoFormatIndex >= m_videoFormats.Size())
             {
                 result = false;
-                m_errorString = "Video format index(" + std::to_string(videoFormatIndex) + ") is out of range(0," + std::to_string(m_videoFormats->size()) + ").";
+                m_errorString = "Video format index(" + std::to_string(videoFormatIndex) + ") is out of range(0," + std::to_string(m_videoFormats.Size()) + ").";
             }
             else
             {

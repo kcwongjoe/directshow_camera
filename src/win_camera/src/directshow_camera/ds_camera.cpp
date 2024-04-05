@@ -35,8 +35,7 @@ namespace DirectShowCamera
             stop();
 
             // Release video format
-            DirectShowVideoFormat::release(m_videoFormats);
-            m_videoFormats = NULL;
+            m_videoFormats.Clear();
             m_currentVideoFormatIndex = -1;
 
             // assigning a newly created DirectShowVideoFormat will reset m_isEmpty
@@ -116,7 +115,10 @@ namespace DirectShowCamera
      *	"Sample Grabber Filter" -r->[Set] "SampleGrabberCallback"
      * @enduml
     */
-    bool DirectShowCamera::open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat)
+    bool DirectShowCamera::open(
+        IBaseFilter** videoInputFilter,
+        std::optional<const DirectShowVideoFormat> videoFormat
+    )
     {
         // Initialize variable
         HRESULT hr = NOERROR;
@@ -189,13 +191,15 @@ namespace DirectShowCamera
             if (result)
             {
                 // Set video format
-                if (videoFormat)
+                if (videoFormat != std::nullopt && videoFormat.has_value())
                 {
                     // Update the video format list so that we can find the AM_Media_Type in the list.
                     updateVideoFormatList();
 
                     // Set format
-                    setVideoFormat(videoFormat);
+                    setVideoFormat(videoFormat.value());
+
+                    // Todo: Check if the video format was set incorrectly, throw error if it was.
                 }
 
                 // Get format
@@ -274,7 +278,7 @@ namespace DirectShowCamera
             hr = m_sampleGrabber->GetConnectedMediaType(&grabberMediaType);
             if (SUCCEEDED(hr))
             {
-                m_sampleGrabberVideoFormat.constructor(&grabberMediaType, false);
+                m_sampleGrabberVideoFormat = DirectShowVideoFormat::Create(&grabberMediaType);
             }
 
             // Try setting the sync source to null - and make it run as fast as possible
@@ -674,7 +678,7 @@ namespace DirectShowCamera
                 hr = m_sampleGrabber->GetConnectedMediaType(&grabberMediaType);
                 if (SUCCEEDED(hr))
                 {
-                    m_sampleGrabberVideoFormat.constructor(&grabberMediaType, false);
+                    m_sampleGrabberVideoFormat = DirectShowVideoFormat::Create(&grabberMediaType);
                 }
 
                 // Set buffer size
@@ -697,19 +701,7 @@ namespace DirectShowCamera
         bool result = false;
         if (m_streamConfig != NULL)
         {
-            // Initialize
-            std::vector<DirectShowVideoFormat*>* videoFormats = new std::vector<DirectShowVideoFormat*>();
-
-            // Get
-            result = DirectShowVideoFormat::getVideoFormats(m_streamConfig, videoFormats, true, m_errorString);
-
-            if (result)
-            {
-                // Release the old one
-                DirectShowVideoFormat::release(m_videoFormats);
-
-                m_videoFormats = videoFormats;
-            }
+            result = m_videoFormats.Update(m_streamConfig, m_errorString);
         }
         else
         {
@@ -720,11 +712,11 @@ namespace DirectShowCamera
     }
 
     /**
-     * @brief Update the current video foramt index from the video format list
+     * @brief Update the current video foramt index from Steam Config
     */
     void DirectShowCamera::updateVideoFormatIndex()
     {
-        if (m_videoFormats && m_videoFormats->size() > 0)
+        if (m_videoFormats.Size() > 0)
         {
             DirectShowCameraUtils::AmMediaTypeDecorator(m_streamConfig,
                 [this](AM_MEDIA_TYPE* mediaType)
@@ -748,9 +740,9 @@ namespace DirectShowCamera
     int DirectShowCamera::getVideoFormatIndex(AM_MEDIA_TYPE* mediaType) const
     {
         int result = -1;
-        for (int i = 0; i < m_videoFormats->size(); i++)
+        for (int i = 0; i < m_videoFormats.Size(); i++)
         {
-            if (*m_videoFormats->at(i) == *mediaType)
+            if (m_videoFormats.getAMMediaType(i) == mediaType)
             {
                 result = i;
                 break;
@@ -765,21 +757,17 @@ namespace DirectShowCamera
      * @param videoFormat 
      * @return Return -1 if not found
     */
-    int DirectShowCamera::getVideoFormatIndex(DirectShowVideoFormat* videoFormat) const
+    int DirectShowCamera::getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const
     {
         int result = -1;
-        if (m_videoFormats)
+        for (int i = 0; i < m_videoFormats.Size(); i++)
         {
-            for (int i = 0; i < m_videoFormats->size(); i++)
+            if (m_videoFormats.getVideoFormat(i) == videoFormat)
             {
-                if (*m_videoFormats->at(i) == *videoFormat)
-                {
-                    result = i;
-                    break;
-                }
+                result = i;
+                break;
             }
         }
-
 
         return result;
     }
@@ -801,7 +789,7 @@ namespace DirectShowCamera
     {
         if (m_currentVideoFormatIndex >= 0)
         {
-            return m_videoFormats->at(m_currentVideoFormatIndex)->clone(false);
+            return m_videoFormats.getVideoFormat(m_currentVideoFormatIndex);
         }
         else
         {
@@ -825,20 +813,7 @@ namespace DirectShowCamera
     */
     std::vector<DirectShowVideoFormat> DirectShowCamera::getVideoFormatList() const
     {
-        if (m_videoFormats)
-        {
-            std::vector<DirectShowVideoFormat> result;
-            for (int i = 0; i < m_videoFormats->size(); i++)
-            {
-                result.push_back(m_videoFormats->at(i)->clone(false));
-
-            }
-            return result;
-        }
-        else
-        {
-            return std::vector<DirectShowVideoFormat>();
-        }
+        return m_videoFormats.getVideoFormatList();
     }
 
     /**
@@ -846,7 +821,7 @@ namespace DirectShowCamera
      * @param videoFormat Video format to be set
      * @return Return true if success.
     */
-    bool DirectShowCamera::setVideoFormat(DirectShowVideoFormat* videoFormat)
+    bool DirectShowCamera::setVideoFormat(DirectShowVideoFormat videoFormat)
     {
         bool result = false;
         updateVideoFormatList();
@@ -876,15 +851,15 @@ namespace DirectShowCamera
                 result = false;
                 m_errorString = "Graph is not initialized, please call initialize().";
             }
-            else if (videoFormatIndex < 0 || videoFormatIndex >= m_videoFormats->size())
+            else if (videoFormatIndex < 0 || videoFormatIndex >= m_videoFormats.Size())
             {
                 result = false;
-                m_errorString = "Video format index("+ std::to_string(videoFormatIndex) +") is out of range(0," + std::to_string(m_videoFormats->size()) + ").";
+                m_errorString = "Video format index("+ std::to_string(videoFormatIndex) +") is out of range(0," + std::to_string(m_videoFormats.Size()) + ").";
             }
             else
             {
                 // Set
-                hr = m_streamConfig->SetFormat(m_videoFormats->at(videoFormatIndex)->getAMMediaType());
+                hr = m_streamConfig->SetFormat(m_videoFormats.getAMMediaType(videoFormatIndex));
                 result = CheckHResultUtils::CheckIIAMSCSetFormatResult(hr, m_errorString, "Error on setting camera resolution");
 
                 if (result)
@@ -1022,7 +997,7 @@ namespace DirectShowCamera
                             iPin,
                             [this, &videoFormats](AM_MEDIA_TYPE* amMediaType)
                             {
-                                videoFormats.push_back(DirectShowVideoFormat(amMediaType, false));
+                                videoFormats.push_back(DirectShowVideoFormat::Create(amMediaType));
                             },
                             m_errorString
                         );

@@ -7,7 +7,7 @@
 #include "directshow_camera/ds_video_format.h"
 #include "directshow_camera/ds_camera_device.h"
 
-#include <thread>
+#include <optional>
 
 namespace DirectShowCamera
 {
@@ -22,7 +22,10 @@ namespace DirectShowCamera
 
         virtual void release() = 0;
 
-        virtual bool open(IBaseFilter** videoInputFilter, DirectShowVideoFormat* videoFormat = NULL) = 0;
+        virtual bool open(
+            IBaseFilter** videoInputFilter,
+            std::optional<const DirectShowVideoFormat> videoFormat = std::nullopt
+        ) = 0;
         virtual void close() = 0;
         virtual bool isOpening() const = 0;
         virtual bool checkDisconnection() = 0;
@@ -51,8 +54,8 @@ namespace DirectShowCamera
         virtual DirectShowVideoFormat getCurrentVideoFormat() const = 0;
         virtual DirectShowVideoFormat getCurrentGrabberFormat() const = 0;
 
-        virtual bool setVideoFormat(DirectShowVideoFormat* videoFormat) = 0;
-        virtual bool setVideoFormat(int videoFormatIndex) = 0;
+        virtual bool setVideoFormat(const DirectShowVideoFormat videoFormat) = 0;
+        virtual bool setVideoFormat(const int videoFormatIndex) = 0;
 
         // Property
         virtual void refreshProperties() = 0;
