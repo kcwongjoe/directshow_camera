@@ -22,7 +22,7 @@ namespace DirectShowCameraUtils
     /**
      * @brief Safe release COM interface pointers. e.g. IBaseFilter* iBaseFilter; SafeRelease(&iBaseFilter);
      * @tparam T COM interface pointers
-     * @param ppT Pointer of COM interface pointers
+     * @param[in,out] ppT Pointer of COM interface pointers
     */
     template <class T> void SafeRelease(T** ppT)
     {
@@ -130,7 +130,7 @@ namespace DirectShowCameraUtils
         std::string& errorString
     )
     {
-        if (iMoniker == nullptr || iMoniker == NULL) return false;
+        if (iMoniker == NULL) return false;
 
         bool result = true;
 
@@ -219,7 +219,7 @@ namespace DirectShowCameraUtils
         bool releaseAMMediaType = true
     )
     {
-        if (iPin == nullptr || iPin == NULL) return false;
+        if (iPin == NULL) return false;
 
         bool result = true;
 

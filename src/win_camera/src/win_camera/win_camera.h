@@ -57,14 +57,13 @@ namespace WinCamera
         WinCamera();
 
         /**
-         * @brief Constructor
-         * @param abstractDirectShowCamera DirectShowCamera or DirectShowCameraStub.
+         * @brief Constructor. Construct a WinCamera with the DirectShowCamera or DirectShowCameraStub.
+         * @param[in] abstractDirectShowCamera DirectShowCamera or DirectShowCameraStub.
         */
         WinCamera(const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera>& abstractDirectShowCamera);
 
         /**
          * @brief Constructor
-         * @param abstractDirectShowCamera Abstract DirectShow Camera
         */
         void Constructor();
 
@@ -77,18 +76,18 @@ namespace WinCamera
 
         /**
          * @brief Open camera with the specific resolution. The support resolution can be retrieved from CameraDevice. If the frame width and height is not specified, the default resolution will be used.
-         * @param device The camera to be opened. You can use getCameras() to extract the available cameras.
-         * @param width (Option) The frame width in pixel.
-         * @param height (Option) The frame height in pixel.
-         * @param rgb (Option) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
+         * @param[in] device The camera to be opened. You can use getCameras() to extract the available cameras.
+         * @param[in] width (Optional) The frame width in pixel.
+         * @param[in] height (Optional) The frame height in pixel.
+         * @param[in] rgb (Optional) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
          * @return Return true if success.
         */
         bool Open(const WinCameraDevice& device, const int width = -1, const int height = -1, const bool rgb = true);
 
         /**
          * @brief Open camera with the specific DirectShowVideoFormat.
-         * @param device The camera to be opened.
-         * @param videoFormat (Option) Video format. Default as nullopt which use the default video format.
+         * @param[in] device The camera to be opened.
+         * @param[in] videoFormat (Optional) Video format to be set. Default as nullopt which use the default video format.
          * @return Return true if success.
         */
         bool Open(
@@ -115,7 +114,7 @@ namespace WinCamera
 
         /**
          * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run.
-         * @param func void()
+         * @param[in] func void()
          */
         void setDisconnectionProcess(std::function<void()> func);
 
@@ -161,10 +160,10 @@ namespace WinCamera
 
         /**
          * @brief Set DirectShowVideoFormat to the camera. Problam may caused when camera was opened. It is suggest to set DirectShowVideoFormat by open() fucntion.
-         * @param videoFormat DirectShowVideoFormat
+         * @param[in] videoFormat DirectShowVideoFormat
          * @return Return true if success.
         */
-        bool setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat videoFormat);
+        bool setDirectShowVideoFormat(const DirectShowCamera::DirectShowVideoFormat videoFormat);
 
         // ------Frame------
 
@@ -223,13 +222,13 @@ namespace WinCamera
 
         /**
          * @brief Set as true to return a vertical flip cv::Mat. Default as true.
-         * @param verticalFlip Set it as true to return a vertical flip cv::Mat.
+         * @param[in] verticalFlip Set it as true to return a vertical flip cv::Mat.
         */
-        void VecticalFlipMat(const bool verticalFlip);
+        void VerticalFlipMat(const bool verticalFlip);
 
         /**
          * @brief Set as true to return a BGR cv::Mat. Default as false which return a RGB Mat.
-         * @param asBGR Set as true to return a BGR cv::Mat.
+         * @param[in] asBGR Set as true to return a BGR cv::Mat.
         */
         void setMatAsBGR(const bool asBGR);
 
@@ -264,29 +263,29 @@ namespace WinCamera
 
         /**
          * @brief Exposure fusion
-         * @param[out] exposureImages Images captured in different exposures.
-         * @param[in] exposureFusionAsyncResult void(cv::Mat) async processing the exposure fusion and return the result.  Default is NULL. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
-         * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
+         * @param[in] exposureFusionAsyncResult (Optional) void(cv::Mat) async processing the exposure fusion and return the result.  Default is nullptr. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
+         * @param[out] exposureImages (Optional) Images captured in different exposures.
+         * @param[in] minSetExposureDelay (Optional) Minimum time delay in the unit of ms between setting exposures. For example, if the exposure time is 1s and minSetExposureDelay = 200, frame will capture between 1.2s. Default is 200ms
          * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
         */
         cv::Mat ExposureFusion(
             const ExposureFusionAsyncResult exposureFusionAsyncResult = nullptr,
-            std::vector<cv::Mat>* exposureImages = NULL,
+            std::vector<cv::Mat>* exposureImages = nullptr,
             const int minSetExposureDelay = 200
         );
 
         /**
          * @brief Exposure fusion
          * @param[in] exposures Exposures time to be captured
-         * @param[out] exposureImages Images captured in different exposures.
-         * @param[in] exposureFusionAsyncResult void(cv::Mat) async processing the exposure fusion and return the result.  Default is NULL. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
-         * @param[in] minSetExposureDelay Minimum time delay in between setting exposures.
+         * @param[in] exposureFusionAsyncResult (Optional) void(cv::Mat) async processing the exposure fusion and return the result.  Default is nullptr. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
+         * @param[out] exposureImages (Optional) Images captured in different exposures.
+         * @param[in] minSetExposureDelay (Optional) Minimum time delay in the unit of ms between setting exposures. For example, if the exposure time is 1s and minSetExposureDelay = 200, frame will capture between 1.2s. Default is 200ms
          * @return Return the fusion result. Empty will return if fail or exposureFusionAsyncResult was set.
         */
         cv::Mat ExposureFusion(
             const std::vector<double> exposures,
             const ExposureFusionAsyncResult exposureFusionAsyncResult = nullptr,
-            std::vector<cv::Mat>* exposureImages = NULL,
+            std::vector<cv::Mat>* exposureImages = nullptr,
             const int minSetExposureDelay = 200
         );
     #endif
@@ -309,7 +308,7 @@ namespace WinCamera
 
         /**
          * @brief Reset camera properties as default value.
-         * @param asAuto Set as true if you want to use auto mode as default value.
+         * @param[in] asAuto Set as true if you want to use auto mode as default value.
         */
         void ResetProperties(const bool asAuto = true);
 
@@ -373,8 +372,8 @@ namespace WinCamera
 
         /**
          * @brief Open the camera
-         * @param videoInputFilter Video filter
-         * @param videoFormat Video format
+         * @param[in] videoInputFilter Video filter
+         * @param[in] videoFormat (Optional) Video format to be set. Default as nullopt.
          * @return Return true if success.
         */
         bool Open(
@@ -383,7 +382,11 @@ namespace WinCamera
         );
 
         // Utils
-        void copyError(bool success);
+        /**
+         * @brief Copy error from DirectShowCamera to this
+         * @param[in] success Only copy error if success = false
+        */
+        void CopyError(const bool success);
     };
 }
 

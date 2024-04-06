@@ -56,8 +56,8 @@ namespace DirectShowCamera
 
         /**
          * @brief Build the directshow graph
-         * @param videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
-         * @param[in] videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
+         * @param[in] videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
+         * @param[in] videoFormat (Optional) Video Format to be set. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
          * @return Return true if success
         */
         bool Open(
@@ -89,7 +89,7 @@ namespace DirectShowCamera
 
         /**
          * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run and then run stop() internally.
-         * @param func void()
+         * @param[in] func void() Function to be run when camera is disconnected.
         */
         void setDisconnectionProcess(std::function<void()> func) override;
 
@@ -193,7 +193,7 @@ namespace DirectShowCamera
 
         /**
          * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opened camera.
-         * @param videoFormat Video format to be set
+         * @param[in] videoFormat Video format to be set
          * @return Return true if success.
         */
         bool setVideoFormat(const DirectShowVideoFormat videoFormat) override;
@@ -249,7 +249,7 @@ namespace DirectShowCamera
          * @param[out] cameraDevices Camera Devices.
          * @return Return true if success
         */
-        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices) override;
+        bool getCameras(std::vector<DirectShowCameraDevice>& cameraDevices) override;
 
         /**
          * @brief Get the video input filter based on the camera index
@@ -317,7 +317,7 @@ namespace DirectShowCamera
 
         /**
          * @brief Get index from the Video Format list
-         * @param videoFormat
+         * @param[in] videoFormat to be searched
          * @return Return -1 if not found
         */
         int getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const;

@@ -4,6 +4,8 @@
 
 void eg2_properties()
 {
+    std::cout << "Example 2: Properties" << std::endl;
+
     // Get a empty camera
     WinCamera::WinCamera camera = WinCamera::WinCamera();
 
@@ -17,8 +19,6 @@ void eg2_properties()
     // Get first support resolution in the first camera
     std::vector <std::pair<int, int>> resolutions = cameraDeivceList[0].getResolutions();
     std::cout << "Width: " + std::to_string(resolutions[0].first) + ", Height: " + std::to_string(resolutions[0].second) << std::endl;
-
-
 
     // Open the first camera in the biggest resolution
     std::cout << "Open the first camera..." << std::endl;
@@ -40,7 +40,6 @@ void eg2_properties()
     {
         std::cout << "This device doesn't support exposure time" << std::endl;
     }
-
 
     // Reset all properties to default
     std::cout << "Reset properties to default..." << std::endl;

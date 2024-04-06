@@ -4,6 +4,8 @@
 
 void eg4_exposure_fusion()
 {
+    std::cout << "Example 4: Exposure Fusion" << std::endl;
+
     // Get a empty camera
     WinCamera::WinCamera camera = WinCamera::WinCamera();
 
@@ -20,12 +22,12 @@ void eg4_exposure_fusion()
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     // Capture a exposure fusion image
-    std::cout << "Start to capture in exposure fusion..." << std::endl;
+    std::cout << "Start to capture in exposure fusion and save to image.jpg" << std::endl;
     cv::Mat frame = camera.ExposureFusion();
     cv::imwrite("image.jpg", frame);
 
     // Processing exposure fusion image is time consumed. Use async mode to capture.
-    std::cout << "Use a async mode to capture image in exposure fusion..." << std::endl;
+    std::cout << "Use a async mode to capture image in exposure fusion and save to image2.jpg" << std::endl;
     std::atomic<bool> calculatedFusion = false;
     camera.ExposureFusion(
         [&calculatedFusion](cv::Mat fusionImage)

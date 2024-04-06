@@ -170,7 +170,7 @@ namespace WinCamera
             // Release device input filter
             DirectShowCameraUtils::SafeRelease(&videoInputFilter);
 
-            copyError(result);
+            CopyError(result);
         }
 
         return result;
@@ -193,7 +193,7 @@ namespace WinCamera
         }
     #endif
 
-        copyError(result);
+        CopyError(result);
 
         return result;
     }
@@ -246,7 +246,7 @@ namespace WinCamera
         {
             bool success = m_directShowCamera->Start();
 
-            copyError(success);
+            CopyError(success);
 
             return success;
         }
@@ -263,7 +263,7 @@ namespace WinCamera
         {
             bool success = m_directShowCamera->Stop();
 
-            copyError(success);
+            CopyError(success);
 
             return success;
         }
@@ -420,9 +420,9 @@ namespace WinCamera
     std::vector<DirectShowCamera::DirectShowCameraDevice> WinCamera::getDirectShowCameras()
     {
         std::vector<DirectShowCamera::DirectShowCameraDevice> result;
-        bool success = m_directShowCamera->getCameras(&result);
+        bool success = m_directShowCamera->getCameras(result);
 
-        copyError(success);
+        CopyError(success);
 
         return result;
     }
@@ -436,7 +436,7 @@ namespace WinCamera
         std::vector<WinCameraDevice> result;
         for (int i = 0; i < directShowCameras.size(); i++)
         {
-            result.push_back(WinCameraDevice(&directShowCameras[i]));
+            result.push_back(WinCameraDevice(directShowCameras[i]));
         }
 
         return result;
@@ -451,7 +451,7 @@ namespace WinCamera
         return m_directShowCamera->getVideoFormatList();
     }
 
-    bool WinCamera::setDirectShowVideoFormat(DirectShowCamera::DirectShowVideoFormat videoFormat)
+    bool WinCamera::setDirectShowVideoFormat(const DirectShowCamera::DirectShowVideoFormat videoFormat)
     {
         if (m_directShowCamera->isOpening())
         {
@@ -464,7 +464,7 @@ namespace WinCamera
             bool result = m_directShowCamera->setVideoFormat(videoFormat);
 
             // Copy error
-            copyError(result);
+            CopyError(result);
 
 #ifdef WITH_OPENCV2
             AllocateMatBuffer();
@@ -481,7 +481,7 @@ namespace WinCamera
         else
         {
             // Copy error
-            copyError(false);
+            CopyError(false);
 
             return false;
         }
@@ -550,7 +550,7 @@ namespace WinCamera
         m_matConvertor.isBGR = asBGR;
     }
 
-    void WinCamera::VecticalFlipMat(const bool verticalFlip)
+    void WinCamera::VerticalFlipMat(const bool verticalFlip)
     {
         m_matConvertor.isVerticalFlip = verticalFlip;
     }
@@ -677,7 +677,7 @@ namespace WinCamera
         bool isAutoExposureNow = Exposure()->isAuto();
 
         bool releaseExposureImages = false;
-        if (exposureImages == nullptr || exposureImages == NULL)
+        if (exposureImages == nullptr)
         {
             exposureImages = new std::vector<cv::Mat>();
             releaseExposureImages = true;
@@ -789,11 +789,7 @@ namespace WinCamera
 
 #pragma region Utils
 
-    /**
-     * @brief Copy error from DirectShowCamera to this
-     * @param success Only copy error if success = false
-    */
-    void WinCamera::copyError(bool success)
+    void WinCamera::CopyError(const bool success)
     {
         if (!success) m_errorString = m_directShowCamera->getLastError();
     }

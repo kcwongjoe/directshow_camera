@@ -4,6 +4,8 @@
 
 void eg5_disconnect_process()
 {
+    std::cout << "Example 5: Disconnect Process. This is example to handle a process when the USB camera is disconnected suddently." << std::endl;
+
     // Get a empty camera
     WinCamera::WinCamera camera = WinCamera::WinCamera();
 

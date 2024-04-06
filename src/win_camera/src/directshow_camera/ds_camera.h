@@ -44,8 +44,8 @@ namespace DirectShowCamera
 
         /**
          * @brief Build the directshow graph
-         * @param videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
-         * @param videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
+         * @param[in] videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
+         * @param[in] videoFormat (Optional)Video Format to be set. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
          * @return Return true if success
          *
          * @startuml {directshow_diagram.svg} "DirectShow Camera Diagram"
@@ -92,7 +92,7 @@ namespace DirectShowCamera
 
         /**
          * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run and then run stop() internally.
-         * @param func void()
+         * @param[in] func void() Function to be run when camera is disconnected.
         */
         void setDisconnectionProcess(std::function<void()> func) override;
 
@@ -201,7 +201,7 @@ namespace DirectShowCamera
 
         /**
          * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opening camera.
-         * @param videoFormatIndex Index of the video foramt list.
+         * @param[in] videoFormatIndex Index of the video foramt list.
          * @return Return true if success.
         */
         bool setVideoFormat(const int videoFormatIndex) override;
@@ -250,7 +250,7 @@ namespace DirectShowCamera
          * @param[out] cameraDevices Camera Devices.
          * @return Return true if success
         */
-        bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices) override;
+        bool getCameras(std::vector<DirectShowCameraDevice>& cameraDevices) override;
 
         /**
          * @brief Get the video input filter based on the camera index

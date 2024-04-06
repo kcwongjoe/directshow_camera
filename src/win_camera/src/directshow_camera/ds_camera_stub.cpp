@@ -422,7 +422,7 @@ namespace DirectShowCamera
 
 #pragma region getCamera
 
-    bool DirectShowCameraStub::getCameras(std::vector<DirectShowCameraDevice>* cameraDevices)
+    bool DirectShowCameraStub::getCameras(std::vector<DirectShowCameraDevice>& cameraDevices)
     {
         DirectShowCameraStubDefaultSetting::getCamera(cameraDevices);
         return true;

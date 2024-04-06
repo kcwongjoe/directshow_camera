@@ -80,17 +80,16 @@ namespace DirectShowCamera
          * @brief Get Camera
          * @param[out] cameraDevices Camera
         */
-        static void getCamera(std::vector<DirectShowCameraDevice>* cameraDevices)
+        static void getCamera(std::vector<DirectShowCameraDevice>& cameraDevices)
         {
             // Initialize and clear
-            if (cameraDevices == nullptr) *cameraDevices = std::vector<DirectShowCameraDevice>();
-            cameraDevices->clear();
+            cameraDevices.clear();
 
             // Get video format
             std::vector<DirectShowVideoFormat> videoFormats = getVideoFormat();
 
             // Add camera
-            cameraDevices->push_back(DirectShowCameraDevice("Integrated Camera", 
+            cameraDevices.push_back(DirectShowCameraDevice("Integrated Camera", 
                 "A fake camera", 
                 "\\\\?\\usb#vid_0000&pid_0000&mi_0000&0000000&0&0000#{00000000-0000-0000-0000-000000000000}\\global",
                 videoFormats));
@@ -98,12 +97,12 @@ namespace DirectShowCamera
 
         /**
          * @brief Get default frame
-         * @param frame[out] Frame bytes
-         * @param frameIndex[out] Frame index
-         * @param numOfBytes[out] Number of bytes of this frame
-         * @param width[in] Frame width
-         * @param height[in] Frame height
-         * @param previousFrameIndex[in] Previous frame index
+         * @param[out] frame Frame bytes
+         * @param[out] frameIndex Frame index
+         * @param[out] numOfBytes Number of bytes of this frame
+         * @param[in] width Frame width
+         * @param[in] height Frame height
+         * @param[in] previousFrameIndex Previous frame index
         */
         static void getFrame(
             unsigned char* frame,

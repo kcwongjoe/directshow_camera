@@ -5,6 +5,7 @@
 
 void eg6_stub()
 {
+    std::cout << "Example 6: Stub" << std::endl;
 
     // Define a flag to indicate whether open as stub.
     // So you just have to comment this line to disable the stub.
@@ -22,7 +23,7 @@ void eg6_stub()
     WinCamera::WinCamera camera = WinCamera::WinCamera(stub);
 #else
     // Use normal directshow camera
-    UVCCamera camera = UVCCamera();
+    WinCamera::WinCamera camera = WinCamera::WinCamera();
 #endif
 
     // Get available camera list

@@ -16,24 +16,103 @@ namespace WinCamera
     class WinCameraDevice
     {
     public:
-        WinCameraDevice(DirectShowCamera::DirectShowCameraDevice* directShowCameraDevice);
+
+#pragma region constructor and destructor
+
+        /**
+         * @brief Constructor
+         * @param directShowCamera Directshow Camera
+        */
+        WinCameraDevice(const DirectShowCamera::DirectShowCameraDevice& directShowCameraDevice);
+
+        /**
+         * @brief Copy constructor
+         * @param cameraDevice CameraDevice
+        */
         WinCameraDevice(const WinCameraDevice& cameraDevice);
 
-        bool supportMonochrome() const;
-        std::vector<std::pair<int, int>> getMonoResolutions();
+#pragma endregion constructor and destructor
 
-        bool supportRGB() const;
-        std::vector<std::pair<int,int>> getRGBResolutions();
+#pragma region Monochrome
 
-        std::vector<std::pair<int,int>> getResolutions();
-        bool ContainResolution(int width, int height) const;
+        /**
+         * @brief Return true if camera supported monochrome image
+         * @return Return true if camera supported monochrome image
+        */
+        bool isSupportMonochrome() const;
 
+        /**
+         * @brief Get the supported monochrome image resolution in (width, height)
+         * @return Return (width, height)[]
+        */
+        std::vector<std::pair<int, int>> getMonoResolutions() const;
+
+#pragma endregion Monochrome
+
+#pragma region RGB
+
+        /**
+         * @brief Return true if camera supported rgb image.
+         * @return Return true if camera supported rgb image.
+        */
+        bool isSupportRGB() const;
+
+        /**
+         * @brief Get the supported rgb image resolution in (width, height)
+         * @return Return (width, height)[]
+        */
+        std::vector<std::pair<int,int>> getRGBResolutions() const;
+
+#pragma endregion RGB
+
+#pragma region Resolution
+
+        /**
+         * @brief Get the supported resolution in (width, height)
+         * @return Return (width, height)[]
+        */
+        std::vector<std::pair<int,int>> getResolutions() const;
+
+        /**
+         * @brief Check whether resolution existed
+         *
+         * @param width Width
+         * @param height Height
+         * @return Return true if existed.
+        */
+        bool ContainResolution(const int width, const int height) const;
+
+#pragma endregion Resolution
+
+#pragma region Camera Getter
+
+        /**
+         * @brief Get camera friendly name
+         * @return Return the camera friendly name
+        */
         std::string getFriendlyName() const;
+
+        /**
+         * @brief Get the camera description
+         * @return Return camera description
+        */
         std::string getDescription() const;
+
+        /**
+         * @brief Get the camera device path. It is the camera id.
+         * @return Return the camera device path.
+        */
         std::string getDevicePath() const;
 
-        // Operator
+#pragma endregion Camera Getter
 
+#pragma region Operator
+
+        /**
+         * @brief Copy assignment operator
+         * @param cameraDevice CameraDevice
+         * @return
+        */
         WinCameraDevice& operator=(const WinCameraDevice& cameraDevice);
 
         // To string
@@ -76,6 +155,8 @@ namespace WinCamera
         friend std::ostream& operator << (std::ostream& out, const WinCameraDevice& obj) {
             return out << (std::string)obj;
         }
+
+#pragma endregion Operator
 
     private:
         std::vector<std::pair<int, int>> m_monoResolutions;
