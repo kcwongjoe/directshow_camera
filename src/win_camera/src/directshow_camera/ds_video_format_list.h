@@ -17,6 +17,14 @@ namespace DirectShowCamera
     public:
 
         /**
+        * @brief Sort and unique the video format list.
+        * @param[in, out] directShowVideoFormats Input the video format list, and sort it.
+        */
+        static void SortAndUnique(std::vector<DirectShowVideoFormat>& directShowVideoFormats);
+
+    public:
+
+        /**
         * @brief Constructer. This constructor create a emply list and you can use Update() later to update the list.
         */
         DirectShowVideoFormatList();

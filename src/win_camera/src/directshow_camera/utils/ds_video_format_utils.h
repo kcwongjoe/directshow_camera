@@ -29,7 +29,7 @@ namespace DirectShowVideoFormatUtils
 
     /**
      * @brief Return true if the media subtype is a monochrome type.
-     * @param guid Media subtype
+     * @param[in] guid Media subtype
      * @return Return true if the media subtype is a monochrome type.
     */
     bool isMonochrome(GUID guid);
@@ -42,7 +42,7 @@ namespace DirectShowVideoFormatUtils
 
     /**
      * @brief Return true if the media subtype can be converted to RGB in directshow filter
-     * @param guid Media subtype
+     * @param[in] guid Media subtype
      * @return
     */
     bool isSupportRGBConvertion(GUID guid);

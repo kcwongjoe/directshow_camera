@@ -17,37 +17,128 @@ namespace DirectShowCamera
     // Static function
     public:
 
+        /**
+        * @brief Create a DirectShowVideoFormat object from a AM_MEDIA_TYPE object
+        * 
+        * @param[in] amMediaType The AM_MEDIA_TYPE object
+        * 
+        * @return The DirectShowVideoFormat object
+        */
         static DirectShowVideoFormat Create(const AM_MEDIA_TYPE* amMediaType);
-
-        static void sortAndUnique(std::vector<DirectShowVideoFormat>* directShowVideoFormats);
 
     public:
 
         // Constuctor
-        DirectShowVideoFormat();
-        DirectShowVideoFormat(GUID mediaType, int width, int height, int bitPerPixel, int totalSize);
 
-        ~DirectShowVideoFormat();
+        /**
+         * @brief Constructor to create a empty DirectShowVideoFormat
+        */
+        DirectShowVideoFormat();
+
+        /**
+         * @brief Constructor
+         *
+         * @param[in] mediaType Media Type
+         * @param[in] width Width in pixel
+         * @param[in] height Height in pixel
+         * @param[in] bitPerPixel Bit per pixel
+         * @param[in] totalSize Total bytes
+        */
+        DirectShowVideoFormat(
+            const GUID mediaType,
+            const int width,
+            const int height,
+            const int bitPerPixel,
+            const int totalSize
+        );
 
         // Getter
+
+        /**
+         * @brief Return true if this is empty.
+         * @return Return true if this is empty.
+        */
         bool isEmpty() const;
+
+        /**
+         * @brief Return the frame width
+         * @return Return the frame width
+        */
         int getWidth() const;
+
+        /**
+         * @brief Return the frame height
+         * @return Return the frame height
+        */
         int getHeight() const;
+
+        /**
+         * @brief Return the bit per pixel
+         * @return Return the bit per pixel
+        */
         int getBitPerPixel() const;
+
+        /**
+         * @brief Return the frame size in byte
+         * @return Return the frame size in byte
+        */
         long getTotalSize() const;
+
+        /**
+         * @brief Return the video type.
+         * @return Return the video type.
+        */
         GUID getVideoType() const;
 
         // Operator
 
+        /**
+         * @brief Copy assignment operator
+         * @param[in] directShowVideoFormat DirectShowVideoFormat
+         * @return
+        */
         DirectShowVideoFormat& operator=(const DirectShowVideoFormat& directShowVideoFormat);
 
+        /**
+         * @brief Compare two video format in size, compare width first, then height, then bit per pixel
+         * @param[in] videoFormat DirectShowVideoFormat
+         * @return
+        */
         bool operator < (const DirectShowVideoFormat& videoFormat) const;
+
+        /**
+         * @brief Compare two video format in size, compare width first, then height, then bit per pixel
+         * @param[in] videoFormat DirectShowVideoFormat
+         * @return
+        */
         bool operator > (const DirectShowVideoFormat& videoFormat) const;
 
+        /**
+         * @brief Equal to operator
+         * @param[in] videoFormat DirectShowVideoFormat
+         * @return Return true if equal
+        */
         bool operator == (const DirectShowVideoFormat& videoFormat) const;
+
+        /**
+         * @brief Equal to operator
+         * @param[in] am_MediaType AM_MEDIA_TYPE
+         * @return Return true if equal
+        */
         bool operator == (const AM_MEDIA_TYPE& am_MediaType) const;
 
+        /**
+         * @brief Not equal to operator
+         * @param[in] videoFormat DirectShowVideoFormat
+         * @return Return tru if equal
+        */
         bool operator != (const DirectShowVideoFormat& videoFormat) const;
+
+        /**
+         * @brief Not equal to operator
+         * @param[in] am_MediaType AM_MEDIA_TYPE
+         * @return Return true if equal
+        */
         bool operator != (const AM_MEDIA_TYPE& am_MediaType) const;
 
         // To string

@@ -2,8 +2,6 @@
 
 #include "directshow_camera/utils/check_hresult_utils.h"
 
-#include <algorithm>
-
 namespace DirectShowCamera
 {
 
@@ -31,60 +29,15 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Sort and unique the video format list.
-     * @param[in, out] directShowVideoFormats Input the video format list, and sort it.
-    */
-    void DirectShowVideoFormat::sortAndUnique(std::vector<DirectShowVideoFormat>* directShowVideoFormats)
-    {
-        // Remove duplicates
-        std::vector<DirectShowVideoFormat> videoFormatTemp;
-        for (int i = 0; i < directShowVideoFormats->size(); i++)
-        {
-            // Check
-            bool found = false;
-            for (int j = i+1; j < directShowVideoFormats->size(); j++)
-            {
-                if (directShowVideoFormats->at(i) == directShowVideoFormats->at(j))
-                {
-                    found = true;
-                    break;
-                }
-            }
-
-            // Add to temp
-            if (!found)
-            {
-                videoFormatTemp.push_back(directShowVideoFormats->at(i));
-            }
-        }
-
-        // Sort
-        directShowVideoFormats->assign(videoFormatTemp.begin(), videoFormatTemp.end());
-        std::sort(directShowVideoFormats->begin(), directShowVideoFormats->end());
-    }
-
 #pragma endregion Static Function
 
 #pragma region constructor and destructor
 
-    /**
-     * @brief Constructor to create a empty DirectShowVideoFormat
-    */
     DirectShowVideoFormat::DirectShowVideoFormat()
     {
         m_isEmpty = true;
     }
 
-    /**
-     * @brief Constructor
-     * 
-     * @param mediaType Media Type
-     * @param width Width in pixel
-     * @param height Height in pixel
-     * @param bitPerPixel Bit per pixel
-     * @param totalSize Total bytes
-    */
     DirectShowVideoFormat::DirectShowVideoFormat(GUID mediaType, int width, int height, int bitPerPixel, int totalSize)
     {
         m_videoType = mediaType;
@@ -96,67 +49,35 @@ namespace DirectShowCamera
         m_isEmpty = false;
     }
 
-    /**
-     * @brief Destructor
-    */
-    DirectShowVideoFormat::~DirectShowVideoFormat()
-    {
-
-    }
-
 #pragma endregion constructor and destructor
 
 #pragma region Getter
 
-    /**
-     * @brief Return true if this is empty.
-     * @return Return true if this is empty. 
-    */
     bool DirectShowVideoFormat::isEmpty() const
     {
         return m_isEmpty;
     }
 
-    /**
-     * @brief Return the frame width
-     * @return Return the frame width
-    */
     int DirectShowVideoFormat::getWidth() const
     {
         return m_width;
     }
 
-    /**
-     * @brief Return the frame height
-     * @return Return the frame height
-    */
     int DirectShowVideoFormat::getHeight() const
     {
         return m_height;
     }
 
-    /**
-     * @brief Return the bit per pixel
-     * @return Return the bit per pixel
-    */
     int DirectShowVideoFormat::getBitPerPixel() const
     {
         return m_bitPerPixel;
     }
 
-    /**
-     * @brief Return the frame size in byte
-     * @return Return the frame size in byte
-    */
     long DirectShowVideoFormat::getTotalSize() const
     {
         return m_totalSize;
     }
 
-    /**
-     * @brief Return the video type.
-     * @return Return the video type.
-    */
     GUID DirectShowVideoFormat::getVideoType() const
     {
         return m_videoType;
@@ -166,11 +87,6 @@ namespace DirectShowCamera
 
 #pragma region Operator
 
-    /**
-     * @brief Copy assignment operator
-     * @param directShowVideoFormat DirectShowVideoFormat
-     * @return 
-    */
     DirectShowVideoFormat& DirectShowVideoFormat::operator=(const DirectShowVideoFormat& directShowVideoFormat)
     {
         if (this != &directShowVideoFormat)
@@ -194,11 +110,6 @@ namespace DirectShowCamera
         return *this;
     }
 
-    /**
-     * @brief Compare two video format in size, compare width first, then height, then bit per pixel
-     * @param videoFormat DirectShowVideoFormat
-     * @return 
-    */
     bool DirectShowVideoFormat::operator < (const DirectShowVideoFormat& videoFormat) const
     {
         if (m_isEmpty && videoFormat.m_isEmpty)
@@ -251,11 +162,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Compare two video format in size, compare width first, then height, then bit per pixel
-     * @param videoFormat DirectShowVideoFormat
-     * @return
-    */
     bool DirectShowVideoFormat::operator > (const DirectShowVideoFormat& videoFormat) const
     {
         if (*this == videoFormat || *this < videoFormat)
@@ -268,11 +174,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Equal to operator
-     * @param videoFormat DirectShowVideoFormat
-     * @return Return tru if equal
-    */
     bool DirectShowVideoFormat::operator == (const DirectShowVideoFormat& videoFormat) const
     {
         if (m_isEmpty && videoFormat.m_isEmpty)
@@ -296,11 +197,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Not equal to operator
-     * @param videoFormat DirectShowVideoFormat
-     * @return Return tru if equal
-    */
     bool DirectShowVideoFormat::operator != (const DirectShowVideoFormat& videoFormat) const
     {
         if (*this == videoFormat)
@@ -313,11 +209,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Equal to operator
-     * @param am_MediaType AM_MEDIA_TYPE
-     * @return Return true if equal
-    */
     bool DirectShowVideoFormat::operator == (const AM_MEDIA_TYPE& am_MediaType) const
     {
         if (m_isEmpty)
@@ -326,12 +217,9 @@ namespace DirectShowCamera
         }
         else
         {
-            // Get the width and height
-            VIDEOINFOHEADER* videoInfoHeader = reinterpret_cast<VIDEOINFOHEADER*>(am_MediaType.pbFormat);
-            int mediaTypeWidth = videoInfoHeader->bmiHeader.biWidth;
-            int mediaTypeHeight = videoInfoHeader->bmiHeader.biHeight;
+            const auto videoFormat = Create(&am_MediaType);
 
-            if (m_width == mediaTypeWidth && m_height == mediaTypeHeight && m_videoType == am_MediaType.subtype)
+            if (*this == videoFormat)
             {
                 return true;
             }
@@ -342,11 +230,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Not equal to operator
-     * @param am_MediaType AM_MEDIA_TYPE
-     * @return Return true if equal
-    */
     bool DirectShowVideoFormat::operator != (const AM_MEDIA_TYPE& am_MediaType) const
     {
         if (*this == am_MediaType)

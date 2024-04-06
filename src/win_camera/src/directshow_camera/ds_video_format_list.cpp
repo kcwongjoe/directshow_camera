@@ -3,8 +3,41 @@
 #include "directshow_camera/utils/check_hresult_utils.h"
 #include "directshow_camera/utils/ds_camera_utils.h"
 
+#include <algorithm>
+
 namespace DirectShowCamera
 {
+    void DirectShowVideoFormatList::SortAndUnique(std::vector<DirectShowVideoFormat>& directShowVideoFormats)
+    {
+
+        // Remove duplicates
+        std::vector<DirectShowVideoFormat> videoFormatTemp;
+        for (int i = 0; i < directShowVideoFormats.size(); i++)
+        {
+            // Check
+            bool found = false;
+            for (int j = i + 1; j < directShowVideoFormats.size(); j++)
+            {
+                if (directShowVideoFormats.at(i) == directShowVideoFormats.at(j))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            // Add to temp
+            if (!found)
+            {
+                videoFormatTemp.push_back(directShowVideoFormats.at(i));
+            }
+        }
+
+        // Sort
+        directShowVideoFormats.assign(videoFormatTemp.begin(), videoFormatTemp.end());
+        std::sort(directShowVideoFormats.begin(), directShowVideoFormats.end());
+    }
+
+
     DirectShowVideoFormatList::DirectShowVideoFormatList()
     {
 

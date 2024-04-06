@@ -1009,7 +1009,7 @@ namespace DirectShowCamera
                 // Sort and erase duplicates
                 if (videoFormats.size() > 0)
                 {
-                    DirectShowVideoFormat::sortAndUnique(&videoFormats);
+                    DirectShowVideoFormatList::SortAndUnique(videoFormats);
                 }
 
                 // Push into device
