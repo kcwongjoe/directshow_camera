@@ -3,9 +3,7 @@
 namespace DirectShowCamera
 {
 
-    /**
-     * @brief Constructor
-    */
+#pragma region Constructor and Destructor
     SampleGrabberCallback::SampleGrabberCallback()
     {
         // initialize buffer
@@ -13,20 +11,17 @@ namespace DirectShowCamera
         AddRef();
     }
 
-    /**
-     * @brief Destructor
-    */
     SampleGrabberCallback::~SampleGrabberCallback()
     {
         // Release buffers
         delete[] m_pixelsBuffer;
     }
 
-    /**
-     * @brief Set the buffer size.
-     * @param numOfBytes Number of bytes of a frame
-    */
-    void SampleGrabberCallback::setBufferSize(int numOfBytes)
+#pragma endregion Constructor and Destructor
+
+#pragma region Buffer Size
+
+    void SampleGrabberCallback::setBufferSize(const int numOfBytes)
     {
         // Lock all buffer
         m_bufferMutex.lock();
@@ -43,10 +38,14 @@ namespace DirectShowCamera
         m_bufferMutex.unlock();
     }
 
-    int SampleGrabberCallback::getBufferSize()
+    int SampleGrabberCallback::getBufferSize() const
     {
         return m_bufferSize;
     }
+
+#pragma endregion Buffer Size
+
+#pragma region Frame
 
     bool SampleGrabberCallback::getFrame(
         unsigned char* frame,
@@ -87,21 +86,17 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Get frame per second
-     * @return Return fps. Return 0 if 1/(current time - last frame time) < minimumFPS
-    */
-    double SampleGrabberCallback::getFPS()
+    double SampleGrabberCallback::getFPS() const
     {
         auto nowTime = std::chrono::system_clock::now();
         double timeDiff = (std::chrono::duration_cast<std::chrono::milliseconds>(nowTime - m_lastFrameTime)).count() / 1000.0;
-        if (1/ timeDiff < minimumFPS)
+        if (1/ timeDiff < m_minimumFPS)
         {
             return 0;
         }
         else
         {
-            if (m_fps < minimumFPS)
+            if (m_fps < m_minimumFPS)
             {
                 return 0;
             }
@@ -113,10 +108,29 @@ namespace DirectShowCamera
         }
     }
 
-    std::chrono::system_clock::time_point SampleGrabberCallback::getLastFrameCaptureTime()
+    std::chrono::system_clock::time_point SampleGrabberCallback::getLastFrameCaptureTime() const
     {
         return m_lastFrameTime;
     }
+
+    bool SampleGrabberCallback::setMinimumFPS(const double minimumFPS)
+    {
+        bool success = false;
+        if (minimumFPS >= 0)
+        {
+            m_minimumFPS = minimumFPS;
+            success = true;
+        }
+
+        return success;
+    }
+
+    double SampleGrabberCallback::getMinimumFPS() const
+    {
+        return m_minimumFPS;
+    }
+
+#pragma endregion Frame
 
     ULONG SampleGrabberCallback::AddRef()
     {

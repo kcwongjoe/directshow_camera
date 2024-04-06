@@ -8,32 +8,23 @@ namespace DirectShowCamera
     
 #pragma region Life cycle
 
-    /**
-     * @brief Constructor
-    */
     DirectShowCamera::DirectShowCamera()
     {
         
     }
 
-    /**
-     * @brief Desctructor
-    */
     DirectShowCamera::~DirectShowCamera()
     {
-        release();
+        Release();
     }
 
-    /**
-     * @brief Release
-    */
-    void DirectShowCamera::release()
+    void DirectShowCamera::Release()
     {
         if (this)
         {
             HRESULT hr = NOERROR;
 
-            stop();
+            Stop();
 
             // Release video format
             m_videoFormats.Clear();
@@ -90,33 +81,7 @@ namespace DirectShowCamera
 
 #pragma region Connection
 
-    /**
-     * @brief Build the directshow graph
-     * @param videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
-     * @param videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
-     * @return Return true if success
-     * 
-     * @startuml {directshow_diagram.svg} "DirectShow Camera Diagram"
-     *	skinparam linetype polyline
-     *	skinparam linetype ortho
-     *	"Capture Graph Builder" .d.>[Manage] "Filter Graph Manager"
-     *	"Filter Graph Manager" .d.>[QueryInterface] "Media Control"
-     *	note left
-     *		Use to control the camera
-     *	end note
-     *	"Filter Graph Manager" .d.>[QueryInterface] "Media Event"
-     *	note right
-     * 		Check the camera disconnection state
-     *	end note
-     * 	"Filter Graph Manager" -r->[Contain] "Filters"
-     *	partition "Filters" #00b9a0 {
-     *		"Video Input Filter" .d.> "Sample Grabber Filter"
-     *		"Sample Grabber Filter" .d.> "Null Renderer Filter"
-     *	}
-     *	"Sample Grabber Filter" -r->[Set] "SampleGrabberCallback"
-     * @enduml
-    */
-    bool DirectShowCamera::open(
+    bool DirectShowCamera::Open(
         IBaseFilter** videoInputFilter,
         std::optional<const DirectShowVideoFormat> videoFormat
     )
@@ -148,7 +113,7 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = m_filterGraphManager->QueryInterface(IID_IMediaEventEx, (void**)&m_mediaEvent);
-                if (FAILED(hr))
+                if (hr != S_OK)
                 {
                     result = false;
                     m_errorString = " Could not create media event object for device disconnection(hr = " + std::to_string(hr) + ").";
@@ -166,7 +131,7 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = m_filterGraphManager->QueryInterface(IID_IMediaControl, (void**)&m_mediaControl);
-                if (FAILED(hr))
+                if (hr != S_OK)
                 {
                     result = false;
                     m_errorString = "Could not create media control object(hr = " + std::to_string(hr) + ").";
@@ -195,7 +160,7 @@ namespace DirectShowCamera
                 if (videoFormat != std::nullopt && videoFormat.has_value())
                 {
                     // Update the video format list so that we can find the AM_Media_Type in the list.
-                    updateVideoFormatList();
+                    UpdateVideoFormatList();
 
                     // Set format
                     setVideoFormat(videoFormat.value());
@@ -226,7 +191,7 @@ namespace DirectShowCamera
             if (result)
             {
                 hr = m_grabberFilter->QueryInterface(IID_ISampleGrabber, (void**)&m_sampleGrabber);
-                if (FAILED(hr))
+                if (hr != S_OK)
                 {
                     result = false;
                     m_errorString = "Could not query Sample Grabber(hr = " + std::to_string(hr) + ").";
@@ -239,7 +204,7 @@ namespace DirectShowCamera
                 m_sampleGrabber->SetOneShot(FALSE);
                 m_sampleGrabber->SetBufferSamples(FALSE);
                 hr = m_sampleGrabber->SetCallback(m_sampleGrabberCallback, 0);// 0 is for SampleCB and 1 for BufferCB
-                if (FAILED(hr))
+                if (hr != S_OK)
                 {
                     result = false;
                     m_errorString = "Could not set sample grabber callback function(hr = " + std::to_string(hr) + ").";
@@ -249,7 +214,7 @@ namespace DirectShowCamera
             // Set grabber filter media type
             if (result)
             {
-                updateGrabberFilterVideoFormat();
+                UpdateGrabberFilterVideoFormat();
             }
 
             // Create a null renderer filter to discard the samples after you are done with them.
@@ -311,41 +276,30 @@ namespace DirectShowCamera
                 m_property = std::make_shared<DirectShowCameraProperties>(m_videoInputFilter, m_errorString);
 
                 // Update video format
-                updateVideoFormatList();
-                updateVideoFormatIndex();
+                UpdateVideoFormatList();
+                UpdateVideoFormatIndex();
             }
             else
             {
                 // Release everything if error
-                release();
+                Release();
             }
         }
 
         return result;
     }
 
-    /**
-     * @brief Close
-    */
-    void DirectShowCamera::close()
+    void DirectShowCamera::Close()
     {
-        release();
+        Release();
     }
 
-    /**
-     * @brief Return true if camera was opened
-     * @return Return true if camera was opened
-    */
     bool DirectShowCamera::isOpening() const
     {
         return m_isOpening;
     }
 
-    /**
-     * @brief It can be check camera whether disconnected accidently. 
-     * @return Return true if camera disconnected.
-    */
-    bool DirectShowCamera::checkDisconnection()
+    bool DirectShowCamera::isDisconnecting()
     {
         // Device doesn't started
         if (!m_isOpening) return true;
@@ -373,21 +327,14 @@ namespace DirectShowCamera
         return disconnected;
     }
 
-    /**
-     * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run and then run stop() internally.
-     * @param func void()
-    */
     void DirectShowCamera::setDisconnectionProcess(std::function<void()> func)
     {
         m_disconnectionProcess = func;
 
-        startCheckConnectionThread();
+        StartCheckConnectionThread();
     }
 
-    /**
-     * @brief Start a thread to check the device connection
-    */
-    void DirectShowCamera::startCheckConnectionThread()
+    void DirectShowCamera::StartCheckConnectionThread()
     {
         if (m_isCapturing && m_disconnectionProcess)
         {
@@ -418,7 +365,7 @@ namespace DirectShowCamera
                             // Check disconnection
                             if (timeDiff > 10000 || fps == 0 || timeDiff >= fpsInTime * 2)
                             {
-                                bool disconnected = checkDisconnection();
+                                bool disconnected = isDisconnecting();
 
                                 if (disconnected)
                                 {
@@ -426,7 +373,7 @@ namespace DirectShowCamera
                                     m_disconnectionProcess();
 
                                     // Stop capture
-                                    stop();
+                                    Stop();
 
                                     m_stopCheckConnectionThread = true;
                                 }
@@ -446,22 +393,18 @@ namespace DirectShowCamera
 
 #pragma region start/stop
 
-    /**
-     * @brief Start capture
-     * @return Return true if success
-    */
-    bool DirectShowCamera::start()
+    bool DirectShowCamera::Start()
     {
         bool result = true;
 
         if (m_isOpening)
         {
             // Set callback buffer
-            updateGrabberFilterVideoFormat();
+            UpdateGrabberFilterVideoFormat();
 
             // Run
             HRESULT hr = m_mediaControl->Run();
-            if (FAILED(hr))
+            if (hr != S_OK)
             {
                 result = false;
                 m_errorString = "Could not start the graph (hr = " + std::to_string(hr) + ").";
@@ -469,7 +412,7 @@ namespace DirectShowCamera
             m_isCapturing = true;
 
             // Start check disconnection thread
-            startCheckConnectionThread();
+            StartCheckConnectionThread();
         }
         else
         {
@@ -480,11 +423,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Stop Capture
-     * @return Return true if success
-    */
-    bool DirectShowCamera::stop()
+    bool DirectShowCamera::Stop()
     {
         HRESULT hr = NOERROR;
         bool result = true;
@@ -499,7 +438,7 @@ namespace DirectShowCamera
                     if (result)
                     {
                         hr = m_mediaControl->Pause();
-                        if (FAILED(hr))
+                        if (hr != S_OK)
                         {
                             result = false;
                             m_errorString = " Could not pause media contol.(hr = " + std::to_string(hr) + ").";
@@ -510,7 +449,7 @@ namespace DirectShowCamera
                     if (result)
                     {
                         hr = m_mediaControl->Stop();
-                        if (FAILED(hr))
+                        if (hr != S_OK)
                         {
                             result = false;
                             m_errorString = " Could not stop media contol.(hr = " + std::to_string(hr) + ").";
@@ -534,10 +473,6 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Return true if camera is capturing
-     * @return Return true if camera is capturing 
-    */
     bool DirectShowCamera::isCapturing() const
     {
         return m_isCapturing;
@@ -568,23 +503,21 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Minimum FPS. FPS below this value will be identified as 0. Default as 0.5
-     * @param minimumFPS 
-    */
-    void DirectShowCamera::setMinimumPFS(double minimumFPS)
+    void DirectShowCamera::setMinimumFPS(const double minimumFPS)
     {
         if (m_sampleGrabberCallback)
         {
-            if (minimumFPS < 0) minimumFPS = 0;
-            m_sampleGrabberCallback->minimumFPS = minimumFPS;
+            if (minimumFPS < 0)
+            {
+                m_sampleGrabberCallback->setMinimumFPS(0);
+            }
+            else
+            {
+                m_sampleGrabberCallback->setMinimumFPS(minimumFPS);
+            }
         }
     }
 
-    /**
-     * @brief Get Frame per second.
-     * @return Return fps.
-    */
     double DirectShowCamera::getFPS() const
     {
         if (isOpening())
@@ -597,10 +530,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get frame size in bytes.
-     * @return 
-    */
     long DirectShowCamera::getFrameTotalSize() const
     {
 
@@ -615,10 +544,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get frame type. Such as MEDIASUBTYPE_RGB24
-     * @return 
-    */
     GUID DirectShowCamera::getFrameType() const
     {
         return m_grabberMediaSubType;
@@ -628,12 +553,9 @@ namespace DirectShowCamera
 
 #pragma region Video Format
 
-    /**
-     * @brief Update teh grabber filter buffer size and the media type.
-    */
-    void DirectShowCamera::updateGrabberFilterVideoFormat()
+    void DirectShowCamera::UpdateGrabberFilterVideoFormat()
     {
-        if (m_sampleGrabber)
+        if (m_sampleGrabber != nullptr && m_sampleGrabber != NULL)
         {
             // Get frame size
             int frameTotalSize = 0;
@@ -647,6 +569,7 @@ namespace DirectShowCamera
 
                     if (DirectShowVideoFormatUtils::isSupportRGBConvertion(mediaType->subtype))
                     {
+                        // Todo: change it to other format
                         // Transform to RGB in the grabber filter
                         frameTotalSize = width * height * 3;
                         mediaSubType = MEDIASUBTYPE_RGB24;
@@ -694,10 +617,7 @@ namespace DirectShowCamera
         }	
     }
 
-    /**
-     * @brief Update video formats
-    */
-    bool DirectShowCamera::updateVideoFormatList()
+    bool DirectShowCamera::UpdateVideoFormatList()
     {
         bool result = false;
         if (m_streamConfig != NULL)
@@ -712,10 +632,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Update the current video foramt index from Steam Config
-    */
-    void DirectShowCamera::updateVideoFormatIndex()
+    void DirectShowCamera::UpdateVideoFormatIndex()
     {
         if (m_videoFormats.Size() > 0)
         {
@@ -733,12 +650,7 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get index from the Video Format list
-     * @param mediaType 
-     * @return Return -1 if not found
-    */
-    int DirectShowCamera::getVideoFormatIndex(AM_MEDIA_TYPE* mediaType) const
+    int DirectShowCamera::getVideoFormatIndex(const AM_MEDIA_TYPE* mediaType) const
     {
         int result = -1;
         for (int i = 0; i < m_videoFormats.Size(); i++)
@@ -753,11 +665,6 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Get index from the Video Format list
-     * @param videoFormat 
-     * @return Return -1 if not found
-    */
     int DirectShowCamera::getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const
     {
         int result = -1;
@@ -773,19 +680,11 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Get current video format index.
-     * @return 
-    */
     int DirectShowCamera::getCurrentVideoFormatIndex() const
     {
         return m_currentVideoFormatIndex;
     }
 
-    /**
-     * @brief Get current video format
-     * @return 
-    */
     DirectShowVideoFormat DirectShowCamera::getCurrentVideoFormat() const
     {
         if (m_currentVideoFormatIndex >= 0)
@@ -799,34 +698,27 @@ namespace DirectShowCamera
         
     }
 
-    /**
-    * @brief Get current grabber format
-    * @return
-    */
     DirectShowVideoFormat DirectShowCamera::getCurrentGrabberFormat() const
     {
         return m_sampleGrabberVideoFormat;
     }
 
-    /**
-     * @brief Get current video format list of this opened camera.
-     * @return 
-    */
     std::vector<DirectShowVideoFormat> DirectShowCamera::getVideoFormatList() const
     {
         return m_videoFormats.getVideoFormatList();
     }
 
-    /**
-     * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opened camera.
-     * @param videoFormat Video format to be set
-     * @return Return true if success.
-    */
-    bool DirectShowCamera::setVideoFormat(DirectShowVideoFormat videoFormat)
+    bool DirectShowCamera::setVideoFormat(const DirectShowVideoFormat videoFormat)
     {
         bool result = false;
-        updateVideoFormatList();
+
+        // Update video format list
+        UpdateVideoFormatList();
+
+        // Get current video format index
         int index = getVideoFormatIndex(videoFormat);
+
+        // Set video format
         if (index >= 0)
         {
             result = setVideoFormat(index);
@@ -835,12 +727,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opening camera.
-     * @param videoFormatIndex Index of the video foramt list.
-     * @return Return true if success.
-    */
-    bool DirectShowCamera::setVideoFormat(int videoFormatIndex)
+    bool DirectShowCamera::setVideoFormat(const int videoFormatIndex)
     {
         bool result = true;
         HRESULT hr = NO_ERROR;
@@ -849,11 +736,13 @@ namespace DirectShowCamera
         {
             if (m_streamConfig == NULL)
             {
+                // Error, not initialized
                 result = false;
                 m_errorString = "Graph is not initialized, please call initialize().";
             }
             else if (videoFormatIndex < 0 || videoFormatIndex >= m_videoFormats.Size())
             {
+                // Error, index is out of range
                 result = false;
                 m_errorString = "Video format index("+ std::to_string(videoFormatIndex) +") is out of range(0," + std::to_string(m_videoFormats.Size()) + ").";
             }
@@ -865,7 +754,10 @@ namespace DirectShowCamera
 
                 if (result)
                 {
-                    updateGrabberFilterVideoFormat();
+                    // Update current video format
+                    UpdateGrabberFilterVideoFormat();
+
+                    // Update current video format index
                     m_currentVideoFormatIndex = videoFormatIndex;
                 }
             }
@@ -878,10 +770,7 @@ namespace DirectShowCamera
 
 #pragma region Properties
 
-    /**
-     * @brief Refresh properties
-     */
-    void DirectShowCamera::refreshProperties()
+    void DirectShowCamera::RefreshProperties()
     {
         if (m_isOpening && m_property != nullptr)
         {
@@ -889,21 +778,12 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get properties
-     * @return Return properties
-    */
     std::shared_ptr<DirectShowCameraProperties> DirectShowCamera::getProperties() const
     {
         return m_property;
     }
 
-    /**
-     * @brief Reset properties to default
-     * 
-     * @param[in] asAuto (Option) Set as true if you also want to set properties to auto. Default as true.
-     */
-    void DirectShowCamera::resetDefault(bool asAuto)
+    void DirectShowCamera::ResetPropertiesToDefault(const bool asAuto)
     {
         if (m_videoInputFilter != NULL && m_property != nullptr)
         {
@@ -911,15 +791,8 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Set property value
-     * @param property Property
-     * @param value Value to be set
-     * @param isAuto Set as true for auto mode, false for manual mode
-     * @return Return true if success
-    */
-    bool DirectShowCamera::setValue(
-        const std::shared_ptr<DirectShowCameraProperty>& property,
+    bool DirectShowCamera::setPropertyValue(
+        std::shared_ptr<DirectShowCameraProperty>& property,
         const long value,
         const bool isAuto
     )
@@ -939,11 +812,6 @@ namespace DirectShowCamera
 
 #pragma region getCamera
 
-    /**
-     * @brief Get the available camera list
-     * @param[out] cameraDevices Camera Devices.
-     * @return Return true if success
-    */
     bool DirectShowCamera::getCameras(std::vector<DirectShowCameraDevice>* cameraDevices)
     {
         // Initialize and clear
@@ -1021,13 +889,7 @@ namespace DirectShowCamera
         return success;
     }
 
-    /**
-     * @brief Get the video input filter based on the camera index 
-     * @param[in] cameraIndex Camera index
-     * @param[out] videoInputFilter Output video input filter
-     * @return Return true if success.
-    */
-    bool DirectShowCamera::getCamera(int cameraIndex, IBaseFilter** videoInputFilter)
+    bool DirectShowCamera::getCamera(const int cameraIndex, IBaseFilter** videoInputFilter)
     {
         int count = 0;
         bool found = false;
@@ -1054,13 +916,7 @@ namespace DirectShowCamera
         return success && found;
     }
 
-    /**
-     * @brief Get the video input filter based on the Camera device path
-     * @param[in] devicePath Camera device path
-     * @param[out] videoInputFilter Output video input filter
-     * @return Return true if success.
-    */
-    bool DirectShowCamera::getCamera(std::string devicePath, IBaseFilter** videoInputFilter)
+    bool DirectShowCamera::getCamera(const std::string devicePath, IBaseFilter** videoInputFilter)
     {
         bool found = false;
         bool success = DirectShowCameraUtils::IPropertyDecorator(
@@ -1097,13 +953,7 @@ namespace DirectShowCamera
         return success && found;
     }
 
-    /**
-     * @brief Get the video input filter based on the Camera device object 
-     * @param[in] device Camera device
-     * @param[out] videoInputFilter Output video input filter
-     * @return Return true if success.
-    */
-    bool DirectShowCamera::getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
+    bool DirectShowCamera::getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
     {
         // try to match via device path first, fallback to friendly name
         bool found = getCamera(device.getDevicePath(), videoInputFilter);
@@ -1143,10 +993,6 @@ namespace DirectShowCamera
 
 #pragma endregion getCamera
 
-    /**
-     * @brief Get the last error
-     * @return Return the last error
-    */
     std::string DirectShowCamera::getLastError() const
     {
         return m_errorString;

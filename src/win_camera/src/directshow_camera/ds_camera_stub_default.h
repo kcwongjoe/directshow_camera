@@ -63,7 +63,7 @@ namespace DirectShowCamera
 
         /**
          * @brief Get Video formats
-         * @param videoFormats 
+         * @return Video formats
         */
         static std::vector<DirectShowVideoFormat> getVideoFormat()
         {

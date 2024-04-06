@@ -20,12 +20,37 @@ namespace DirectShowCamera
     {
     public:
 
+#pragma region Constructor and Destructor
+        /**
+         * @brief Constructor
+        */
         SampleGrabberCallback();
+
+        /**
+         * @brief Destructor
+        */
         ~SampleGrabberCallback();
 
-        // Buffer size
-        void setBufferSize(int numOfBytes);
-        int getBufferSize();
+#pragma endregion Constructor and Destructor
+
+#pragma region Buffer Size
+
+        /**
+         * @brief Set the buffer size.
+         * @paraml[in] numOfBytes Number of bytes of a frame
+        */
+        void setBufferSize(const int numOfBytes);
+
+        /**
+        * @brief Get the buffer size.
+        * 
+        * @return The buffer size
+        */
+        int getBufferSize() const;
+
+#pragma endregion Buffer Size
+
+#pragma region Frame
 
         /**
          * @brief Get the current frame
@@ -43,13 +68,35 @@ namespace DirectShowCamera
             const bool copyNewFrameOnly = false,
             const unsigned long previousFrameIndex = 0
         );
-        double getFPS();
-        std::chrono::system_clock::time_point getLastFrameCaptureTime();
 
         /**
-            * @brief Minimum FPS. FPS below this value will be identified as 0.
+         * @brief Get frame per second
+         * @return Return fps. Return 0 if 1/(current time - last frame time) < MinimumFPS
         */
-        double minimumFPS = 0.5;
+        double getFPS() const;
+
+        /**
+        * @brief Get the last frame capture time
+        * @return Return the last frame capture time
+        */
+        std::chrono::system_clock::time_point getLastFrameCaptureTime() const;
+
+        /**
+        * @brief Set the minimum FPS. FPS below this value will be identified as 0.
+        * 
+        * @param[in] minimumFPS Minimum FPS. FPS below this value will be identified as 0.
+        * @return Return true if the minimum FPS is set successfully.
+        */
+        bool setMinimumFPS(const double minimumFPS);
+
+        /**
+        * @brief Get the minimum FPS. FPS below this value will be identified as 0.
+        * 
+        * @return Return the minimum FPS. FPS below this value will be identified as 0.
+        */
+        double getMinimumFPS() const;
+
+#pragma endregion Frame
 
         //------------------------------------------------
         STDMETHODIMP_(ULONG) AddRef();
@@ -92,6 +139,8 @@ namespace DirectShowCamera
 
         std::chrono::system_clock::time_point m_lastFrameTime;
         double m_fps = 0;
+
+        double m_minimumFPS = 0.5;
 
         /**
         * @brief Current reference count. If it reaches 0 we delete ourself

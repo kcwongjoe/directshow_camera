@@ -121,7 +121,7 @@ void eg6_stub()
 #ifdef USE_STUB
     // ******Disconnect process******
     std::cout << "The fake camera is disconnected accidently now..." << std::endl;
-    cameraStub->disconnetCamera();
+    cameraStub->DisconnetCamera();
 
     // Wait for 2 second
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));

@@ -5,32 +5,23 @@ namespace DirectShowCamera
 
 #pragma region Life cycle
 
-    /**
-     * @brief Constructor
-    */
     DirectShowCameraStub::DirectShowCameraStub()
     {
         m_fps = DirectShowCameraStubDefaultSetting::getFps();
     }
 
-    /**
-     * @brief Desctructor
-    */
     DirectShowCameraStub::~DirectShowCameraStub()
     {
-        release();
+        Release();
     }
 
-    /**
-     * @brief Release
-    */
-    void DirectShowCameraStub::release()
+    void DirectShowCameraStub::Release()
     {
         if (this)
         {
             HRESULT hr = NOERROR;
             
-            stop();
+            Stop();
 
             // Release video format
             m_videoFormats.Clear();
@@ -47,13 +38,7 @@ namespace DirectShowCamera
 
 #pragma region Connection
 
-    /**
-     * @brief Build the directshow graph
-     * @param videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
-     * @param[in] videoFormat Video Format. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
-     * @return Return true if success
-    */
-    bool DirectShowCameraStub::open(
+    bool DirectShowCameraStub::Open(
         IBaseFilter** videoInputFilter,
         std::optional<const DirectShowVideoFormat> videoFormat
     )
@@ -64,7 +49,7 @@ namespace DirectShowCamera
         DirectShowCameraStubDefaultSetting::getProperties(m_properties);
 
         // Update video format
-        updateVideoFormatList();
+        UpdateVideoFormatList();
         if (videoFormat != std::nullopt && videoFormat.has_value()) {
             m_currentVideoFormatIndex = getVideoFormatIndex(videoFormat.value());
         }
@@ -76,28 +61,17 @@ namespace DirectShowCamera
         return true;
     }
 
-    /**
-     * @brief Close
-    */
-    void DirectShowCameraStub::close()
+    void DirectShowCameraStub::Close()
     {
-        release();
+        Release();
     }
 
-    /**
-     * @brief Return true if camera was opened
-     * @return Return true if camera was opened
-    */
     bool DirectShowCameraStub::isOpening() const
     {
         return m_isOpening;
     }
 
-    /**
-     * @brief It can be check camera whether disconnected accidently.
-     * @return Return true if camera disconnected.
-    */
-    bool DirectShowCameraStub::checkDisconnection()
+    bool DirectShowCameraStub::isDisconnecting()
     {
         // Device doesn't started
         if (!m_isOpening) return true;
@@ -105,21 +79,14 @@ namespace DirectShowCamera
         return m_disconnectCamera;
     }
 
-    /**
-     * @brief Set the disconnection process. When the process was set, a thread will start to keep check the connection. If camera is disconnected, this process will run and then run stop() internally.
-     * @param func void()
-    */
     void DirectShowCameraStub::setDisconnectionProcess(std::function<void()> func)
     {
         m_disconnectionProcess = func;
 
-        startCheckConnectionThread();
+        StartCheckConnectionThread();
     }
 
-    /**
-     * @brief Start a thread to check the device connection
-    */
-    void DirectShowCameraStub::startCheckConnectionThread()
+    void DirectShowCameraStub::StartCheckConnectionThread()
     {
         if (m_isCapturing && m_disconnectionProcess)
         {
@@ -142,7 +109,7 @@ namespace DirectShowCamera
                             std::this_thread::sleep_for(std::chrono::milliseconds(step));
 
                             // Check disconnection
-                            if (checkDisconnection())
+                            if (isDisconnecting())
                             {
                                 m_disconnectCamera = false;
 
@@ -150,7 +117,7 @@ namespace DirectShowCamera
                                 m_disconnectionProcess();
 
                                 // Stop capture
-                                stop();
+                                Stop();
 
                                 m_stopCheckConnectionThread = true;
                             }
@@ -165,10 +132,7 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Disconnect camera. It is used to simulate a camera disconnection for testing DisconnectionProcess.
-    */
-    void DirectShowCameraStub::disconnetCamera()
+    void DirectShowCameraStub::DisconnetCamera()
     {
         m_disconnectCamera = true;
     }
@@ -177,11 +141,7 @@ namespace DirectShowCamera
 
 #pragma region start/stop
 
-    /**
-     * @brief Start capture
-     * @return Return true if success
-    */
-    bool DirectShowCameraStub::start()
+    bool DirectShowCameraStub::Start()
     {
         bool result = true;
 
@@ -190,7 +150,7 @@ namespace DirectShowCamera
             m_isCapturing = true;
 
             // Start check disconnection thread
-            startCheckConnectionThread();
+            StartCheckConnectionThread();
         }
         else
         {
@@ -201,11 +161,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Stop Capture
-     * @return Return true if success
-    */
-    bool DirectShowCameraStub::stop()
+    bool DirectShowCameraStub::Stop()
     {
         HRESULT hr = NOERROR;
         bool result = true;
@@ -233,10 +189,6 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Return true if camera is capturing
-     * @return Return true if camera is capturing
-    */
     bool DirectShowCameraStub::isCapturing() const
     {
         return m_isCapturing;
@@ -287,20 +239,18 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Minimum FPS. FPS below this value will be identified as 0. Default as 0.5
-     * @param minimumFPS
-    */
-    void DirectShowCameraStub::setMinimumPFS(double minimumFPS)
+    void DirectShowCameraStub::setMinimumFPS(const double minimumFPS)
     {
-        if (minimumFPS < 0) minimumFPS = 0;
-        m_fps = minimumFPS;
+        if (minimumFPS < 0)
+        {
+            m_fps = 0;
+        }
+        else
+        {
+            m_fps = minimumFPS;
+        }
     }
 
-    /**
-     * @brief Get Frame per second.
-     * @return Return fps.
-    */
     double DirectShowCameraStub::getFPS() const
     {
         if (isOpening())
@@ -313,10 +263,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get frame size in bytes.
-     * @return
-    */
     long DirectShowCameraStub::getFrameTotalSize() const
     {
 
@@ -333,10 +279,6 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Get frame type. Such as MEDIASUBTYPE_RGB24
-     * @return
-    */
     GUID DirectShowCameraStub::getFrameType() const
     {
         return MEDIASUBTYPE_RGB24;
@@ -346,10 +288,7 @@ namespace DirectShowCamera
 
 #pragma region Video Format
 
-    /**
-     * @brief Update video formats
-    */
-    bool DirectShowCameraStub::updateVideoFormatList()
+    bool DirectShowCameraStub::UpdateVideoFormatList()
     {
         // Create video format
         const auto videoFormat = DirectShowCameraStubDefaultSetting::getVideoFormat();
@@ -358,11 +297,6 @@ namespace DirectShowCamera
         return true;
     }
 
-    /**
-     * @brief Get index from the Video Format list
-     * @param videoFormat
-     * @return Return -1 if not found
-    */
     int DirectShowCameraStub::getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const
     {
         int result = -1;
@@ -378,19 +312,11 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Get current video format index.
-     * @return
-    */
     int DirectShowCameraStub::getCurrentVideoFormatIndex() const
     {
         return m_currentVideoFormatIndex;
     }
 
-    /**
-     * @brief Get current video format
-     * @return
-    */
     DirectShowVideoFormat DirectShowCameraStub::getCurrentVideoFormat() const
     {
         if (m_currentVideoFormatIndex >= 0)
@@ -404,33 +330,20 @@ namespace DirectShowCamera
 
     }
 
-    /**
-     * @brief Get current grabber format
-     * @return
-    */
     DirectShowVideoFormat DirectShowCameraStub::getCurrentGrabberFormat() const
     {
         return getCurrentVideoFormat();
     }
 
-    /**
-     * @brief Get current video format list of this opened camera.
-     * @return
-    */ 
     std::vector<DirectShowVideoFormat> DirectShowCameraStub::getVideoFormatList() const
     {
         return m_videoFormats.getVideoFormatList();
     }
 
-    /**
-     * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opened camera.
-     * @param videoFormat Video format to be set
-     * @return Return true if success.
-    */
     bool DirectShowCameraStub::setVideoFormat(const DirectShowVideoFormat videoFormat)
     {
         bool result = false;
-        updateVideoFormatList();
+        UpdateVideoFormatList();
         int index = getVideoFormatIndex(videoFormat);
         if (index >= 0)
         {
@@ -440,15 +353,9 @@ namespace DirectShowCamera
         return result;
     }
 
-    /**
-     * @brief Set video format. It is suggested to set video format in the open(). It may not succes to change the video format after opening camera.
-     * @param videoFormatIndex Index of the video foramt list.
-     * @return Return true if success.
-    */
-    bool DirectShowCameraStub::setVideoFormat(int videoFormatIndex)
+    bool DirectShowCameraStub::setVideoFormat(const int videoFormatIndex)
     {
         bool result = true;
-        HRESULT hr = NO_ERROR;
 
         if (result)
         {
@@ -476,29 +383,17 @@ namespace DirectShowCamera
 
 #pragma region Properties
 
-    /**
-     * @brief Refresh properties
-     */
-    void DirectShowCameraStub::refreshProperties()
+    void DirectShowCameraStub::RefreshProperties()
     {
         
     }
 
-    /**
-     * @brief Get properties
-     * @return Return properties
-    */
     std::shared_ptr<DirectShowCameraProperties> DirectShowCameraStub::getProperties() const
     {
         return m_properties;
     }
 
-    /**
-     * @brief Reset properties to default
-     *
-     * @param[in] asAuto (Option) Set as true if you also want to set properties to auto. Default as true.
-     */
-    void DirectShowCameraStub::resetDefault(bool asAuto)
+    void DirectShowCameraStub::ResetPropertiesToDefault(const bool asAuto)
     {
         if (m_isOpening && m_properties != nullptr)
         {
@@ -506,15 +401,8 @@ namespace DirectShowCamera
         }
     }
 
-    /**
-     * @brief Set property value
-     * @param property Property
-     * @param value Value to be set
-     * @param isAuto Set as true for auto mode, false for manual mode
-     * @return Return true if success
-    */
-    bool DirectShowCameraStub::setValue(
-        const std::shared_ptr<DirectShowCameraProperty>& property,
+    bool DirectShowCameraStub::setPropertyValue(
+        std::shared_ptr<DirectShowCameraProperty>& property,
         const long value,
         const bool isAuto
     )
@@ -534,58 +422,31 @@ namespace DirectShowCamera
 
 #pragma region getCamera
 
-    /**
-     * @brief Get the available camera list
-     * @param[out] cameraDevices Camera Devices.
-     * @return Return true if success
-    */
     bool DirectShowCameraStub::getCameras(std::vector<DirectShowCameraDevice>* cameraDevices)
     {
         DirectShowCameraStubDefaultSetting::getCamera(cameraDevices);
         return true;
     }
 
-    /**
-     * @brief Get the video input filter based on the camera index
-     * @param[in] cameraIndex Camera index
-     * @param[out] videoInputFilter Output video input filter
-     * @return Return true if success.
-    */
-    bool DirectShowCameraStub::getCamera(int cameraIndex, IBaseFilter** videoInputFilter)
+    bool DirectShowCameraStub::getCamera(const int cameraIndex, IBaseFilter** videoInputFilter)
     {
         *videoInputFilter = NULL;
         return true;
     }
 
-    /**
-     * @brief Get the video input filter based on the Camera device path
-     * @param[in] devicePath Camera device path
-     * @param[out] videoInputFilter Output video input filter
-     * @return Return true if success.
-    */
-    bool DirectShowCameraStub::getCamera(std::string devicePath, IBaseFilter** videoInputFilter)
+    bool DirectShowCameraStub::getCamera(const std::string devicePath, IBaseFilter** videoInputFilter)
     {
         *videoInputFilter = NULL;
         return true;
     }
 
-    /**
-     * @brief Get the video input filter based on the Camera device object
-     * @param[in] device Camera device
-     * @param[out] videoInputFilter Output video input filter
-     * @return Return true if success.
-    */
-    bool DirectShowCameraStub::getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
+    bool DirectShowCameraStub::getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
     {
         return getCamera(device.getDevicePath(), videoInputFilter);
     }
 
 #pragma endregion getCamera
 
-    /**
-     * @brief Get the last error
-     * @return Return the last error
-    */
     std::string DirectShowCameraStub::getLastError() const
     {
         return m_errorString;

@@ -184,7 +184,7 @@ namespace WinCamera
         bool result = false;
 
         // Initialize camera
-        result = m_directShowCamera->open(videoInputFilter, videoFormat);
+        result = m_directShowCamera->Open(videoInputFilter, videoFormat);
 
     #ifdef WITH_OPENCV2
         if (result)
@@ -218,7 +218,7 @@ namespace WinCamera
 
             if (this && result && isOpened())
             {
-                m_directShowCamera->close();
+                m_directShowCamera->Close();
             }
         }
 
@@ -228,7 +228,7 @@ namespace WinCamera
 
     bool WinCamera::CheckDisconnection()
     {
-        return m_directShowCamera->checkDisconnection();
+        return m_directShowCamera->isDisconnecting();
     }
 
     void WinCamera::setDisconnectionProcess(std::function<void()> func)
@@ -244,7 +244,7 @@ namespace WinCamera
     {
         if (m_directShowCamera->isOpening())
         {
-            bool success = m_directShowCamera->start();
+            bool success = m_directShowCamera->Start();
 
             copyError(success);
 
@@ -261,7 +261,7 @@ namespace WinCamera
     {
         if (m_directShowCamera->isOpening())
         {
-            bool success = m_directShowCamera->stop();
+            bool success = m_directShowCamera->Stop();
 
             copyError(success);
 
@@ -293,7 +293,7 @@ namespace WinCamera
 
     void WinCamera::ResetProperties(const bool asAuto)
     {
-        m_directShowCamera->resetDefault(asAuto);
+        m_directShowCamera->ResetPropertiesToDefault(asAuto);
     }
 
     std::shared_ptr<DirectShowCamera::DirectShowCameraProperties> WinCamera::getDirectShowProperties() const
@@ -458,7 +458,7 @@ namespace WinCamera
             bool requireStart = m_directShowCamera->isCapturing();
 
             // Stop capturing
-            m_directShowCamera->stop();
+            m_directShowCamera->Stop();
 
             // Set resolution
             bool result = m_directShowCamera->setVideoFormat(videoFormat);
@@ -473,7 +473,7 @@ namespace WinCamera
             // Restart capturing
             if (requireStart)
             {
-                m_directShowCamera->start();
+                m_directShowCamera->Start();
             }
 
             return result;

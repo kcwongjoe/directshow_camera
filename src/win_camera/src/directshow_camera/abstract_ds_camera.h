@@ -20,19 +20,19 @@ namespace DirectShowCamera
     public:
         virtual ~AbstractDirectShowCamera() { }
 
-        virtual void release() = 0;
+        virtual void Release() = 0;
 
-        virtual bool open(
+        virtual bool Open(
             IBaseFilter** videoInputFilter,
             std::optional<const DirectShowVideoFormat> videoFormat = std::nullopt
         ) = 0;
-        virtual void close() = 0;
+        virtual void Close() = 0;
         virtual bool isOpening() const = 0;
-        virtual bool checkDisconnection() = 0;
+        virtual bool isDisconnecting() = 0;
         virtual void setDisconnectionProcess(std::function<void()> func) = 0;
 
-        virtual bool start() = 0;
-        virtual bool stop() = 0;
+        virtual bool Start() = 0;
+        virtual bool Stop() = 0;
         virtual bool isCapturing() const = 0;
 
         virtual bool getFrame
@@ -43,7 +43,7 @@ namespace DirectShowCamera
             const bool copyNewFrameOnly,
             const unsigned long previousFrameIndex
         ) = 0;
-        virtual void setMinimumPFS(double minimumFPS) = 0;
+        virtual void setMinimumFPS(const double minimumFPS) = 0;
         virtual double getFPS() const = 0;
         virtual long getFrameTotalSize() const = 0;
         virtual GUID getFrameType() const = 0;
@@ -58,21 +58,21 @@ namespace DirectShowCamera
         virtual bool setVideoFormat(const int videoFormatIndex) = 0;
 
         // Property
-        virtual void refreshProperties() = 0;
+        virtual void RefreshProperties() = 0;
         virtual std::shared_ptr<DirectShowCameraProperties> getProperties() const = 0;
 
-        virtual void resetDefault(bool asAuto = true) = 0;
-        virtual bool setValue(
-            const std::shared_ptr<DirectShowCameraProperty>& property,
+        virtual void ResetPropertiesToDefault(const bool asAuto = true) = 0;
+        virtual bool setPropertyValue(
+            std::shared_ptr<DirectShowCameraProperty>& property,
             const long value,
             const bool isAuto
         ) = 0;
 
         // Get camera
         virtual bool getCameras(std::vector<DirectShowCameraDevice>* cameraDevices) = 0;
-        virtual bool getCamera(int cameraIndex, IBaseFilter** videoInputFilter) = 0;
-        virtual bool getCamera(std::string devicePath, IBaseFilter** videoInputFilter) = 0;
-        virtual bool getCamera(DirectShowCameraDevice device, IBaseFilter** videoInputFilter) = 0;
+        virtual bool getCamera(const int cameraIndex, IBaseFilter** videoInputFilter) = 0;
+        virtual bool getCamera(const std::string devicePath, IBaseFilter** videoInputFilter) = 0;
+        virtual bool getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter) = 0;
 
         virtual std::string getLastError() const = 0;
     };
