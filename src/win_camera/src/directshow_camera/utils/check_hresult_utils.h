@@ -4,7 +4,6 @@
 
 //************Content************
 #include <winerror.h>
-#include <vfwmsgs.h>
 
 namespace DirectShowCamera
 {

@@ -7,7 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "directshow_camera/ds_video_format.h"
+#include <guiddef.h>
 
 namespace WinCamera
 {
@@ -32,7 +32,7 @@ namespace WinCamera
         */
         bool isVerticalFlip = true;
 
-        GUID videoType = MEDIASUBTYPE_None;
+        GUID videoType;
             
         cv::Mat convert(unsigned char* data, int width, int height);
 

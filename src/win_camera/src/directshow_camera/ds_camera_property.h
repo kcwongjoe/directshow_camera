@@ -55,7 +55,7 @@ namespace DirectShowCamera
             // get range
             hr = cameraControl->GetRange(getDSEnum(), &min, &max, &step, &defaultValue, &availableCapsFlag);
 
-            if (SUCCEEDED(hr))
+            if (hr == S_OK)
             {
                 m_supportAuto = capsFlagIsAuto(availableCapsFlag);
                 m_supportManual = capsFlagIsManual(availableCapsFlag);
@@ -96,7 +96,7 @@ namespace DirectShowCamera
             long capsFlag;
             hr = cameraControl->Get(getDSEnum(), &value, &capsFlag);
 
-            if (SUCCEEDED(hr))
+            if (hr == S_OK)
             {
                 // Set current value
                 m_value = value;
@@ -214,7 +214,7 @@ namespace DirectShowCamera
 
             // Set
             HRESULT hr = cameraControl->Set(m_enum, value, isAutoToCapsFlag(isAutoMode));
-            if (SUCCEEDED(hr))
+            if (hr == S_OK)
             {
                 // Success, update variable
                 m_value = value;

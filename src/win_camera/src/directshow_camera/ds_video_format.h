@@ -4,7 +4,7 @@
 
 //************Content************
 
-#include "directshow_camera/utils/ds_camera_utils.h"
+#include "directshow_camera/utils/ds_video_format_utils.h"
 
 namespace DirectShowCamera
 {
@@ -20,14 +20,6 @@ namespace DirectShowCamera
         static DirectShowVideoFormat Create(const AM_MEDIA_TYPE* amMediaType);
 
         static void sortAndUnique(std::vector<DirectShowVideoFormat>* directShowVideoFormats);
-
-        static std::string to_string(AM_MEDIA_TYPE* amMediaType);
-        static std::string to_string(GUID guid);
-
-        static std::vector<GUID> getMonochromeSubType();
-        static bool isMonochrome(GUID guid);
-        static std::vector<GUID> getSupportRGBSubType();
-        static bool supportRGBConvertion(GUID guid);
 
     public:
 
@@ -65,7 +57,7 @@ namespace DirectShowCamera
             std::string result;
             if (!m_isEmpty)
             {
-                result = "(" + std::to_string(m_width) + " x " + std::to_string(m_height) + " x " + std::to_string(m_bitPerPixel) + "bits )" + to_string(m_videoType);
+                result = "(" + std::to_string(m_width) + " x " + std::to_string(m_height) + " x " + std::to_string(m_bitPerPixel) + "bits )" + DirectShowVideoFormatUtils::ToString(m_videoType);
             }
             else
             {

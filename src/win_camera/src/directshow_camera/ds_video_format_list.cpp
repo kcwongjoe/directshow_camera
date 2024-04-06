@@ -1,5 +1,8 @@
 #include "directshow_camera/ds_video_format_list.h"
 
+#include "directshow_camera/utils/check_hresult_utils.h"
+#include "directshow_camera/utils/ds_camera_utils.h"
+
 namespace DirectShowCamera
 {
     DirectShowVideoFormatList::DirectShowVideoFormatList()
@@ -9,6 +12,7 @@ namespace DirectShowCamera
 
     DirectShowVideoFormatList::DirectShowVideoFormatList(std::vector<DirectShowVideoFormat> videoFormatList)
     {
+        // Set video format list and create empty AM_MEDIA_TYPE list
         m_videoFormatList = videoFormatList;
         for (int i=0;i<m_videoFormatList.size();i++)
         {
@@ -20,7 +24,7 @@ namespace DirectShowCamera
         IAMStreamConfig* streamConfig,
         std::string& errorString,
         bool& success,
-        std::vector<GUID>* supportVideoTypes
+        std::optional<std::vector<GUID>> supportVideoTypes
     )
     {
         success = Import(streamConfig, errorString, supportVideoTypes);
@@ -37,7 +41,11 @@ namespace DirectShowCamera
         DeleteAMMediaTypeList();
     }
 
-    bool DirectShowVideoFormatList::Update(IAMStreamConfig* streamConfig, std::string& errorString, std::vector<GUID>* supportVideoTypes)
+    bool DirectShowVideoFormatList::Update(
+        IAMStreamConfig* streamConfig,
+        std::string& errorString,
+        std::optional<std::vector<GUID>> supportVideoTypes
+    )
     {
         // Clear old data
         Clear();
@@ -51,7 +59,17 @@ namespace DirectShowCamera
         return m_videoFormatList.size();
     }
 
-    AM_MEDIA_TYPE* DirectShowVideoFormatList::getAMMediaType(int index) const
+    std::vector<DirectShowVideoFormat> DirectShowVideoFormatList::getVideoFormatList() const
+    {
+        return m_videoFormatList;
+    }
+
+    DirectShowVideoFormat DirectShowVideoFormatList::getVideoFormat(const int index) const
+    {
+        return m_videoFormatList.at(index);
+    }
+
+    AM_MEDIA_TYPE* DirectShowVideoFormatList::getAMMediaType(const int index) const
     {
         return m_amMediaTypeList.at(index);
     }
@@ -64,31 +82,22 @@ namespace DirectShowCamera
             for (int i = 0; i < m_videoFormatList.size(); i++)
             {
                 result += "Index: " + std::to_string(i) + "\n";
-                if (!m_amMediaTypeList.at(i))
+                if (m_amMediaTypeList.at(i) != NULL)
                 {
-                    result += DirectShowVideoFormat::to_string(m_amMediaTypeList.at(i));
+                    result += DirectShowVideoFormatUtils::ToString(m_amMediaTypeList.at(i));
                 }
                 else
                 {
-                    // AmMediaType is null, use DirectShowVideoFormat string instead
+                    // If AmMediaType is null, use DirectShowVideoFormat string instead
                     result += std::string(m_videoFormatList.at(i)) + "\n";
                 }
             }
+
             return result;
         }
         else {
             return "null";
         }
-    }
-
-    std::vector<DirectShowVideoFormat> DirectShowVideoFormatList::getVideoFormatList() const
-    {
-        return m_videoFormatList;
-    }
-
-    DirectShowVideoFormat DirectShowVideoFormatList::getVideoFormat(int index) const
-    {
-        return m_videoFormatList.at(index);
     }
 
     void DirectShowVideoFormatList::DeleteAMMediaTypeList()
@@ -106,7 +115,7 @@ namespace DirectShowCamera
     bool DirectShowVideoFormatList::Import(
         IAMStreamConfig* streamConfig,
         std::string& errorString,
-        std::vector<GUID>* supportVideoTypes
+        std::optional<std::vector<GUID>> supportVideoTypes
     )
     {
         HRESULT hr = NO_ERROR;
@@ -140,7 +149,7 @@ namespace DirectShowCamera
                     {
                         addVideoFormat = false;
                     }
-                    else if (supportVideoTypes)
+                    else if (supportVideoTypes != std::nullopt && supportVideoTypes.has_value())
                     {
                         // Check support video types
                         if (std::count(supportVideoTypes->begin(), supportVideoTypes->end(), videoFormat.getVideoType()) <= 0)

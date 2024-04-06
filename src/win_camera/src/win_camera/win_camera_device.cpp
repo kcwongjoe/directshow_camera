@@ -27,7 +27,7 @@ namespace WinCamera
 
             if (width != 0 && height != 0)
             {
-                if (DirectShowCamera::DirectShowVideoFormat::supportRGBConvertion(subType))
+                if (DirectShowVideoFormatUtils::isSupportRGBConvertion(subType))
                 {
                     // RGB
 
@@ -46,7 +46,7 @@ namespace WinCamera
                         m_rgbResolutions.push_back(std::pair<int, int>(width, height));
                     }
                 }
-                else if (DirectShowCamera::DirectShowVideoFormat::isMonochrome(subType))
+                else if (DirectShowVideoFormatUtils::isMonochrome(subType))
                 {
                     // Monochrome 
 

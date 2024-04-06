@@ -2,60 +2,6 @@
 
 namespace DirectShowCameraUtils
 {
-#pragma region string
-
-    /**
-     * @brief Casting GUID to string
-     * @param guid GUID
-     * @return Return GUID string {}
-    */
-    std::string ToString(GUID guid)
-    {
-        std::string result;
-
-        // Get string
-        LPOLESTR guidString;
-        HRESULT hr = StringFromCLSID(guid, &guidString);
-        if (SUCCEEDED(hr))
-        {
-            USES_CONVERSION;
-            result = OLE2CA(guidString);
-        }
-
-        return result;
-    }
-
-    /**
-     * @brief Convert BSTR to string
-     * @param[in] bstr BSTR
-     * @param[in] cp (Option) CodePage, Default as CP_UTF8
-     * @return Return string
-    */
-    std::string BSTRToString(BSTR bstr, int cp)
-    {
-        std::string result = "";
-
-        if (bstr)
-        {
-            // request content length in single-chars through a terminating nullchar in the BSTR.
-            // note: BSTR's support imbedded nullchars, so this will only convert through the first nullchar.
-            int res = WideCharToMultiByte(cp, 0, bstr, -1, NULL, 0, NULL, NULL);
-            if (res > 0)
-            {
-                result.resize(res);
-                WideCharToMultiByte(cp, 0, bstr, -1, &result[0], res, NULL, NULL);
-            }
-            else
-            {   // no content. clear target
-                result.clear();
-            }
-        }
-
-        return result;
-    }
-
-#pragma endregion string
-
 #pragma region Release
 
     /**
@@ -163,7 +109,7 @@ namespace DirectShowCameraUtils
             IEnumPins* pins = NULL;
             PIN_INFO pininfo;
             HRESULT hr = iBaseFilter->EnumPins(&pins);
-            if (hr != S_OK || !pins)
+            if (hr != S_OK || pins == NULL)
                 return;
             pins->Reset();
             while (hr == NOERROR)

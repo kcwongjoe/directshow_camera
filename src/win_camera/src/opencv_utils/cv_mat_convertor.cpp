@@ -1,5 +1,7 @@
 #include "opencv_utils/cv_mat_convertor.h"
 
+#include "directshow_camera/ds_guid.h"
+
 #ifdef WITH_OPENCV2
 
 namespace WinCamera
@@ -8,7 +10,8 @@ namespace WinCamera
     /**
      * @brief Constructor
     */
-    OpenCVMatConverter::OpenCVMatConverter()
+    OpenCVMatConverter::OpenCVMatConverter() :
+        videoType(MEDIASUBTYPE_None)
     {
         
         m_supportVideoType.push_back(MEDIASUBTYPE_RGB8);

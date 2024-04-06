@@ -1,6 +1,7 @@
 #include "directshow_camera/ds_camera.h"
 
 #include "directshow_camera/utils/check_hresult_utils.h"
+#include "directshow_camera/utils/win32_utils.h"
 
 namespace DirectShowCamera
 {
@@ -276,7 +277,7 @@ namespace DirectShowCamera
             AM_MEDIA_TYPE grabberMediaType;
             ZeroMemory(&grabberMediaType, sizeof(grabberMediaType));
             hr = m_sampleGrabber->GetConnectedMediaType(&grabberMediaType);
-            if (SUCCEEDED(hr))
+            if (hr == S_OK)
             {
                 m_sampleGrabberVideoFormat = DirectShowVideoFormat::Create(&grabberMediaType);
             }
@@ -287,7 +288,7 @@ namespace DirectShowCamera
             {
                 IMediaFilter* iMediaFilter = 0;
                 hr = m_filterGraphManager->QueryInterface(IID_IMediaFilter, (void**)&iMediaFilter);
-                if (SUCCEEDED(hr)) {
+                if (hr == S_OK) {
                     iMediaFilter->SetSyncSource(NULL);
                     iMediaFilter->Release();
                 }
@@ -644,7 +645,7 @@ namespace DirectShowCamera
                     int width = videoInfoHeader->bmiHeader.biWidth;
                     int height = videoInfoHeader->bmiHeader.biHeight;
 
-                    if (DirectShowVideoFormat::supportRGBConvertion(mediaType->subtype))
+                    if (DirectShowVideoFormatUtils::isSupportRGBConvertion(mediaType->subtype))
                     {
                         // Transform to RGB in the grabber filter
                         frameTotalSize = width * height * 3;
@@ -670,13 +671,13 @@ namespace DirectShowCamera
             grabberMediaType.lSampleSize = frameTotalSize;
 
             HRESULT hr = m_sampleGrabber->SetMediaType(&grabberMediaType);
-            if (SUCCEEDED(hr))
+            if (hr == S_OK)
             {
                 m_grabberMediaSubType = mediaSubType;
 
                 // get video format of grabber filter - this can fail if the graph is not yet connected
                 hr = m_sampleGrabber->GetConnectedMediaType(&grabberMediaType);
-                if (SUCCEEDED(hr))
+                if (hr == S_OK)
                 {
                     m_sampleGrabberVideoFormat = DirectShowVideoFormat::Create(&grabberMediaType);
                 }
@@ -964,26 +965,26 @@ namespace DirectShowCamera
 
                 // Get description
                 hr = propertyBag->Read(L"Description", &var, 0);
-                if (SUCCEEDED(hr))
+                if (hr == S_OK)
                 {
-                    description = DirectShowCameraUtils::BSTRToString(var.bstrVal);
+                    description = Win32Utils::BSTRToString(var.bstrVal);
                     VariantClear(&var);
                 }
 
                 // Get friendly name
                 hr = propertyBag->Read(L"FriendlyName", &var, 0);
-                if (SUCCEEDED(hr))
+                if (hr == S_OK)
                 {
-                    friendlyName = DirectShowCameraUtils::BSTRToString(var.bstrVal);
+                    friendlyName = Win32Utils::BSTRToString(var.bstrVal);
                     VariantClear(&var);
                 }
 
                 // Get device path
                 hr = propertyBag->Read(L"DevicePath", &var, 0);
-                if (SUCCEEDED(hr))
+                if (hr == S_OK)
                 {
                     // Get device path
-                    devicePath = DirectShowCameraUtils::BSTRToString(var.bstrVal);
+                    devicePath = Win32Utils::BSTRToString(var.bstrVal);
                     VariantClear(&var);
                 }
 
@@ -1073,9 +1074,9 @@ namespace DirectShowCamera
 
                 // Get device path
                 hr = propertyBag->Read(L"DevicePath", &var, 0);
-                if (SUCCEEDED(hr))
+                if (hr == S_OK)
                 {
-                    std::string currentDevicePath = DirectShowCameraUtils::BSTRToString(var.bstrVal);
+                    std::string currentDevicePath = Win32Utils::BSTRToString(var.bstrVal);
                     VariantClear(&var);
 
                     // Found, obtain the video input filter
@@ -1119,9 +1120,9 @@ namespace DirectShowCamera
 
                     // Get friendly name
                     hr = propertyBag->Read(L"FriendlyName", &var, 0);
-                    if (SUCCEEDED(hr))
+                    if (hr == S_OK)
                     {
-                        std::string friendly_name = DirectShowCameraUtils::BSTRToString(var.bstrVal);
+                        std::string friendly_name = Win32Utils::BSTRToString(var.bstrVal);
                         VariantClear(&var);
 
                         if (friendly_name == device.getFriendlyName())

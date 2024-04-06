@@ -99,12 +99,12 @@ namespace WinCamera
                 if (rgb)
                 {
                     // RGB
-                    mediaType = DirectShowCamera::DirectShowVideoFormat::getSupportRGBSubType();
+                    mediaType = DirectShowVideoFormatUtils::SupportRGBSubType();
                 }
                 else
                 {
                     // MonoChrome
-                    mediaType = DirectShowCamera::DirectShowVideoFormat::getMonochromeSubType();
+                    mediaType = DirectShowVideoFormatUtils::SupportMonochromeSubType();
                 }
 
                 // Match with list
@@ -677,7 +677,7 @@ namespace WinCamera
         bool isAutoExposureNow = Exposure()->isAuto();
 
         bool releaseExposureImages = false;
-        if (!exposureImages)
+        if (exposureImages == nullptr || exposureImages == NULL)
         {
             exposureImages = new std::vector<cv::Mat>();
             releaseExposureImages = true;

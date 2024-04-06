@@ -6,8 +6,6 @@
 
 namespace COMLibUtils
 {
-    static bool s_isInitializedCOMLib = false;
-
     class COMLibUtils
     {
     public:
@@ -22,6 +20,8 @@ namespace COMLibUtils
          * @brief Uninitialize COM library
         */
         static void UninitCOMLib();
+
+        static bool s_isInitializedCOMLib;
     };
 }
 

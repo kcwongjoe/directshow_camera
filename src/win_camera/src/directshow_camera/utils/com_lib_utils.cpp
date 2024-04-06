@@ -4,6 +4,8 @@
 
 namespace COMLibUtils
 {
+    bool COMLibUtils::s_isInitializedCOMLib = false;
+
     bool COMLibUtils::InitCOMLib()
     {
         HRESULT hr = NO_ERROR;
@@ -13,7 +15,7 @@ namespace COMLibUtils
             hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
         }
 
-        return SUCCEEDED(hr);
+        return hr == S_OK;
     }
 
     void COMLibUtils::UninitCOMLib()

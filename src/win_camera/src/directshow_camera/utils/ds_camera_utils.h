@@ -3,24 +3,15 @@
 #define WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__DIRECTSHOW_CAMERA_UTILS_H
 
 //************Content************
-#include <windows.h>
-#include <windef.h>
 
-#include "directshow_camera/ds_guid.h"
-#include <atlconv.h>
 #include "directshow_camera/utils/check_hresult_utils.h"
 
-// Direct show is native code, complier it in unmanaged
-#pragma managed(push, off)
-#include <dshow.h>
-#pragma managed(pop)
-#pragma comment(lib, "strmiids")
+#include "directshow_camera/ds_header.h"
 
 namespace DirectShowCameraUtils
 {
-    // ******To String******
-    std::string BSTRToString(BSTR bstr, int cp = CP_UTF8);
-    std::string ToString(GUID guid);
+
+#pragma region Release
 
     // ******Release******
     void FreeMediaType(AM_MEDIA_TYPE& amMediaType);
@@ -41,6 +32,8 @@ namespace DirectShowCameraUtils
             *ppT = NULL;
         }
     }
+
+#pragma endregion
 
     /**
      * @brief A decorator to extract IMoniker and IPropertyBag. This can be use to retreve the camera information by setting clsid as CLSID_VideoInputDeviceCategory.
@@ -137,7 +130,7 @@ namespace DirectShowCameraUtils
         std::string& errorString
     )
     {
-        if (!iMoniker) return false;
+        if (iMoniker == nullptr || iMoniker == NULL) return false;
 
         bool result = true;
 
@@ -176,7 +169,7 @@ namespace DirectShowCameraUtils
             IPin* iPin = NULL;
             try
             {
-                while (SUCCEEDED(iEnumPin->Next(1, &iPin, &pinFetched)) && pinFetched) {
+                while (iEnumPin->Next(1, &iPin, &pinFetched) == S_OK && pinFetched) {
 
                     // Get PIN_INFO
                     PIN_INFO pinInfo;
@@ -226,7 +219,7 @@ namespace DirectShowCameraUtils
         bool releaseAMMediaType = true
     )
     {
-        if (!iPin) return false;
+        if (iPin == nullptr || iPin == NULL) return false;
 
         bool result = true;
 
@@ -244,7 +237,7 @@ namespace DirectShowCameraUtils
 
             ULONG amMediaTypeFetched = 0;
             try {
-                while (SUCCEEDED(iEnumMediaType->Next(1, &amMediaType, &amMediaTypeFetched)) && amMediaTypeFetched) {
+                while (iEnumMediaType->Next(1, &amMediaType, &amMediaTypeFetched) == S_OK && amMediaTypeFetched) {
 
                     // Run
                     func(amMediaType);

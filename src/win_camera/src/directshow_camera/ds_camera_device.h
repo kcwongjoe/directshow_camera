@@ -38,7 +38,7 @@ namespace DirectShowCamera
             if (result)
             {
                 for (int i = 0; i < m_videoFormats.size();i++) {
-                    if (m_videoFormats != device.m_videoFormats)
+                    if (m_videoFormats[i] != device.m_videoFormats[i])
                     {
                         result = false;
                         break;

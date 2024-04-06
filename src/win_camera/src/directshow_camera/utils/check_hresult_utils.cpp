@@ -1,5 +1,9 @@
 #include "directshow_camera/utils/check_hresult_utils.h"
 
+#include <windows.h>
+#include <windef.h>
+#include <vfwmsgs.h>
+
 namespace DirectShowCamera
 {
     bool CheckHResultUtils::CheckCoCreateInstanceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription)
