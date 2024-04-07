@@ -20,6 +20,9 @@ namespace WinCamera
     {
     public:
 
+        /**
+         * @brief Constructor
+        */
         OpenCVMatConverter();
 
         /**

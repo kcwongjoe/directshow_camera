@@ -1,35 +1,40 @@
 #include "opencv_utils/cv_mat_convertor.h"
 
 #include "directshow_camera/ds_guid.h"
+#include "directshow_camera/utils/ds_video_format_utils.h"
 
 #ifdef WITH_OPENCV2
 
 namespace WinCamera
 {
 
-    /**
-     * @brief Constructor
-    */
     OpenCVMatConverter::OpenCVMatConverter() :
         m_videoType(MEDIASUBTYPE_None)
     {
-        
-        m_supportVideoType.push_back(MEDIASUBTYPE_RGB8);
-        m_supportVideoType.push_back(MEDIASUBTYPE_GREY);
-        m_supportVideoType.push_back(MEDIASUBTYPE_Y8);
-        m_supportVideoType.push_back(MEDIASUBTYPE_Y800);
-        m_supportVideoType.push_back(MEDIASUBTYPE_Y16);
-        m_supportVideoType.push_back(MEDIASUBTYPE_YUY2);
-        m_supportVideoType.push_back(MEDIASUBTYPE_RGB565);
-        m_supportVideoType.push_back(MEDIASUBTYPE_RGB555);
-        m_supportVideoType.push_back(MEDIASUBTYPE_RGB24);
-        m_supportVideoType.push_back(MEDIASUBTYPE_MJPG);
-        
+        m_supportVideoType = {
+            MEDIASUBTYPE_RGB8,
+            MEDIASUBTYPE_GREY,
+            MEDIASUBTYPE_Y8,
+            MEDIASUBTYPE_Y800,
+            MEDIASUBTYPE_Y16,
+            MEDIASUBTYPE_YUY2,
+            MEDIASUBTYPE_RGB565,
+            MEDIASUBTYPE_RGB555,
+            MEDIASUBTYPE_RGB24,
+            MEDIASUBTYPE_MJPG
+        };
     }
 
     void OpenCVMatConverter::setVideoType(const GUID videoType)
     {
-        m_videoType = videoType;
+        if (std::find(m_supportVideoType.begin(), m_supportVideoType.end(), videoType) != m_supportVideoType.end()) {
+            // Video type is supported, set it
+            m_videoType = videoType;
+        }
+        else
+        {
+            throw std::invalid_argument("Video type(" + DirectShowVideoFormatUtils::ToString(videoType) + ") is not supported");
+        }
     }
 
     GUID OpenCVMatConverter::getVideoType() const
@@ -41,6 +46,9 @@ namespace WinCamera
     {
         // Initialize
         cv::Mat result;
+
+        // Check if video type is not set
+        if (m_videoType == MEDIASUBTYPE_None)   return result;
 
         // Convert to Mat
         if (m_videoType == MEDIASUBTYPE_Y800 || m_videoType == MEDIASUBTYPE_Y8 || m_videoType == MEDIASUBTYPE_GREY)
