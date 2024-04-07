@@ -26,8 +26,7 @@
 #include "win_camera/properties/win_camera_property_iris.h"
 #include "win_camera/properties/win_camera_property_focus.h"
 
-#include "directshow_camera/ds_camera.h"
-#include "directshow_camera/abstract_ds_camera.h"
+#include "directshow_camera/camera/ds_camera.h"
 
 // Include Opencv
 #ifdef WITH_OPENCV2

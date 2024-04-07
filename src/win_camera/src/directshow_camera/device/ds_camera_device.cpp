@@ -1,4 +1,4 @@
-#include "directshow_camera/ds_camera_device.h"
+#include "directshow_camera/device/ds_camera_device.h"
 
 namespace DirectShowCamera
 {

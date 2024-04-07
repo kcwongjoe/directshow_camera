@@ -1,10 +1,10 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_VIDEO_FORMAT_LIST_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_VIDEO_FORMAT_LIST_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__VIDEO_FORMAT__DIRECTSHOW_VIDEO_FORMAT_LIST_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__VIDEO_FORMAT__DIRECTSHOW_VIDEO_FORMAT_LIST_H
 
 //************Content************
 
-#include "directshow_camera/ds_video_format.h"
+#include "directshow_camera/video_format/ds_video_format.h"
 
 namespace DirectShowCamera
 {

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_GRABBER_CALLBACK_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_GRABBER_CALLBACK_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__GRABBER__DIRECTSHOW_GRABBER_CALLBACK_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__GRABBER__DIRECTSHOW_GRABBER_CALLBACK_H
 
 //************Content************
 
@@ -8,7 +8,10 @@
 #include <chrono>
 
 #include <windows.h>
-#include "directshow_camera/ds_guid.h"
+
+#include "directshow_camera/grabber/qedit.h"
+
+#include "directshow_camera/video_format/ds_guid.h"
 
 namespace DirectShowCamera
 {

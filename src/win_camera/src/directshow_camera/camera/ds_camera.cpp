@@ -1,7 +1,8 @@
-#include "directshow_camera/ds_camera.h"
+#include "directshow_camera/camera/ds_camera.h"
 
 #include "directshow_camera/utils/check_hresult_utils.h"
 #include "directshow_camera/utils/win32_utils.h"
+#include "directshow_camera/utils/ds_camera_utils.h"
 
 namespace DirectShowCamera
 {

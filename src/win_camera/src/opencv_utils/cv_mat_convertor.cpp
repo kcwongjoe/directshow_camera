@@ -1,6 +1,6 @@
 #include "opencv_utils/cv_mat_convertor.h"
 
-#include "directshow_camera/ds_guid.h"
+#include "directshow_camera/video_format/ds_guid.h"
 #include "directshow_camera/utils/ds_video_format_utils.h"
 
 #ifdef WITH_OPENCV2

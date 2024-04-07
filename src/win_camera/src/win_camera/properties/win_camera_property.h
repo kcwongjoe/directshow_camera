@@ -4,8 +4,8 @@
 
 //************Content************
 
-#include "directshow_camera/ds_camera.h"
-#include "directshow_camera/ds_camera_property.h"
+#include "directshow_camera/camera/ds_camera.h"
+#include "directshow_camera/properties/ds_camera_property.h"
 
 namespace WinCamera { class WinCamera; }
 

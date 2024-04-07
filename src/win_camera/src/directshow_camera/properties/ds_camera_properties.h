@@ -1,10 +1,10 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_PROPERTIES_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_PROPERTIES_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__PROPERTIES__DIRECTSHOW_CAMERA_PROPERTIES_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__PROPERTIES__DIRECTSHOW_CAMERA_PROPERTIES_H
 
 //************Content************
 
-#include "directshow_camera/ds_camera_property.h"
+#include "directshow_camera/properties/ds_camera_property.h"
 
 namespace DirectShowCamera
 {

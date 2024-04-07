@@ -1,4 +1,4 @@
-#include "directshow_camera/ds_video_format_list.h"
+#include "directshow_camera/video_format/ds_video_format_list.h"
 
 #include "directshow_camera/utils/check_hresult_utils.h"
 #include "directshow_camera/utils/ds_camera_utils.h"

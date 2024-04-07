@@ -1,11 +1,13 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_ABSTRACT_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DIRECTSHOW_CAMERA_ABSTRACT_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__CAMERA__DIRECTSHOW_CAMERA_ABSTRACT_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__CAMERA__DIRECTSHOW_CAMERA_ABSTRACT_H
 
 //************Content************
-#include "directshow_camera/ds_camera_properties.h"
-#include "directshow_camera/ds_video_format.h"
-#include "directshow_camera/ds_camera_device.h"
+#include "directshow_camera/properties/ds_camera_properties.h"
+
+#include "directshow_camera/video_format/ds_video_format.h"
+
+#include "directshow_camera/device/ds_camera_device.h"
 
 #include <optional>
 

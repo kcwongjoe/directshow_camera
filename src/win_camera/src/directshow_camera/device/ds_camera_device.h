@@ -1,9 +1,9 @@
 #pragma once
-#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DS_CAMERA_DEVICE_H
-#define WIN_CAMERA__DIRECTSHOW_CAMERA__DS_CAMERA_DEVICE_H
+#ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__DEVICE__DS_CAMERA_DEVICE_H
+#define WIN_CAMERA__DIRECTSHOW_CAMERA__DEVICE__DS_CAMERA_DEVICE_H
 
 //************Content************
-#include "directshow_camera/ds_video_format.h"
+#include "directshow_camera/video_format/ds_video_format.h"
 
 namespace DirectShowCamera
 {

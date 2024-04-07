@@ -1,4 +1,4 @@
-#include "directshow_camera/ds_camera_properties.h"
+#include "directshow_camera/properties/ds_camera_properties.h"
 
 #include "directshow_camera/utils/ds_camera_utils.h"
 

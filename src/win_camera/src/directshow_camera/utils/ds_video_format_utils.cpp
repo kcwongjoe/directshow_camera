@@ -1,6 +1,6 @@
 #include "directshow_camera/utils/ds_video_format_utils.h"
 
-#include "directshow_camera/ds_guid.h"
+#include "directshow_camera/video_format/ds_guid.h"
 #include "directshow_camera/utils/win32_utils.h"
 
 namespace DirectShowVideoFormatUtils
