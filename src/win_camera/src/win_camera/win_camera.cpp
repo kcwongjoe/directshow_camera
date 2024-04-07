@@ -5,6 +5,7 @@
 
 #include "exceptions/resolution_not_support_exception.h"
 #include "exceptions/device_not_found_exception.h"
+#include "exceptions/directshow_camera_exception.h"
 
 namespace WinCamera
 {
@@ -171,7 +172,8 @@ namespace WinCamera
             // Release device input filter
             DirectShowCameraUtils::SafeRelease(&videoInputFilter);
 
-            CopyError(result);
+            // Throw DirectShow Camera Exception
+            if (!result) ThrowDirectShowException();
         }
 
         return result;
@@ -194,7 +196,8 @@ namespace WinCamera
         }
     #endif
 
-        CopyError(result);
+        // Throw DirectShow Camera Exception
+        if (!result) ThrowDirectShowException();
 
         return result;
     }
@@ -247,7 +250,8 @@ namespace WinCamera
         {
             bool success = m_directShowCamera->Start();
 
-            CopyError(success);
+            // Throw DirectShow Camera Exception
+            if (!success) ThrowDirectShowException();
 
             return success;
         }
@@ -264,7 +268,8 @@ namespace WinCamera
         {
             bool success = m_directShowCamera->Stop();
 
-            CopyError(success);
+            // Throw DirectShow Camera Exception
+            if (!success) ThrowDirectShowException();
 
             return success;
         }
@@ -423,7 +428,8 @@ namespace WinCamera
         std::vector<DirectShowCamera::DirectShowCameraDevice> result;
         bool success = m_directShowCamera->getCameras(result);
 
-        CopyError(success);
+        // Throw DirectShow Camera Exception
+        if (!success) ThrowDirectShowException();
 
         return result;
     }
@@ -464,8 +470,8 @@ namespace WinCamera
             // Set resolution
             bool result = m_directShowCamera->setVideoFormat(videoFormat);
 
-            // Copy error
-            CopyError(result);
+            // Throw DirectShow Camera Exception
+            if (!result) ThrowDirectShowException();
 
 #ifdef WITH_OPENCV2
             AllocateMatBuffer();
@@ -481,8 +487,8 @@ namespace WinCamera
         }
         else
         {
-            // Copy error
-            CopyError(false);
+            // Throw DirectShow Camera Exception
+            ThrowDirectShowException();
 
             return false;
         }
@@ -788,12 +794,21 @@ namespace WinCamera
 
 #pragma endregion Frame
 
-#pragma region Utils
+#pragma region Exception
 
-    void WinCamera::CopyError(const bool success)
+    void WinCamera::ThrowDirectShowException()
     {
-        if (!success) m_errorString = m_directShowCamera->getLastError();
+        const auto lastError = m_directShowCamera->getLastError();
+
+        if (!lastError.empty())
+        {
+            // Clear last error in DirectShowCamera
+            m_directShowCamera->ResetLastError();
+
+            // Throw exception
+            throw DriectShowCameraException(lastError);
+        }
     }
 
-#pragma endregion Utils
+#pragma endregion Exception
 }

@@ -447,6 +447,11 @@ namespace DirectShowCamera
 
 #pragma endregion getCamera
 
+    void DirectShowCameraStub::ResetLastError()
+    {
+        m_errorString.clear();
+    }
+
     std::string DirectShowCameraStub::getLastError() const
     {
         return m_errorString;

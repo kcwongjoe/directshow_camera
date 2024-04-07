@@ -76,6 +76,7 @@ namespace DirectShowCamera
         virtual bool getCamera(const std::string devicePath, IBaseFilter** videoInputFilter) = 0;
         virtual bool getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter) = 0;
 
+        virtual void ResetLastError() = 0;
         virtual std::string getLastError() const = 0;
     };
 }

@@ -9,7 +9,8 @@ namespace DirectShowCamera
     
 #pragma region Life cycle
 
-    DirectShowCamera::DirectShowCamera()
+    DirectShowCamera::DirectShowCamera() :
+        m_mediaControlHandler(IMediaControlHandler())
     {
         
     }
@@ -51,7 +52,7 @@ namespace DirectShowCamera
             DirectShowCameraUtils::SafeRelease(&m_mediaEvent);
 
             // Release media control
-            DirectShowCameraUtils::SafeRelease(&m_mediaControl);
+            m_mediaControlHandler.Release();
 
             // Release null renderer filter
             DirectShowCameraUtils::SafeRelease(&m_nullRendererFilter);
@@ -130,12 +131,7 @@ namespace DirectShowCamera
             // Set the media control
             if (result)
             {
-                const auto hr = m_filterGraphManager->QueryInterface(IID_IMediaControl, (void**)&m_mediaControl);
-                if (hr != S_OK)
-                {
-                    result = false;
-                    m_errorString = "Could not create media control object(hr = " + std::to_string(hr) + ").";
-                }
+                result = m_mediaControlHandler.CreateMediaControl(m_filterGraphManager, m_errorString);
             }
 
             // Add video input filter
@@ -406,12 +402,8 @@ namespace DirectShowCamera
             UpdateGrabberFilterVideoFormat();
 
             // Run
-            HRESULT hr = m_mediaControl->Run();
-            if (hr != S_OK)
-            {
-                result = false;
-                m_errorString = "Could not start the graph (hr = " + std::to_string(hr) + ").";
-            }
+            result = m_mediaControlHandler.Run(m_errorString);
+
             m_isCapturing = true;
 
             // Start check disconnection thread
@@ -440,23 +432,13 @@ namespace DirectShowCamera
                     // Pause
                     if (result)
                     {
-                        hr = m_mediaControl->Pause();
-                        if (hr != S_OK)
-                        {
-                            result = false;
-                            m_errorString = " Could not pause media contol.(hr = " + std::to_string(hr) + ").";
-                        }
+                        result = m_mediaControlHandler.Pause(m_errorString);
                     }
 
                     // Stop
                     if (result)
                     {
-                        hr = m_mediaControl->Stop();
-                        if (hr != S_OK)
-                        {
-                            result = false;
-                            m_errorString = " Could not stop media contol.(hr = " + std::to_string(hr) + ").";
-                        }
+                        result = m_mediaControlHandler.Stop(m_errorString);
                     }
 
                     // Reset isCapturing
@@ -995,6 +977,11 @@ namespace DirectShowCamera
     }
 
 #pragma endregion getCamera
+
+    void DirectShowCamera::ResetLastError()
+    {
+        m_errorString.clear();
+    }
 
     std::string DirectShowCamera::getLastError() const
     {

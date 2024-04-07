@@ -278,6 +278,11 @@ namespace DirectShowCamera
 #pragma endregion Camera
 
         /**
+         * @brief Reset the last error
+        */
+        void ResetLastError() override;
+
+        /**
          * @brief Get the last error
          * @return Return the last error
         */

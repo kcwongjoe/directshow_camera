@@ -48,7 +48,7 @@ namespace WinCamera
         typedef std::function<void(cv::Mat image)> ExposureFusionAsyncResult;
 #endif
 
-        //-----------------Constructor-----------------
+#pragma region Constructor and Destructor
 
         /**
          * @brief Constructor
@@ -71,7 +71,9 @@ namespace WinCamera
         */
         ~WinCamera();
 
-        //-----------------Connection-----------------
+#pragma endregion Constructor and Destructor
+
+#pragma region Connection
 
         /**
          * @brief Open camera with the specific resolution. The support resolution can be retrieved from CameraDevice. If the frame width and height is not specified, the default resolution will be used.
@@ -117,7 +119,9 @@ namespace WinCamera
          */
         void setDisconnectionProcess(std::function<void()> func);
 
-        //-----------------Capture-----------------
+#pragma endregion Connection
+
+#pragma region Capture
 
         /**
          * @brief Start capture
@@ -143,7 +147,9 @@ namespace WinCamera
         */
         std::string getLastError() const;
 
-        // ------DirectShow Video Format------
+#pragma endregion Capture
+
+#pragma region DirectShow Video Format
 
         /**
          * @brief Get support DirectShowVideoFormat list. It is a advance option. Suggest to acquire the resolution from CameraDevice (Use getCameras() to get CameraDevice).
@@ -164,7 +170,9 @@ namespace WinCamera
         */
         bool setDirectShowVideoFormat(const DirectShowCamera::DirectShowVideoFormat videoFormat);
 
-        // ------Frame------
+#pragma endregion DirectShow Video Format
+
+#pragma region Frame
 
         /**
          * @brief Get frame
@@ -289,7 +297,9 @@ namespace WinCamera
         );
     #endif
 
-        // ------Camera------
+#pragma endregion Frame
+
+#pragma region Camera
 
         /**
          * @brief Get the available DirectShowCameraDevice list. It is a advance option. Suggest to use getCameras().
@@ -303,7 +313,9 @@ namespace WinCamera
         */
         std::vector<WinCameraDevice> getCameras();
 
-        //------Properties------
+#pragma endregion Camera
+
+#pragma region Properties
 
         /**
          * @brief Reset camera properties as default value.
@@ -337,7 +349,21 @@ namespace WinCamera
         std::shared_ptr<WinCameraPropertyIris> Iris();
         std::shared_ptr<WinCameraPropertyFocus> Focus();
 
-    /**********************Private********************************/
+#pragma endregion Properties
+
+    private:
+
+        /**
+         * @brief Open the camera
+         * @param[in] videoInputFilter Video filter
+         * @param[in] videoFormat (Optional) Video format to be set. Default as nullopt.
+         * @return Return true if success.
+        */
+        bool Open(
+            IBaseFilter** videoInputFilter,
+            std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat = std::nullopt
+        );
+
     private:
         std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> m_directShowCamera;
         bool m_isInitialized = false;
@@ -369,23 +395,13 @@ namespace WinCamera
         OpenCVMatConverter m_matConvertor;
     #endif
 
-        /**
-         * @brief Open the camera
-         * @param[in] videoInputFilter Video filter
-         * @param[in] videoFormat (Optional) Video format to be set. Default as nullopt.
-         * @return Return true if success.
-        */
-        bool Open(
-            IBaseFilter** videoInputFilter,
-            std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat = std::nullopt
-        );
+
 
         // Utils
         /**
-         * @brief Copy error from DirectShowCamera to this
-         * @param[in] success Only copy error if success = false
+         * @brief Throw DirectShow exception if existed
         */
-        void CopyError(const bool success);
+        void ThrowDirectShowException();
     };
 }
 

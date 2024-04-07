@@ -4,6 +4,7 @@
 
 //************Content************
 #include "directshow_camera/camera/abstract_ds_camera.h"
+#include "directshow_camera/camera/i_media_control_handler.h"
 
 #include "directshow_camera/properties/ds_camera_properties.h"
 
@@ -11,6 +12,7 @@
 
 #include "directshow_camera/video_format/ds_video_format_list.h"
 #include "directshow_camera/video_format/ds_video_format.h"
+
 
 namespace DirectShowCamera
 {
@@ -279,11 +281,21 @@ namespace DirectShowCamera
 
 #pragma endregion getCamera
 
+
+#pragma region Error
+
+        /**
+        * @brief Reset last error
+        */
+        void ResetLastError() override;
+
         /**
          * @brief Get the last error
          * @return Return the last error
         */
         std::string getLastError() const override;
+
+#pragma endregion Error
 
     private:
         /**
@@ -343,7 +355,7 @@ namespace DirectShowCamera
         DirectShowVideoFormat m_sampleGrabberVideoFormat;
 
         IMediaEventEx* m_mediaEvent = NULL;
-        IMediaControl* m_mediaControl = NULL;
+        IMediaControlHandler m_mediaControlHandler;
 
         bool m_isOpening = false;
         bool m_isCapturing = false;
