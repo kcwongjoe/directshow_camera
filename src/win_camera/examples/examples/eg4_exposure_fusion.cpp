@@ -1,4 +1,4 @@
-#include "eg4_exposure_fusion.h"
+#include "examples/eg4_exposure_fusion.h"
 
 #include "win_camera/win_camera.h"
 

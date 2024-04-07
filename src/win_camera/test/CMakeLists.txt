@@ -13,7 +13,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Get example files
-file(GLOB_RECURSE MY_TEST_FILES "*.cpp")
+file(GLOB_RECURSE WIN_CAMERA_TEST_SOURCE_FILES "*.cpp")
 
 # Pre-compile header
 set(TEST_PRECOMPILE_HEADERS
@@ -21,7 +21,7 @@ set(TEST_PRECOMPILE_HEADERS
 )
 
 # Add sources files
-add_executable(${TEST_PROJECT_NAME} ${MY_TEST_FILES})
+add_executable(${TEST_PROJECT_NAME} ${WIN_CAMERA_TEST_SOURCE_FILES})
 
 # Link header files
 target_include_directories(${TEST_PROJECT_NAME}
@@ -32,6 +32,11 @@ target_include_directories(${TEST_PROJECT_NAME}
 # Add pre-compile header
 target_precompile_headers(${TEST_PROJECT_NAME} PRIVATE
     ${TEST_PRECOMPILE_HEADERS}
+)
+
+# Group source files
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES ${WIN_CAMERA_TEST_SOURCE_FILES}
 )
 
 # Link source library and doctest

@@ -1,9 +1,9 @@
-#include "eg1_capture.h"
-#include "eg2_properties.h"
-#include "eg3_camera_thread.h"
-#include "eg4_exposure_fusion.h"
-#include "eg5_disconnect_process.h"
-#include "eg6_stub.h"
+#include "examples/eg1_capture.h"
+#include "examples/eg2_properties.h"
+#include "examples/eg3_camera_thread.h"
+#include "examples/eg4_exposure_fusion.h"
+#include "examples/eg5_disconnect_process.h"
+#include "examples/eg6_stub.h"
 #include <iostream>
 
 int main(int argc, char *argv[])

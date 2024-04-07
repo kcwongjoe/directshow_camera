@@ -1,4 +1,4 @@
-#include "eg1_capture.h"
+#include "examples/eg1_capture.h"
 
 #include "win_camera/win_camera.h"
 

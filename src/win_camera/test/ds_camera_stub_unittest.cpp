@@ -55,7 +55,7 @@ TEST_F(TestUVCCameraStubF, TestGetCamera)
 
     // Get expect result
     std::vector<DirectShowCamera::DirectShowCameraDevice> expectDirectShowCameraDevices;
-    DirectShowCamera::DirectShowCameraStubDefaultSetting::getCamera(&expectDirectShowCameraDevices);
+    DirectShowCamera::DirectShowCameraStubDefaultSetting::getCamera(expectDirectShowCameraDevices);
     
     // Check
     ASSERT_EQ(cameraDeivceList.size(), expectDirectShowCameraDevices.size()) << "Test UVCCamera(DirectShowCameraStub)::getCameras fail.";

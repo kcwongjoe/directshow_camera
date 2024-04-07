@@ -1,4 +1,4 @@
-#include "eg3_camera_thread.h"
+#include "examples/eg3_camera_thread.h"
 
 #include "win_camera/win_camera_thread.h"
 

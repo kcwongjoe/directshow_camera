@@ -1,4 +1,4 @@
-#include "eg2_properties.h"
+#include "examples/eg2_properties.h"
 
 #include "win_camera/win_camera.h"
 

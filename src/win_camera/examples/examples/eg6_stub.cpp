@@ -1,4 +1,4 @@
-#include "eg6_stub.h"
+#include "examples/eg6_stub.h"
 
 #include "win_camera/win_camera.h"
 #include "directshow_camera/ds_camera_stub.h"
