@@ -81,7 +81,7 @@ namespace WinCamera
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return getDirectShowProperty()->supportAutoMode();
+        return getDirectShowProperty()->isSupportAutoMode();
     }
 
     bool WinCameraProperty::ySupportManualModeInternal() const
@@ -89,7 +89,7 @@ namespace WinCamera
         // Throw if camera is not opened or property is not supported
         CheckOpeningAndSupported();
 
-        return getDirectShowProperty()->supportManualMode();
+        return getDirectShowProperty()->isSupportManualMode();
     }
 
     void WinCameraProperty::CheckOpening() const

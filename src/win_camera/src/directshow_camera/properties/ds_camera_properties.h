@@ -16,34 +16,163 @@ namespace DirectShowCamera
     {
     public:
 
-        // Constructor
+#pragma region Constructor and Destructor
+        /**
+         * @brief Dummy constructor, use DirectShowCameraProperties(IBaseFilter*, std::string*) instead.
+        */
         DirectShowCameraProperties();
+
+        /**
+         * @brief Constuct the DirectShow Camera Properties from IBaseFilter
+         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+         * @param[out] errorString Error string
+        */
         DirectShowCameraProperties(IBaseFilter* videoInputFilter, std::string& errorString);
+
+        /**
+         * @brief Destructor
+        */
         ~DirectShowCameraProperties();
 
-        void reset();
-        void resetDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto = true);
-        void refresh(IBaseFilter* videoInputFilter, std::string& errorString);
-        void markAsInitialized();
+#pragma endregion Constructor and Destructor
 
-        // Getter
+#pragma region Properties Update
+
+        /**
+         * @brief Reset variables
+        */
+        void Reset();
+
+        /**
+         * @brief Reset the DirectShow Camera Properties to the default value from IBaseFilter
+         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+         * @param[out] errorString Error string
+         * @param[in] asAuto (Optional) If this value is true, properties will try to set as auto. Default as true
+        */
+        void ResetToDefaultValue(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto = true);
+
+        /**
+         * @brief Refresh properties from video input filter.
+         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+         * @param[out] errorString Error string
+        */
+        void Refresh(IBaseFilter* videoInputFilter, std::string& errorString);
+
+        /**
+         * @brief Mark this object as initialized.
+        */
+        void MarkAsInitialized();
+
+#pragma endregion Properties Update
+
+#pragma region Properties
+
+        /**
+         * @brief Get brightness, from blanking(small value) to pure white(large value)
+         * @return Return brightness
+        */
         std::shared_ptr<DirectShowCameraProperty> getBrightness() const;
+
+        /**
+         * @brief Get contrast
+         * @return Return contrast
+        */
         std::shared_ptr<DirectShowCameraProperty> getContrast() const;
+
+        /**
+         * @brief Get hue (-180 to +180 degrees)
+         *
+         * @return Return hue
+        */
         std::shared_ptr<DirectShowCameraProperty> getHue() const;
+
+        /**
+         * @brief Get saturation
+         * @return Return saturation
+        */
         std::shared_ptr<DirectShowCameraProperty> getSaturation() const;
+
+        /**
+         * @brief Get sharpness
+         * @return Return sharpness
+        */
         std::shared_ptr<DirectShowCameraProperty> getSharpness() const;
+
+        /**
+         * @brief Get gamma
+         * @return Return gamma
+        */
         std::shared_ptr<DirectShowCameraProperty> getGamma() const;
+
+        /**
+         * @brief Get color enable, 0(off) or 1(on)
+         * @return
+        */
         std::shared_ptr<DirectShowCameraProperty> getColorEnable() const;
+
+        /**
+         * @brief Get white balance
+         * @return Return white balance
+        */
         std::shared_ptr<DirectShowCameraProperty> getWhiteBalance() const;
+
+        /**
+         * @brief Get backlight compensation, 0(off) or 1(on)
+         * @return Return backlight compensation
+        */
         std::shared_ptr<DirectShowCameraProperty> getBacklightCompensation() const;
+
+        /**
+         * @brief Get gain, +ve are brighter and -ve are darker
+         * @return Get gain
+        */
         std::shared_ptr<DirectShowCameraProperty> getGain() const;
+
+        /**
+         * @brief Get pan, in degree?
+         * @return Return pan
+        */
         std::shared_ptr<DirectShowCameraProperty> getPan() const;
+
+        /**
+         * @brief Get tilt, in degree?
+         * @return Return tilt
+        */
         std::shared_ptr<DirectShowCameraProperty> getTilt() const;
+
+        /**
+         * @brief Get roll, in degree?
+         * @return Return roll
+        */
         std::shared_ptr<DirectShowCameraProperty> getRoll() const;
+
+        /**
+         * @brief Get zoom, in millimeters
+         * @return Return zoom
+        */
         std::shared_ptr<DirectShowCameraProperty> getZoom() const;
+
+        /**
+         * @brief Get exposure, value = log2(sec) which means sec = 0.5^value(value < 0) or 2^value(value > 0) , eg. value = -3 sec = 0.125s, value = 2 sec = 4
+         * @return Return exposure
+        */
         std::shared_ptr<DirectShowCameraProperty> getExposure() const;
+
+        /**
+         * @brief Get iris, fstop * 10
+         * @return Return iris
+        */
         std::shared_ptr<DirectShowCameraProperty> getIris() const;
+
+        /**
+         * @brief Get focus, in millimeters
+         * @return Return focus
+        */
         std::shared_ptr<DirectShowCameraProperty> getFocus() const;
+
+#pragma endregion Properties
+
+#pragma region operator
 
         // Class to string
 
@@ -83,9 +212,23 @@ namespace DirectShowCamera
             return out << (std::string)obj;
         }
 
+#pragma endregion operator
+
     private:
-        void construct();
-        bool PropertySetAsDefault(
+        /**
+        * @brief Construct the DirectShow Camera Properties
+        */
+        void Construct();
+
+        /**
+        * @brief Set the DirectShow Camera Property to the default value from IBaseFilter
+        * 
+        * @param[in] property The property to set
+        * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+        * @param[out] errorString Error string
+        * @param[in] asAuto (Optional) If this value is true, properties will try to set as auto. Default as true
+        */
+        bool SetToDefaultValue(
             std::shared_ptr<DirectShowCameraProperty>& property,
             IBaseFilter* videoInputFilter,
             std::string& errorString,

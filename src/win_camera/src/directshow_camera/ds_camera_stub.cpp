@@ -397,7 +397,7 @@ namespace DirectShowCamera
     {
         if (m_isOpening && m_properties != nullptr)
         {
-            m_properties->resetDefault(NULL, m_errorString, asAuto);
+            m_properties->ResetToDefaultValue(NULL, m_errorString, asAuto);
         }
     }
 

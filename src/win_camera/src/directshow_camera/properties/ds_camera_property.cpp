@@ -1,23 +1,16 @@
 #include "directshow_camera/properties/ds_camera_property.h"
 
+#include "directshow_camera/utils/ds_camera_utils.h"
+
 namespace DirectShowCamera
 {
-#pragma region constructor
+#pragma region constructor and destructor
 
-    /**
-     * @brief Dummy constructor, use DirectShowCameraProperty(string, long, int) instead.
-    */
     DirectShowCameraProperty::DirectShowCameraProperty()
     {
-        reset();
+        Reset();
     }
 
-    /**
-     * @brief Constructor
-     * @param[in] name Property Name, use for casting to string
-     * @param[in] propertyEnum Property Enumeration in directshow
-     * @param[in] queryInterface Query interface, USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
-    */
     DirectShowCameraProperty::DirectShowCameraProperty(
         const std::string name,
         const long propertyEnum,
@@ -28,15 +21,10 @@ namespace DirectShowCamera
         m_enum = propertyEnum;
         m_queryInterface = queryInterface;
         
-        reset();
+        Reset();
     }
 
-#pragma endregion constructor
-
-    /**
-     * @brief Reset internal variable
-    */
-    void DirectShowCameraProperty::reset()
+    void DirectShowCameraProperty::Reset()
     {
         m_min = 0;
         m_max = 0;
@@ -50,234 +38,30 @@ namespace DirectShowCamera
         m_supportManual = false;
     }
 
-#pragma region utils
+#pragma endregion constructor and destructor
 
-    /**
-     * @brief Check whether the Capsflags contains auto mode.
-     * @param[in] capsFlags CapsFlag
-     * @return Return true if the Capsflags contains auto mode.
-    */
-    bool DirectShowCameraProperty::capsFlagIsAuto(const long capsFlags) const
-    {
-        bool result = false;
+#pragma region Support Mode
 
-        // Check
-        if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
-        {
-            // Support auto mode
-            if (capsFlags & VideoProcAmp_Flags_Auto)
-            {
-                result = true;
-            }
-        }
-        else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
-        {
-            // Support auto mode
-            if (capsFlags & CameraControl_Flags_Auto)
-            {
-                result = true;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * @brief Check whether the Capsflags contains manual mode.
-     * @param[in] capsFlags CapsFlag
-     * @return Return true if the Capsflags contains manual mode.
-    */
-    bool DirectShowCameraProperty::capsFlagIsManual(const long capsFlags) const
-    {
-        bool result = false;
-
-        // Check
-        if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
-        {
-            // is manual mode
-            if (capsFlags & VideoProcAmp_Flags_Manual)
-            {
-                result = true;
-            }
-        }
-        else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
-        {
-            // Support manual mode
-            if (capsFlags & CameraControl_Flags_Manual)
-            {
-                result = true;
-            }
-        }
-
-        return result;
-    }
-
-    long DirectShowCameraProperty::isAutoToCapsFlag(const bool isAuto) const
-    {
-        if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
-        {
-            // Am_Video_Proc_Amp
-            if (isAuto)
-            {
-                // Auto
-                return VideoProcAmp_Flags_Auto;
-            }
-            else
-            {
-                // Manual
-                return VideoProcAmp_Flags_Manual;
-            }
-        }
-        else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
-        {
-            // Am_Camera_control
-            if (isAuto)
-            {
-                // Auto
-                return VideoProcAmp_Flags_Auto;
-            }
-            else
-            {
-                // Manual
-                return VideoProcAmp_Flags_Manual;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-#pragma endregion utils
-
-#pragma region Getter
-
-    /**
-     * @brief Return true if camera supported this property
-     * @return Return true if camera supported this property 
-    */
     bool DirectShowCameraProperty::isSupported() const
     {
         return m_supported;
     }
 
-    /**
-     * @brief Return true if property support auto mode.
-     * @return Return true if property support auto mode.
-    */
-    bool DirectShowCameraProperty::supportAutoMode() const
+    bool DirectShowCameraProperty::isSupportAutoMode() const
     {
         return m_supportAuto;
     }
 
-    /**
-     * @brief Return true if property support manual mode.
-     * @return Return true if property support manual mode.
-    */
-    bool DirectShowCameraProperty::supportManualMode() const
+    bool DirectShowCameraProperty::isSupportManualMode() const
     {
         return m_supportManual;
     }
 
-    /**
-     * @brief Get the property name
-     * @return Return the property name
-    */
-    std::string DirectShowCameraProperty::getName() const
-    {
-        return m_name;
-    }
+#pragma endregion Support Mode
 
-    /**
-     * @brief Get the property Enumeration in DirectShow 
-     * @return Return the property Enumeration in DirectShow 
-    */
-    long DirectShowCameraProperty::getDSEnum() const
-    {
-        return m_enum;
-    }
+#pragma region Import
 
-    /**
-     * @brief Get the range of the property
-     * @return Return the range of the property
-    */
-    std::pair<long, long> DirectShowCameraProperty::getRange() const
-    {
-        std::pair<long, long> result(m_min, m_max);
-        return result;
-    }
-
-    /**
-     * @brief Get the bottom limit of the property
-     * @return Return the bottom limit of the property
-    */
-    long DirectShowCameraProperty::getMin() const
-    {
-        return m_min;
-    }
-
-    /**
-     * @brief Get the upper limit of the property
-     * @return Return the upper limit of the property
-    */
-    long DirectShowCameraProperty::getMax() const
-    {
-        return m_max;
-    }
-
-    /**
-     * @brief Get the step value of the property
-     * @return Return the step value of the property
-    */
-    long DirectShowCameraProperty::getStep() const
-    {
-        return m_step;
-    }
-
-    /**
-     * @brief Get the default value of the property
-     * @return Return the default value of the property
-    */
-    long DirectShowCameraProperty::getDefault() const
-    {
-        return m_defaultValue;
-    }
-
-    /**
-     * @brief Get the current value of the property
-     * @return Return the current value of the property
-    */
-    long DirectShowCameraProperty::getValue() const
-    {
-        return m_value;
-    }
-
-    /**
-     * @brief Return true if the current mode is auto, otherise manual mode is enabled.
-     * @return Return true if the current mode is auto, otherise manual mode is enabled.
-    */
-    bool DirectShowCameraProperty::isAuto() const
-    {
-        return m_isAuto;
-    }
-
-#pragma endregion Getter
-
-
-    /**
-     * @brief Import property
-     * 
-     * @param[in] supported Is camera supported?
-     * @param[in] min Min value
-     * @param[in] max Max value
-     * @param[in] step Step
-     * @param[in] defaultValue Default value
-     * @param[in] isAuto Is auto?
-     * @param[in] value Current value
-     * @param[in] supportAuto Support auto?
-     * @param[in] supportManual Support manual?
-    */
-    void DirectShowCameraProperty::importProperty(
+    void DirectShowCameraProperty::ImportProperty(
         const bool supported,
         const long min,
         const long max,
@@ -301,9 +85,15 @@ namespace DirectShowCamera
         m_supportManual = supportManual;
     }
 
+#pragma endregion Import
+
 #pragma region Setter
 
-    bool DirectShowCameraProperty::setAsDefault(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto)
+    bool DirectShowCameraProperty::setToDefaultValue(
+        IBaseFilter* videoInputFilter,
+        std::string& errorString,
+        const bool asAuto
+    )
     {
         // Get auto mode
         bool isAutoMode = false;
@@ -314,7 +104,12 @@ namespace DirectShowCamera
         return result;
     }
 
-    bool DirectShowCameraProperty::setValue(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString)
+    bool DirectShowCameraProperty::setValue(
+        IBaseFilter* videoInputFilter,
+        const long value,
+        const bool isAutoMode,
+        std::string& errorString
+    )
     {
         bool result = true;
         
@@ -418,5 +213,145 @@ namespace DirectShowCamera
     }
 
 #pragma endregion Setter
+
+#pragma region Getter
+
+    std::string DirectShowCameraProperty::getName() const
+    {
+        return m_name;
+    }
+
+    long DirectShowCameraProperty::getDSEnum() const
+    {
+        return m_enum;
+    }
+
+    std::pair<long, long> DirectShowCameraProperty::getRange() const
+    {
+        std::pair<long, long> result(m_min, m_max);
+        return result;
+    }
+
+    long DirectShowCameraProperty::getMin() const
+    {
+        return m_min;
+    }
+
+    long DirectShowCameraProperty::getMax() const
+    {
+        return m_max;
+    }
+
+    long DirectShowCameraProperty::getStep() const
+    {
+        return m_step;
+    }
+
+    long DirectShowCameraProperty::getDefaultValue() const
+    {
+        return m_defaultValue;
+    }
+
+    long DirectShowCameraProperty::getValue() const
+    {
+        return m_value;
+    }
+
+    bool DirectShowCameraProperty::isAuto() const
+    {
+        return m_isAuto;
+    }
+
+#pragma endregion Getter
+
+#pragma region CapsFlag
+
+    bool DirectShowCameraProperty::isAutoCapsFlag(const long capsFlags) const
+    {
+        bool result = false;
+
+        // Check
+        if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
+        {
+            // Support auto mode
+            if (capsFlags & VideoProcAmp_Flags_Auto)
+            {
+                result = true;
+            }
+        }
+        else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
+        {
+            // Support auto mode
+            if (capsFlags & CameraControl_Flags_Auto)
+            {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    bool DirectShowCameraProperty::isManualCapsFlag(const long capsFlags) const
+    {
+        bool result = false;
+
+        // Check
+        if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
+        {
+            // is manual mode
+            if (capsFlags & VideoProcAmp_Flags_Manual)
+            {
+                result = true;
+            }
+        }
+        else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
+        {
+            // Support manual mode
+            if (capsFlags & CameraControl_Flags_Manual)
+            {
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    long DirectShowCameraProperty::getCapsFlag(const bool isAuto) const
+    {
+        if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
+        {
+            // Am_Video_Proc_Amp
+            if (isAuto)
+            {
+                // Auto
+                return VideoProcAmp_Flags_Auto;
+            }
+            else
+            {
+                // Manual
+                return VideoProcAmp_Flags_Manual;
+            }
+        }
+        else if (m_queryInterface == USE_AM_CAMERA_CONTROL)
+        {
+            // Am_Camera_control
+            if (isAuto)
+            {
+                // Auto
+                return VideoProcAmp_Flags_Auto;
+            }
+            else
+            {
+                // Manual
+                return VideoProcAmp_Flags_Manual;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+#pragma endregion CapsFlag
 }
 

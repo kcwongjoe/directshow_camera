@@ -41,24 +41,24 @@ namespace DirectShowCamera
 
             // Setting
             properties = std::make_shared<DirectShowCameraProperties>();
-            properties->getBrightness()->importProperty(true, 0, 255, 1, 128, false, 128, false, true);
-            properties->getContrast()->importProperty(true, 0, 255, 1, 32, false, 32, false, true);
-            properties->getHue()->importProperty(true, -180, 180, 1, 0, false, 0, false, true);
-            properties->getSaturation()->importProperty(true, 0, 100, 1, 64, false, 64, false, true);
-            properties->getSharpness()->importProperty(true, 0, 7, 1, 0, false, 0, false, true);
-            properties->getGamma()->importProperty(true, 90, 150, 1, 120, false, 120, false, true);
-            properties->getColorEnable()->importProperty(true, 0, 1, 1, 1, false, 1, false, true);
-            properties->getWhiteBalance()->importProperty(true, 2800, 6500, 1, 4600, true, 4600, true, true);
-            properties->getBacklightCompensation()->importProperty(true, 0, 2, 1, 1, false, 1, false, true);
-            properties->getGain()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
-            properties->getPan()->importProperty(true, -16, 16, 1, 0, false, 0, false, true);
-            properties->getTilt()->importProperty(true, -16, 16, 1, 0, false, 0, false, true);
-            properties->getRoll()->importProperty(true, 0, 3, 1, 0, false, 0, false, true);
-            properties->getZoom()->importProperty(true, 100, 400, 10, 100, false, 100, false, true);
-            properties->getExposure()->importProperty(true, -12, -3, 1, -6, true, -6, true, true);
-            properties->getIris()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
-            properties->getFocus()->importProperty(false, 0, 1, 1, 0, false, 0, false, true);
-            properties->markAsInitialized();
+            properties->getBrightness()->ImportProperty(true, 0, 255, 1, 128, false, 128, false, true);
+            properties->getContrast()->ImportProperty(true, 0, 255, 1, 32, false, 32, false, true);
+            properties->getHue()->ImportProperty(true, -180, 180, 1, 0, false, 0, false, true);
+            properties->getSaturation()->ImportProperty(true, 0, 100, 1, 64, false, 64, false, true);
+            properties->getSharpness()->ImportProperty(true, 0, 7, 1, 0, false, 0, false, true);
+            properties->getGamma()->ImportProperty(true, 90, 150, 1, 120, false, 120, false, true);
+            properties->getColorEnable()->ImportProperty(true, 0, 1, 1, 1, false, 1, false, true);
+            properties->getWhiteBalance()->ImportProperty(true, 2800, 6500, 1, 4600, true, 4600, true, true);
+            properties->getBacklightCompensation()->ImportProperty(true, 0, 2, 1, 1, false, 1, false, true);
+            properties->getGain()->ImportProperty(false, 0, 1, 1, 0, false, 0, false, true);
+            properties->getPan()->ImportProperty(true, -16, 16, 1, 0, false, 0, false, true);
+            properties->getTilt()->ImportProperty(true, -16, 16, 1, 0, false, 0, false, true);
+            properties->getRoll()->ImportProperty(true, 0, 3, 1, 0, false, 0, false, true);
+            properties->getZoom()->ImportProperty(true, 100, 400, 10, 100, false, 100, false, true);
+            properties->getExposure()->ImportProperty(true, -12, -3, 1, -6, true, -6, true, true);
+            properties->getIris()->ImportProperty(false, 0, 1, 1, 0, false, 0, false, true);
+            properties->getFocus()->ImportProperty(false, 0, 1, 1, 0, false, 0, false, true);
+            properties->MarkAsInitialized();
         }
 
         /**

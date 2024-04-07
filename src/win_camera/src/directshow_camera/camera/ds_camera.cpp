@@ -778,7 +778,7 @@ namespace DirectShowCamera
     {
         if (m_isOpening && m_property != nullptr)
         {
-            m_property->refresh(m_videoInputFilter, m_errorString);
+            m_property->Refresh(m_videoInputFilter, m_errorString);
         }
     }
 
@@ -791,7 +791,7 @@ namespace DirectShowCamera
     {
         if (m_videoInputFilter != NULL && m_property != nullptr)
         {
-            m_property->resetDefault(m_videoInputFilter, m_errorString, asAuto);
+            m_property->ResetToDefaultValue(m_videoInputFilter, m_errorString, asAuto);
         }
     }
 

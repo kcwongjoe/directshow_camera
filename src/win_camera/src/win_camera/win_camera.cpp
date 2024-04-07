@@ -1,6 +1,7 @@
 #include "win_camera/win_camera.h"
 
 #include "directshow_camera/utils/com_lib_utils.h"
+#include "directshow_camera/utils/ds_camera_utils.h"
 
 #include "exceptions/resolution_not_support_exception.h"
 #include "exceptions/device_not_found_exception.h"
