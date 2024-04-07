@@ -3,19 +3,13 @@
 namespace DirectShowCamera
 {
 
-    /**
-     * @brief Constructor
-     * 
-     * @param friendlyName Friendly Name
-     * @param description Description
-     * @param devicePath Device Path
-     * @param videoFormats Video Formats
-     */
+#pragma region Constructor and Destructor
+
     DirectShowCameraDevice::DirectShowCameraDevice(
-        std::string friendlyName,
-        std::string description,
-        std::string devicePath,
-        std::vector<DirectShowVideoFormat> videoFormats
+        const std::string friendlyName,
+        const std::string description,
+        const std::string devicePath,
+        const std::vector<DirectShowVideoFormat> videoFormats
     )
     {
         m_videoFormats = videoFormats;
@@ -24,48 +18,30 @@ namespace DirectShowCamera
         m_devicePath = devicePath;    
     }
 
+#pragma endregion Constructor and Destructor
+
 #pragma region Getter
 
-    /**
-     * @brief Get the supported DirectShowVideoFormats
-     * 
-     * @return Return the the supported DirectShowVideoFormats 
-     */
     std::vector<DirectShowVideoFormat> DirectShowCameraDevice::getDirectShowVideoFormats() const
     {
         return m_videoFormats;
     }
 
-    /**
-     * @brief Get the camera friendly name
-     * 
-     * @return Return the camera friendly name
-     */
     std::string DirectShowCameraDevice::getFriendlyName() const
     {
-        return this->m_friendlyName;
+        return m_friendlyName;
     }
 
-    /**
-     * @brief Get the camera description
-     * 
-     * @return Return the camera description
-     */
     std::string DirectShowCameraDevice::getDescription() const
     {
-        return this->m_description;
+        return m_description;
     }
 
-    /**
-     * @brief Get the device path
-     * 
-     * @return Return the device path
-     */
     std::string DirectShowCameraDevice::getDevicePath() const
     {
-        return this->m_devicePath;
+        return m_devicePath;
     }
 
-#pragma endregion Getter and Setter
+#pragma endregion Getter
 
 }
