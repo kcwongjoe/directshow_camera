@@ -103,9 +103,12 @@ namespace DirectShowCamera
         // Run
         HRESULT hr = m_mediaControl->Stop();
 
-        // Check succeeded
-        if (hr != S_OK)
+        // The state transition might be asynchronous. If the method returns before the transition completes, the return value is S_FALSE.
+        // Ignore S_FALSE here and not wait for completion. As we do nothing after Stop., we will not capture any frame after Stop.
+        if (!SUCCEEDED(hr))
         {
+            // Notes: This method always sets the filter's state to State_Stopped, even if the method returns an error code. 
+
             errorMessage = "Could not stop media contol.(hr = " + std::to_string(hr) + ").";
             return false;
         }
