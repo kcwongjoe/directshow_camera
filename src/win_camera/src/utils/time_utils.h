@@ -41,7 +41,7 @@ namespace Utils
 
         /**
          * @brief Get millisecond from time
-         * @param time
+         * @param[in] time
          * @return
         */
         static int GetMilliseconds(std::chrono::system_clock::time_point time);

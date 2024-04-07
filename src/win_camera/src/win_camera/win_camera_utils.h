@@ -14,14 +14,14 @@ namespace WinCamera
 
         /**
          * @brief Convert DirectShow exposure value to seconds
-         * @param dsValue DirectShow exposure value
+         * @param[in] dsValue DirectShow exposure value
          * @return Return exposure in second
         */
         static double DSExposureValueToSec(const long dsValue);
 
         /**
          * @brief Convert exposure value in second to DirectShow exposure value
-         * @param second Exposure value in second
+         * @param[in] second Exposure value in second
          * @return Return DirectShow exposure value
         */
         static long DSExposureSecToValue(const double second);

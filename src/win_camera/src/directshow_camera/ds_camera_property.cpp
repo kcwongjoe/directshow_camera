@@ -14,11 +14,15 @@ namespace DirectShowCamera
 
     /**
      * @brief Constructor
-     * @param name Property Name, use for casting to string
-     * @param propertyEnum Property Enumeration in directshow
-     * @param queryInterface Query interface, USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
+     * @param[in] name Property Name, use for casting to string
+     * @param[in] propertyEnum Property Enumeration in directshow
+     * @param[in] queryInterface Query interface, USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
     */
-    DirectShowCameraProperty::DirectShowCameraProperty(std::string name, long propertyEnum, int queryInterface)
+    DirectShowCameraProperty::DirectShowCameraProperty(
+        const std::string name,
+        const long propertyEnum,
+        const int queryInterface
+    )
     {
         m_name = name;
         m_enum = propertyEnum;
@@ -50,10 +54,10 @@ namespace DirectShowCamera
 
     /**
      * @brief Check whether the Capsflags contains auto mode.
-     * @param capsFlags CapsFlag
+     * @param[in] capsFlags CapsFlag
      * @return Return true if the Capsflags contains auto mode.
     */
-    bool DirectShowCameraProperty::capsFlagIsAuto(long capsFlags) const
+    bool DirectShowCameraProperty::capsFlagIsAuto(const long capsFlags) const
     {
         bool result = false;
 
@@ -80,10 +84,10 @@ namespace DirectShowCamera
 
     /**
      * @brief Check whether the Capsflags contains manual mode.
-     * @param capsFlags CapsFlag
+     * @param[in] capsFlags CapsFlag
      * @return Return true if the Capsflags contains manual mode.
     */
-    bool DirectShowCameraProperty::capsFlagIsManual(long capsFlags) const
+    bool DirectShowCameraProperty::capsFlagIsManual(const long capsFlags) const
     {
         bool result = false;
 
@@ -108,7 +112,7 @@ namespace DirectShowCamera
         return result;
     }
 
-    long DirectShowCameraProperty::isAutoToCapsFlag(bool isAuto) const
+    long DirectShowCameraProperty::isAutoToCapsFlag(const bool isAuto) const
     {
         if (m_queryInterface == USE_AM_VIDEO_PROC_AMP)
         {
@@ -263,17 +267,27 @@ namespace DirectShowCamera
     /**
      * @brief Import property
      * 
-     * @param supported Is camera supported?
-     * @param min Min value
-     * @param max Max value
-     * @param step Step
-     * @param defaultValue Default value
-     * @param isAuto Is auto?
-     * @param value Current value
-     * @param supportAuto Support auto?
-     * @param supportManual Support manual?
+     * @param[in] supported Is camera supported?
+     * @param[in] min Min value
+     * @param[in] max Max value
+     * @param[in] step Step
+     * @param[in] defaultValue Default value
+     * @param[in] isAuto Is auto?
+     * @param[in] value Current value
+     * @param[in] supportAuto Support auto?
+     * @param[in] supportManual Support manual?
     */
-    void DirectShowCameraProperty::importProperty(bool supported, long min, long max, long step, long defaultValue, bool isAuto, long value, bool supportAuto, bool supportManual)
+    void DirectShowCameraProperty::importProperty(
+        const bool supported,
+        const long min,
+        const long max,
+        const long step,
+        const long defaultValue,
+        const bool isAuto,
+        const long value,
+        const bool supportAuto,
+        const bool supportManual
+    )
     {
         m_min = min;
         m_max = max;

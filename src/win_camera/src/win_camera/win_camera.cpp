@@ -580,7 +580,7 @@ namespace WinCamera
             }
 
             // Update convertor media type
-            m_matConvertor.videoType = m_directShowCamera->getFrameType();
+            m_matConvertor.setVideoType(m_directShowCamera->getFrameType());
         }
 
         return result;

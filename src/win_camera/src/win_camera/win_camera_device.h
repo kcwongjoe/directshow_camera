@@ -21,13 +21,13 @@ namespace WinCamera
 
         /**
          * @brief Constructor
-         * @param directShowCamera Directshow Camera
+         * @param[in] directShowCamera Directshow Camera
         */
         WinCameraDevice(const DirectShowCamera::DirectShowCameraDevice& directShowCameraDevice);
 
         /**
          * @brief Copy constructor
-         * @param cameraDevice CameraDevice
+         * @param[in] cameraDevice CameraDevice
         */
         WinCameraDevice(const WinCameraDevice& cameraDevice);
 
@@ -47,6 +47,15 @@ namespace WinCamera
         */
         std::vector<std::pair<int, int>> getMonoResolutions() const;
 
+        /**
+         * @brief Check whether resolution existed in monochrome
+         *
+         * @param[in] width Width
+         * @param[in] height Height
+         * @return Return true if existed.
+        */
+        bool ContainMonochromeResolution(const int width, const int height) const;
+
 #pragma endregion Monochrome
 
 #pragma region RGB
@@ -63,6 +72,15 @@ namespace WinCamera
         */
         std::vector<std::pair<int,int>> getRGBResolutions() const;
 
+        /**
+         * @brief Check whether resolution existed in RGB
+         *
+         * @param[in] width Width
+         * @param[in] height Height
+         * @return Return true if existed.
+        */
+        bool ContainRGBResolution(const int width, const int height) const;
+
 #pragma endregion RGB
 
 #pragma region Resolution
@@ -76,8 +94,8 @@ namespace WinCamera
         /**
          * @brief Check whether resolution existed
          *
-         * @param width Width
-         * @param height Height
+         * @param[in] width Width
+         * @param[in] height Height
          * @return Return true if existed.
         */
         bool ContainResolution(const int width, const int height) const;
@@ -110,7 +128,7 @@ namespace WinCamera
 
         /**
          * @brief Copy assignment operator
-         * @param cameraDevice CameraDevice
+         * @param[in] cameraDevice CameraDevice
          * @return
         */
         WinCameraDevice& operator=(const WinCameraDevice& cameraDevice);

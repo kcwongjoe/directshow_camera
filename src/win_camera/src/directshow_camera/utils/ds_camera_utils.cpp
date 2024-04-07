@@ -6,7 +6,7 @@ namespace DirectShowCameraUtils
 
     /**
      * @brief Deletes the format block in an AM_MEDIA_TYPE. e.g. AM_MEDIA_TYPE mt; FreeMediaType(mt);
-     * @param amMediaType AM_MEDIA_TYPE
+     * @param[in,out] amMediaType AM_MEDIA_TYPE
     */
     void FreeMediaType(AM_MEDIA_TYPE& amMediaType)
     {
@@ -26,7 +26,7 @@ namespace DirectShowCameraUtils
 
     /**
      * @brief Delete the pointer of AM_MEDIA_TYPE, include the format block. Use FreeMediaType() for object. e.g. AM_MEDIA_TYPE* mt; DeleteMediaType(&mt);
-     * @param amMediaType AM_MEDIA_TYPE to be deleted
+     * @param[in,out] amMediaType AM_MEDIA_TYPE to be deleted
     */
     void DeleteMediaType(AM_MEDIA_TYPE** amMediaType)
     {
@@ -40,7 +40,7 @@ namespace DirectShowCameraUtils
 
     /**
      * @brief Destroy graph. Reference from opencv::cap_dshow.cpp
-     * @param iGraphBuilder
+     * @param[in,out] iGraphBuilder
     */
     void DestroyGraph(IGraphBuilder* iGraphBuilder) {
 
@@ -96,8 +96,8 @@ namespace DirectShowCameraUtils
 
     /**
      * @brief Take apart the graph from the capture device downstream to the null renderer
-     * @param iGraphBuilder
-     * @param iBaseFilter
+     * @param[in,out] iGraphBuilder
+     * @param[in] iBaseFilter
     */
     void NukeDownStream(IGraphBuilder* iGraphBuilder, IBaseFilter* iBaseFilter) {
 

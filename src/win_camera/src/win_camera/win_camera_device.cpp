@@ -28,16 +28,9 @@ namespace WinCamera
                     // RGB
 
                     // Check existed
-                    bool found = false;
-                    for (int j = 0; j < m_rgbResolutions.size(); j++) {
-                        if (m_rgbResolutions[j].first == width && m_rgbResolutions[j].second == height)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
+                    bool found = ContainRGBResolution(width, height);
 
-                    // Add
+                    // Add if not existed
                     if (!found)
                     {
                         m_rgbResolutions.push_back(std::pair<int, int>(width, height));
@@ -48,16 +41,9 @@ namespace WinCamera
                     // Monochrome 
 
                     // Check existed
-                    bool found = false;
-                    for (int j = 0; j < m_monoResolutions.size(); j++) {
-                        if (m_monoResolutions[j].first == width && m_monoResolutions[j].second == height)
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
+                    bool found = ContainMonochromeResolution(width, height);
 
-                    // Add
+                    // Add if not existed
                     if (!found)
                     {
                         m_monoResolutions.push_back(std::pair<int, int>(width, height));
@@ -90,6 +76,18 @@ namespace WinCamera
         return m_monoResolutions;
     }
 
+    bool WinCameraDevice::ContainMonochromeResolution(const int width, const int height) const
+    {
+        for (int i = 0; i < m_monoResolutions.size(); i++)
+        {
+            if (m_monoResolutions[i].first == width && m_monoResolutions[i].second == height)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 #pragma endregion Monochrome
 
 #pragma region RGB
@@ -102,6 +100,19 @@ namespace WinCamera
     std::vector<std::pair<int, int>> WinCameraDevice::getRGBResolutions() const
     {
         return m_rgbResolutions;
+    }
+
+    bool WinCameraDevice::ContainRGBResolution(const int width, const int height) const
+    {
+        for (int i = 0; i < m_rgbResolutions.size(); i++)
+        {
+            if (m_rgbResolutions[i].first == width && m_rgbResolutions[i].second == height)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 #pragma endregion RGB
@@ -122,23 +133,10 @@ namespace WinCamera
 
     bool WinCameraDevice::ContainResolution(const int width, const int height) const
     {
-        for (int i=0;i< m_monoResolutions.size();i++)
-        {
-            if (m_monoResolutions[i].first == width && m_monoResolutions[i].second == height)
-            {
-                return true;
-            }
-        }
+        const auto foundInMonochrome = ContainMonochromeResolution(width, height);
+        const auto foundInRGB = ContainRGBResolution(width, height);
 
-        for (int i = 0; i < m_rgbResolutions.size(); i++)
-        {
-            if (m_rgbResolutions[i].first == width && m_rgbResolutions[i].second == height)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return foundInMonochrome || foundInRGB;
     }
 
 #pragma endregion Resolution

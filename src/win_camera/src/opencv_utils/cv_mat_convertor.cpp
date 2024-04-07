@@ -11,7 +11,7 @@ namespace WinCamera
      * @brief Constructor
     */
     OpenCVMatConverter::OpenCVMatConverter() :
-        videoType(MEDIASUBTYPE_None)
+        m_videoType(MEDIASUBTYPE_None)
     {
         
         m_supportVideoType.push_back(MEDIASUBTYPE_RGB8);
@@ -27,20 +27,23 @@ namespace WinCamera
         
     }
 
-    /**
-     * @brief Convet Byte[] to cv::Mat
-     * @param data Byte[]
-     * @param width Widht of frame
-     * @param height Height of frmae
-     * @return Return cv::Mat which store data in BGR
-    */
-    cv::Mat OpenCVMatConverter::convert(unsigned char* data, int width, int height)
+    void OpenCVMatConverter::setVideoType(const GUID videoType)
+    {
+        m_videoType = videoType;
+    }
+
+    GUID OpenCVMatConverter::getVideoType() const
+    {
+        return m_videoType;
+    }
+
+    cv::Mat OpenCVMatConverter::convert(unsigned char* data, const int width, const int height)
     {
         // Initialize
         cv::Mat result;
 
         // Convert to Mat
-        if (videoType == MEDIASUBTYPE_Y800 || videoType == MEDIASUBTYPE_Y8 || videoType == MEDIASUBTYPE_GREY)
+        if (m_videoType == MEDIASUBTYPE_Y800 || m_videoType == MEDIASUBTYPE_Y8 || m_videoType == MEDIASUBTYPE_GREY)
         {
             // 1 byte per pixel
 
@@ -50,7 +53,7 @@ namespace WinCamera
             // Copy
             memcpy(result.ptr(), data, (long)height * (long)width);
         }
-        else if (videoType == MEDIASUBTYPE_Y16)
+        else if (m_videoType == MEDIASUBTYPE_Y16)
         {
             // 2 byte per pixel
 
@@ -158,11 +161,6 @@ namespace WinCamera
         return result;
     }
 
-    /**
-     * @brief Get the support video type
-     * 
-     * @return std::vector<GUID> 
-     */
     std::vector<GUID> OpenCVMatConverter::getSupportVideoType() const
     {
         return m_supportVideoType;

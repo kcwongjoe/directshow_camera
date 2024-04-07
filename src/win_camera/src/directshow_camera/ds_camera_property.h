@@ -23,7 +23,11 @@ namespace DirectShowCamera
 
         // Constuctor
         DirectShowCameraProperty();
-        DirectShowCameraProperty(std::string name, long propertyEnum, int queryInterface);
+        DirectShowCameraProperty(
+            const std::string name,
+            const long propertyEnum,
+            const int queryInterface
+        );
 
         void reset();
 
@@ -39,7 +43,7 @@ namespace DirectShowCamera
         /**
          * @brief Import property from IAMVideoProcAmp/IAMCameraControl
          * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-         * @param cameraControl IAMVideoProcAmp or IAMCameraControl
+         * @param[in] cameraControl IAMVideoProcAmp or IAMCameraControl
          * @return Return true if success.
         */
         template<class CameraControl>
@@ -83,7 +87,7 @@ namespace DirectShowCamera
         /**
          * @brief Import current value of the property from IAMVideoProcAmp/IAMCameraControl
          * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-         * @param cameraControl IAMVideoProcAmp or IAMCameraControl
+         * @param[in] cameraControl IAMVideoProcAmp or IAMCameraControl
          * @return Return true if success.
         */
         template<class CameraControl>
@@ -203,12 +207,16 @@ namespace DirectShowCamera
         /**
          * @brief Set value to IAMVideoProcAmp or IAMCameraControl
          * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-         * @param cameraControl
-         * @param value
-         * @param isAutoMode
+         * @param[in] cameraControl
+         * @param[in] value
+         * @param[in] isAutoMode
          * @return
         */
-        template<class CameraControl> bool setValueTemplate(CameraControl* cameraControl, long value, bool isAutoMode)
+        template<class CameraControl> bool setValueTemplate(
+            CameraControl* cameraControl,
+            const long value,
+            const bool isAutoMode
+        )
         {
             bool result = true;
 
@@ -231,9 +239,9 @@ namespace DirectShowCamera
         }
 
         // Utils
-        bool capsFlagIsAuto(long capsFlags) const;
-        bool capsFlagIsManual(long capsFlags) const;
-        long isAutoToCapsFlag(bool isAuto) const;
+        bool capsFlagIsAuto(const long capsFlags) const;
+        bool capsFlagIsManual(const long capsFlags) const;
+        long isAutoToCapsFlag(const bool isAuto) const;
     };
 }
 

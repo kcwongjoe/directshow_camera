@@ -42,7 +42,7 @@ namespace WinCamera
         /**
          * @brief Set the capture process
          *
-         * @param capturedProcess void(cv::mat image) The function to process the captured image.
+         * @param[in] capturedProcess void(cv::mat image) The function to process the captured image.
          */
         void setCapturedProcess(CapturedProcess capturedProcess);
 
@@ -90,15 +90,15 @@ namespace WinCamera
 
         /**
          * @brief Set the save image folder path
-         * @param path Path for imaged to be saved
+         * @param[in] path Path for imaged to be saved
          * @see EnableSaveImage()
         */
         void setSaveImagePath(const std::string path);
 
         /**
          * @brief Set as true to save image automatically.
-         * @param enable Set as true to save image.
-         * @param saveInAsync (Option) Set as true to save image in async mode. Default as true;
+         * @param[in] enable Set as true to save image.
+         * @param[in] saveInAsync (Option) Set as true to save image in async mode. Default as true;
          * @note The image will be saved in the folder set by setSaveImagePath()
          * @see setSaveImagePath()
         */

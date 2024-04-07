@@ -23,21 +23,43 @@ namespace WinCamera
         OpenCVMatConverter();
 
         /**
-            * @brief Set it as true if the input byte is BGR order, otherwise the input byte is RGB order. Default as false.
+         * @brief Set it as true if the input byte is BGR order, otherwise the input byte is RGB order. Default as false.
         */
         bool isBGR = true;
 
         /**
-            * @brief Set it as true to flip iamge vertically. Default as true
+         * @brief Set it as true to flip iamge vertically. Default as true
         */
         bool isVerticalFlip = true;
 
-        GUID videoType;
-            
-        cv::Mat convert(unsigned char* data, int width, int height);
+        /**
+        * @brief Set the video type
+        * @param[in] videoType Video type
+        */
+        void setVideoType(const GUID videoType);
 
+        /**
+        * @brief Get the video type
+        */
+        GUID getVideoType() const;
+
+        /**
+         * @brief Convet Byte[] to cv::Mat
+         * @param[out] data Byte[]
+         * @param[in] width Widht of frame
+         * @param[in] height Height of frmae
+         * @return Return cv::Mat which store data in BGR
+        */
+        cv::Mat convert(unsigned char* data, const int width, const int height);
+
+        /**
+         * @brief Get the support video type
+         *
+         * @return std::vector<GUID>
+         */
         std::vector<GUID> getSupportVideoType() const;
     private:
+        GUID m_videoType;
         std::vector<GUID> m_supportVideoType;
 
     };
