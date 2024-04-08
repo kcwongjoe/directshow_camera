@@ -159,14 +159,18 @@ namespace DirectShowCamera
                     UpdateVideoFormatList();
 
                     // Set format
-                    setVideoFormat(videoFormat.value());
+                    result = setVideoFormat(videoFormat.value());
 
-                    // Todo: Check if the video format was set incorrectly, throw error if it was.
+                    // errorMessage has been updated inside setVideoFormat(). Don't overwrite the error message.
+                    if (!result) m_errorString = "Error on setting video format: " + m_errorString;
                 }
 
                 // Get format
-                const auto hr = m_streamConfig->GetFormat(&amMediaType);
-                result = CheckHResultUtils::CheckIIAMSCGetFormatResult(hr, m_errorString, "Error on getting media type");
+                if (result)
+                {
+                    const auto hr = m_streamConfig->GetFormat(&amMediaType);
+                    result = CheckHResultUtils::CheckIIAMSCGetFormatResult(hr, m_errorString, "Error on getting media type");
+                }
             }
 
             // Create the Sample Grabber.

@@ -200,7 +200,7 @@ namespace DirectShowCamera
                     }
                 }
 
-                // Todo: sort and unique videoFormats(std::vector<DirectShowVideoFormat*>*) here.
+                // Todo: sort m_videoFormatList and m_amMediaTypeList based on the order of m_videoFormatList. Consider whether unique the m_videoFormatList
             }
         }
 

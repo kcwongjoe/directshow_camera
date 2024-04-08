@@ -151,6 +151,7 @@ namespace WinCamera
 
 #pragma region DirectShow Video Format
 
+        // Todo: Move to protected and change the test object
         /**
          * @brief Get support DirectShowVideoFormat list. It is a advance option. Suggest to acquire the resolution from CameraDevice (Use getCameras() to get CameraDevice).
          * @return Return the support DirectShowVideoFormat list.
@@ -163,6 +164,7 @@ namespace WinCamera
         */
         DirectShowCamera::DirectShowVideoFormat getDirectShowVideoFormat() const;
 
+        // Todo: Fix changing video format problem when camera is opened
         /**
          * @brief Set DirectShowVideoFormat to the camera. Problam may caused when camera was opened. It is suggest to set DirectShowVideoFormat by open() fucntion.
          * @param[in] videoFormat DirectShowVideoFormat
@@ -301,6 +303,7 @@ namespace WinCamera
 
 #pragma region Camera
 
+        // Todo: Move to protected and change the test object
         /**
          * @brief Get the available DirectShowCameraDevice list. It is a advance option. Suggest to use getCameras().
          * @return Return the available DirectShowCameraDevice list
@@ -323,6 +326,7 @@ namespace WinCamera
         */
         void ResetProperties(const bool asAuto = true);
 
+        // Todo: Move to protected and change the test object
         /**
          * @brief Get directshow properties pointer. It is a advance option.
          * @return Return the directshow properties pointer

@@ -23,12 +23,20 @@ namespace WinCamera
     ) :
         m_directShowCamera(abstractDirectShowCamera)
     {
+        // Check
+        assert(
+            (abstractDirectShowCamera != nullptr) &&
+            "abstractDirectShowCamera in WinCamera::WinCamera() should never be null."
+        );
+
+        // Initialize
         Constructor();
     }
 
     void WinCamera::Constructor()
     {
-        COMLibUtils::COMLibUtils::InitCOMLib();
+        const auto result = COMLibUtils::COMLibUtils::InitCOMLib(m_errorString);
+        if (!result) ThrowDirectShowException();
 
 #ifdef WITH_OPENCV2
         m_matConvertor = OpenCVMatConverter();
@@ -204,7 +212,7 @@ namespace WinCamera
 
     bool WinCamera::isOpened() const
     {
-        if (m_directShowCamera)
+        if (m_directShowCamera != nullptr)
             return m_directShowCamera->isOpening();
         else
             return false;
@@ -213,7 +221,7 @@ namespace WinCamera
     bool WinCamera::Close()
     {
         bool result = true;
-        if (m_directShowCamera)
+        if (m_directShowCamera != nullptr)
         {
             if (this && result && isCapturing())
             {
@@ -465,13 +473,12 @@ namespace WinCamera
             bool requireStart = m_directShowCamera->isCapturing();
 
             // Stop capturing
-            m_directShowCamera->Stop();
+            const auto resultStop = m_directShowCamera->Stop();
+            if (!resultStop) ThrowDirectShowException();
 
             // Set resolution
-            bool result = m_directShowCamera->setVideoFormat(videoFormat);
-
-            // Throw DirectShow Camera Exception
-            if (!result) ThrowDirectShowException();
+            const auto resultSetVideoFormat = m_directShowCamera->setVideoFormat(videoFormat);
+            if (!resultSetVideoFormat) ThrowDirectShowException();
 
 #ifdef WITH_OPENCV2
             AllocateMatBuffer();
@@ -480,10 +487,11 @@ namespace WinCamera
             // Restart capturing
             if (requireStart)
             {
-                m_directShowCamera->Start();
+                const auto resultStart = m_directShowCamera->Start();
+                if (!resultStart) ThrowDirectShowException();
             }
 
-            return result;
+            return true;
         }
         else
         {

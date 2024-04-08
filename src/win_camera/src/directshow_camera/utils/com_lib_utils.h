@@ -11,10 +11,12 @@ namespace COMLibUtils
     public:
         /**
          * @brief Initialize COM library
+         * 
+         * @param[out] errorString Error message
          *
          * @return Return the status of initialized.
         */
-        static bool InitCOMLib();
+        static bool InitCOMLib(std::string& errorString);
 
         /**
          * @brief Uninitialize COM library
