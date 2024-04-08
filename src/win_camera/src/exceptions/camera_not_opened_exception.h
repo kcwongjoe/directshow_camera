@@ -22,6 +22,12 @@ namespace WinCamera
         CameraNotOpenedException();
 
         /**
+        * @brief Constructor
+        * @param codeLocation The location where the exception is thrown. This will be added to the error message.
+        */
+        CameraNotOpenedException(std::string codeLocation);
+
+        /**
          * @brief Get the error message
         */
         std::string getErrorMessage() const;

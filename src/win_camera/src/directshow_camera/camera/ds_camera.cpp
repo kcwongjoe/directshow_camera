@@ -3,6 +3,7 @@
 #include "directshow_camera/utils/check_hresult_utils.h"
 #include "directshow_camera/utils/win32_utils.h"
 #include "directshow_camera/utils/ds_camera_utils.h"
+#include "directshow_camera/utils/com_lib_utils.h"
 
 namespace DirectShowCamera
 {
@@ -12,12 +13,16 @@ namespace DirectShowCamera
     DirectShowCamera::DirectShowCamera() :
         m_mediaControlHandler(IMediaControlHandler())
     {
-        
+        // Initialize COM Library
+        const auto result = COMLibUtils::COMLibUtils::InitCOMLib(m_errorString);
     }
 
     DirectShowCamera::~DirectShowCamera()
     {
         Release();
+
+        // Uninitialize COM Library
+        COMLibUtils::COMLibUtils::UninitCOMLib();
     }
 
     void DirectShowCamera::Release()

@@ -8,6 +8,11 @@ namespace WinCamera
 
     }
 
+    CameraNotOpenedException::CameraNotOpenedException(std::string codeLocation) :
+        m_errorMessage("In the " + codeLocation + ", Camera is not opened.")
+    {
+    }
+
     std::string CameraNotOpenedException::getErrorMessage() const
     {
         return m_errorMessage;

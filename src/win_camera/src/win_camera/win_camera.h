@@ -104,6 +104,7 @@ namespace WinCamera
 
         /**
          * @brief Close
+         * @return Return true if success
         */
         bool Close();
 
@@ -140,12 +141,6 @@ namespace WinCamera
          * @return Return true if camera is capturing.
         */
         bool isCapturing() const;
-
-        /**
-         * @brief Get the last error message.
-         * @return Return the last error message.
-        */
-        std::string getLastError() const;
 
 #pragma endregion Capture
 
@@ -368,12 +363,16 @@ namespace WinCamera
             std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat = std::nullopt
         );
 
+        /**
+         * @brief Throw DirectShow exception if existed
+        */
+        void ThrowDirectShowException();
+
     private:
         std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> m_directShowCamera;
         bool m_isInitialized = false;
 
         unsigned long m_lastFrameIndex = 0;
-        std::string m_errorString;
 
         std::shared_ptr<WinCameraPropertyBrightness> m_brightness;
         std::shared_ptr<WinCameraPropertyContrast> m_contrast;
@@ -398,14 +397,6 @@ namespace WinCamera
         int m_matBufferSize = 0;
         OpenCVMatConverter m_matConvertor;
     #endif
-
-
-
-        // Utils
-        /**
-         * @brief Throw DirectShow exception if existed
-        */
-        void ThrowDirectShowException();
     };
 }
 

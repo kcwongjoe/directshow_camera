@@ -1,11 +1,11 @@
 #include "win_camera/win_camera.h"
 
-#include "directshow_camera/utils/com_lib_utils.h"
 #include "directshow_camera/utils/ds_camera_utils.h"
 
 #include "exceptions/resolution_not_support_exception.h"
 #include "exceptions/device_not_found_exception.h"
 #include "exceptions/directshow_camera_exception.h"
+#include "exceptions/camera_not_opened_exception.h"
 
 namespace WinCamera
 {
@@ -35,8 +35,8 @@ namespace WinCamera
 
     void WinCamera::Constructor()
     {
-        const auto result = COMLibUtils::COMLibUtils::InitCOMLib(m_errorString);
-        if (!result) ThrowDirectShowException();
+        // Check if DirectShowCamera has error during initialization
+        ThrowDirectShowException();
 
 #ifdef WITH_OPENCV2
         m_matConvertor = OpenCVMatConverter();
@@ -49,9 +49,6 @@ namespace WinCamera
     WinCamera::~WinCamera()
     {
         Close();
-        
-        // Uninitialize COM Library
-        COMLibUtils::COMLibUtils::UninitCOMLib();
     }
 
 #pragma endregion Constructor and Destructor
@@ -256,16 +253,16 @@ namespace WinCamera
     {
         if (m_directShowCamera->isOpening())
         {
-            bool success = m_directShowCamera->Start();
+            const auto result = m_directShowCamera->Start();
 
             // Throw DirectShow Camera Exception
-            if (!success) ThrowDirectShowException();
+            if (!result) ThrowDirectShowException();
 
-            return success;
+            return result;
         }
         else
         {
-            m_errorString = "Error on startCapture() : Camera is not opened.";
+            throw CameraNotOpenedException("WinCamera::StartCapture()");
             return false;
         }
     }
@@ -274,16 +271,16 @@ namespace WinCamera
     {
         if (m_directShowCamera->isOpening())
         {
-            bool success = m_directShowCamera->Stop();
+            const auto result = m_directShowCamera->Stop();
 
             // Throw DirectShow Camera Exception
-            if (!success) ThrowDirectShowException();
+            if (!result) ThrowDirectShowException();
 
-            return success;
+            return result;
         }
         else
         {
-            m_errorString = "Error on stopCapture() : Camera is not opened.";
+            throw CameraNotOpenedException("WinCamera::StopCapture()");
             return false;
         }
     }
@@ -423,11 +420,6 @@ namespace WinCamera
     }
 
 #pragma endregion Properties
-
-    std::string WinCamera::getLastError() const
-    {
-        return m_errorString;
-    }
 
 #pragma region Cameras
 
