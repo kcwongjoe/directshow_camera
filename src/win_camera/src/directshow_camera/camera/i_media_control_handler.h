@@ -89,23 +89,6 @@ namespace DirectShowCamera
         );
 
     private:
-
-        /**
-        * @brief The maximum number of time to try to call IMediaControl.GetState(). It is used in WaitForCompletion().
-        */
-        const int m_maxGetStateTryTime = 20;
-
-        /**
-        * @brief The delay time in ms between each calling IMediaControl.GetState(). It is used in WaitForCompletion().
-        */
-        const int m_tryGetStateDelay = 100;
-
-        /**
-        * @brief Timeout for IMediaControl.GetState(). It is in ms.
-        */
-        const int m_getStateTimeout = 1000;
-
-    private:
         IMediaControl* m_mediaControl = NULL;
     };
 }

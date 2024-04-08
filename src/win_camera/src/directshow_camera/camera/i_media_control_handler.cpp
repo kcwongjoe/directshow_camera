@@ -126,12 +126,12 @@ namespace DirectShowCamera
         FILTER_STATE fs = State_Stopped;
         if (succeedState == State_Stopped) fs = State_Running;
 
-        // Start to wait for completion
+        // Wait for completion
         int tryCount = 0;
-        while (fs != succeedState && tryCount < m_maxGetStateTryTime)
+        while (fs != succeedState && tryCount < 20) // Maximum try 20 times
         {
-            // Wait for ms
-            std::this_thread::sleep_for(std::chrono::milliseconds(m_tryGetStateDelay));
+            // Wait for 100ms
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
             // Get State
             const auto hr = m_mediaControl->GetState(
