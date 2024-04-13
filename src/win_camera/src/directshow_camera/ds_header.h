@@ -10,6 +10,9 @@
 #pragma managed(pop)
 #pragma comment(lib, "strmiids")
 
+#include <vidcap.h>
+#include <ksmedia.h>
+
 //*******************************
 
 #endif

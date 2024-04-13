@@ -323,6 +323,42 @@ namespace DirectShowVideoFormatUtils
         return result;
     }
 
+    std::string IKsTopologyInfoNodeToString(GUID guid)
+    {
+        if (guid == KSNODETYPE_DEV_SPECIFIC)
+        {
+            return "KSNODETYPE_DEV_SPECIFIC";
+        }
+        else if (guid == KSNODETYPE_VIDEO_CAMERA_TERMINAL)
+        {
+            return "KSNODETYPE_VIDEO_CAMERA_TERMINAL";
+        }
+        else if (guid == KSNODETYPE_VIDEO_INPUT_MTT)
+        {
+            return "KSNODETYPE_VIDEO_INPUT_MTT";
+        }
+        else if (guid == KSNODETYPE_VIDEO_INPUT_TERMINAL)
+        {
+            return "KSNODETYPE_VIDEO_INPUT_TERMINAL";
+        }
+        else if (guid == KSNODETYPE_VIDEO_PROCESSING)
+        {
+            return "KSNODETYPE_VIDEO_PROCESSING";
+        }
+        else if (guid == KSNODETYPE_VIDEO_SELECTOR)
+        {
+            return "KSNODETYPE_VIDEO_SELECTOR";
+        }
+        else if (guid == KSNODETYPE_VIDEO_STREAMING)
+        {
+            return "KSNODETYPE_VIDEO_STREAMING";
+        }
+        else
+        {
+            return "UNKNOWN_NODE_TYPE";
+        }
+    }
+
     std::vector<GUID> SupportMonochromeSubType()
     {
         std::vector<GUID> result = {

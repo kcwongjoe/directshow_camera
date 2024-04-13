@@ -19,6 +19,7 @@ namespace DirectShowCamera
     public: 
         static const int USE_AM_VIDEO_PROC_AMP = 0;
         static const int USE_AM_CAMERA_CONTROL = 1;
+        static const int USE_VIDEO_PROC_AMP = 2;
 
     public:
 

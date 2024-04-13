@@ -204,7 +204,7 @@ namespace DirectShowCameraUtils
     }
 
     /**
-     * @brief A decorator to process AM_MEDIA_TYPE from IPin.
+     * @brief A decorator to extract AM_MEDIA_TYPE from IPin.
      * @tparam Func void(AM_MEDIA_TYPE*)
      * @param[in] iPin IPin
      * @param[in] func Lambda function to process AM_MEDIA_TYPE
@@ -265,7 +265,7 @@ namespace DirectShowCameraUtils
     }
 
     /**
-     * @brief A decorator to process AM_MediaType
+     * @brief A decorator to extract AM_MediaType from IAMStreamConfig
      * @tparam func void(AM_MEDIA_TYPE*)
      * @param[in] streamConfig StreamConfig to get the AM_MediaType
      * @param[in] func Lambda funciton for processing AM_MediaType
@@ -311,7 +311,7 @@ namespace DirectShowCameraUtils
 
 
     /**
-     * @brief A decorator to process IAMVideoProcAmp
+     * @brief A decorator to extract IAMVideoProcAmp from IBaseFilter
      * @tparam func void(IAMVideoProcAmp*)
      * @param[in] videoInputFilter Video Input Filter to get the IAMVideoProcAmp
      * @param[in] func Lambda funciton for processing IAMVideoProcAmp
@@ -359,7 +359,7 @@ namespace DirectShowCameraUtils
     }
 
     /**
-     * @brief A decorator to process IAMCameraControl
+     * @brief A decorator to extract IAMCameraControl from IBaseFilter
      * @tparam func void(IAMCameraControl*)
      * @param[in] videoInputFilter Video Input Filter to get the IAMCameraControl
      * @param[in] func Lambda funciton for processing IAMCameraControl
@@ -404,6 +404,92 @@ namespace DirectShowCameraUtils
         {
             return false;
         }
+    }
+
+    /**
+     * @brief A decorator to extract IVideoProcAmp from IBaseFilter
+     * @tparam func void(IVideoProcAmp *)
+     * @param[in] videoInputFilter Video Input Filter to get the IVideoProcAmp 
+     * @param[in] func Lambda funciton for processing IVideoProcAmp 
+     * @param[out] errorString Error String
+     * @return bool Return true if success.
+     */
+    template <typename VideoProcAmpFunc> bool VideoProcAmpDecorator(
+        IBaseFilter* videoInputFilter,
+        VideoProcAmpFunc func,
+        std::string& errorString = NULL
+    )
+    {
+        bool success;
+        HRESULT hr = NO_ERROR;
+
+        // Get IKsTopologyInfo
+        IKsTopologyInfo* ksTopologyInfo = NULL;
+        hr = videoInputFilter->QueryInterface(__uuidof(IKsTopologyInfo), (void**)&ksTopologyInfo);
+        success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting ksTopologyInfo");
+
+        //Get IVideoProcAmp
+        if (success)
+        {
+            // Get the number of nodes in IKsTopologyInfo
+            auto numOfNodes = DWORD{ 0 };
+            ksTopologyInfo->get_NumNodes(&numOfNodes);
+
+            for (DWORD i = 0; i < numOfNodes; i++) {
+
+                // Get node type
+                GUID nodeType;
+                hr = ksTopologyInfo->get_NodeType(i, &nodeType);
+
+                if (hr == S_OK)
+                {
+                    // Check if nodeType is KSNODETYPE_VIDEO_PROCESSING which can expose IVideoProcAmp 
+                    if (nodeType == KSNODETYPE_VIDEO_PROCESSING) {
+                        IVideoProcAmp* videoProcAmp = NULL;
+                        hr = ksTopologyInfo->CreateNodeInstance(i, __uuidof(IVideoProcAmp), (void**)&videoProcAmp);
+
+                        //Run the function
+                        if (hr == S_OK)
+                        {
+                            try
+                            {
+                                func(videoProcAmp);
+                            }
+                            catch (...)
+                            {
+                                // Release
+                                SafeRelease(&videoProcAmp);
+                                SafeRelease(&ksTopologyInfo);
+
+                                // Rethrow
+                                throw;
+                            }
+
+                            // Release
+                            SafeRelease(&videoProcAmp);
+                        }
+                        else
+                        {
+                            errorString = "Error on getting IVideoProcAmp: hr = (" + std::to_string(hr) + ")";
+                            success = false;
+                        }
+
+                        break;
+                    }
+                }
+                else
+                {
+                    errorString = "Error on IKsTopologyInfo::get_NodeType: hr = (" + std::to_string(hr) + ")";
+                    success = false;
+                    break;
+                }
+            }
+
+            // Release
+            SafeRelease(&ksTopologyInfo);
+        }
+
+        return success;
     }
 }
 

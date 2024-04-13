@@ -22,6 +22,13 @@ namespace DirectShowVideoFormatUtils
     std::string ToString(GUID guid);
 
     /**
+    * @brief Convert KsTopologyInfo nodetype GUID to string
+    * @param[in] guid GUID
+    * @return Return the description
+    */
+    std::string IKsTopologyInfoNodeToString(GUID guid);
+
+    /**
      * @brief Get the supported monochrome media subtype. Order by the less convertion.
      * @return Return the monochrome list
     */
