@@ -18,6 +18,8 @@ Set(WIN_CAMERA_SOURCES_PATH "${WIN_CAMERA_ROOT_PATH}/src/win_camera")
 
 # Add cmake module
 list(APPEND CMAKE_MODULE_PATH "${WIN_CAMERA_ROOT_PATH}/cmake")
+
+# Initialize variables
 include(CMakeUtils)
 init_variables()
 
