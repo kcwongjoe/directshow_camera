@@ -279,7 +279,7 @@ namespace WinCamera
         );
 
         /**
-         * @brief Exposure fusion
+         * @brief Exposure fusion. Reference: [Tom Mertens, Jan Kautz, and Frank Van Reeth. Exposure fusion. In Computer Graphics and Applications, 2007. PG'07. 15th Pacific Conference on, pages 382–390. IEEE, 2007.](https://mericam.github.io/exposure_fusion/index.html)
          * @param[in] exposures Exposures time to be captured
          * @param[in] exposureFusionAsyncResult (Optional) void(cv::Mat) async processing the exposure fusion and return the result.  Default is nullptr. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
          * @param[out] exposureImages (Optional) Images captured in different exposures.

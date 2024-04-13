@@ -31,5 +31,5 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}
 # Link source library
 target_link_libraries(${EXAMPLE_PROJECT_NAME} LINK_PUBLIC ${PROJECT_NAME} ${OpenCV_LIBS})
 
-# Post-build process to copy dll
+# Copy opencv dll
 prebuild_copy_opencv_dll(${EXAMPLE_PROJECT_NAME} "${CMAKE_BINARY_DIR}/src/win_camera/examples")
