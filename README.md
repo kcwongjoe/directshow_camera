@@ -32,7 +32,7 @@ OpenCV version: 4.9.0 (Option)
 3.  Build solution from the cmake command line. Solution will be built in the *build* folder.
 
     ```shell
-    cmake -B ./build -G "Visual Studio 17 2022" -A win32
+    cmake -B ./build -G "Visual Studio 17 2022" -A x64
     cmake --build build/
     ```
     Change the `-A` to win32 for a x86 build. Notes that OpenCV doesn't provide a X86 pre-build, you have to build OpenCV by yourself if you want to use the OpenCV features.
