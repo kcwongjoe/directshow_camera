@@ -332,4 +332,37 @@ namespace DirectShowCamera
 
         return result;
     }
+    bool CheckHResultUtils::CheckIKsPropertySetQuerySupportedResult(
+        const HRESULT hr,
+        std::string& errorString,
+        const std::string errorDescription
+    )
+    {
+        bool result = true;
+        if (hr != S_OK)
+        {
+            result = false;
+
+            // Convert to error string
+            errorString = errorDescription + ": ";
+            if (hr == E_NOTIMPL)
+            {
+                errorString += "Property set is not supported.";
+            }
+            else if (hr == E_PROP_ID_UNSUPPORTED)
+            {
+                errorString += "Property identifier (Id) is not supported for the specified property set.";
+            }
+            else if (hr == E_PROP_SET_UNSUPPORTED)
+            {
+                errorString += "Property set is not supported.";
+            }
+            else
+            {
+                errorString += "hr = (" + std::to_string(hr) + ")";
+            }
+        }
+
+        return result;
+    }
 }

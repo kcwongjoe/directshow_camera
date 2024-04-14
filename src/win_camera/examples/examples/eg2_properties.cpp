@@ -27,6 +27,10 @@ void eg2_properties()
         resolutions[resolutions.size() - 1].second
     );
 
+    // Show Camera Properties
+    std::cout << (*camera.getDirectShowProperties().get()) << std::endl;
+    std::cout << "-----------------------------" << std::endl;
+
     // Get exposure in second
     if (camera.Exposure()->isSupported())
     {
@@ -35,6 +39,7 @@ void eg2_properties()
         std::vector<double> exposures = camera.Exposure()->GetPossibleExposureValues();
         camera.Exposure()->setValue(exposures[exposures.size() - 1]);
         std::cout << "Set exposure to " + std::to_string(exposures[exposures.size() - 1]) + "s" << std::endl;
+        std::cout << "Exposure now is " + std::to_string(camera.Exposure()->getValue()) + "s" << std::endl;
 
     }else
     {
@@ -44,6 +49,7 @@ void eg2_properties()
     // Reset all properties to default
     std::cout << "Reset properties to default..." << std::endl;
     camera.ResetProperties();
+    std::cout << "Exposure now is " + std::to_string(camera.Exposure()->getValue()) + "s" << std::endl;
 
     // Close the camera.
     camera.Close();

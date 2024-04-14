@@ -100,6 +100,15 @@ namespace DirectShowCamera
          * @return Return true if success
         */
         static bool CheckQueryInterfaceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IUnknown::QueryInterface()");
+
+        /**
+         * @brief Check the HResult for IKsPropertySet::QuerySupported and convert to error string
+         * @param[in] hr HRESULT
+         * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
+         * @param[in] errorDescription (Option)Error description, default as "Error on IKsPropertySet::QuerySupported"
+         * @return Return true if success
+        */
+        static bool CheckIKsPropertySetQuerySupportedResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IKsPropertySet::QuerySupported()");
     };
 }
 

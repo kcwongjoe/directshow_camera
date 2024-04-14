@@ -25,6 +25,7 @@
 #include "win_camera/properties/win_camera_property_exposure.h"
 #include "win_camera/properties/win_camera_property_iris.h"
 #include "win_camera/properties/win_camera_property_focus.h"
+#include "win_camera/properties/win_camera_property_powerline_frequency.h"
 
 #include "directshow_camera/camera/ds_camera.h"
 
@@ -347,6 +348,7 @@ namespace WinCamera
         std::shared_ptr<WinCameraPropertyExposure> Exposure();
         std::shared_ptr<WinCameraPropertyIris> Iris();
         std::shared_ptr<WinCameraPropertyFocus> Focus();
+        std::shared_ptr<WinCameraPropertyPowerlineFrequency> PowerlineFrequency();
 
 #pragma endregion Properties
 
@@ -391,6 +393,7 @@ namespace WinCamera
         std::shared_ptr<WinCameraPropertyExposure> m_exposure;
         std::shared_ptr<WinCameraPropertyIris> m_iris;
         std::shared_ptr<WinCameraPropertyFocus> m_focus;
+        std::shared_ptr<WinCameraPropertyPowerlineFrequency> m_powerline_frequency;
 
     #ifdef WITH_OPENCV2
         unsigned char* m_matBuffer = NULL;

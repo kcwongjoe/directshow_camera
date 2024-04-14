@@ -332,6 +332,7 @@ namespace WinCamera
         m_exposure = std::make_shared<WinCameraPropertyExposure>(*this, m_directShowCamera);
         m_iris = std::make_shared<WinCameraPropertyIris>(*this, m_directShowCamera);
         m_focus = std::make_shared<WinCameraPropertyFocus>(*this, m_directShowCamera);
+        m_powerline_frequency = std::make_shared<WinCameraPropertyPowerlineFrequency>(*this, m_directShowCamera);
     }
 
     std::shared_ptr<WinCameraPropertyBrightness> WinCamera::Brightness()
@@ -417,6 +418,11 @@ namespace WinCamera
     std::shared_ptr<WinCameraPropertyFocus> WinCamera::Focus()
     {
         return m_focus;
+    }
+
+    std::shared_ptr<WinCameraPropertyPowerlineFrequency> WinCamera::PowerlineFrequency()
+    {
+        return m_powerline_frequency;
     }
 
 #pragma endregion Properties

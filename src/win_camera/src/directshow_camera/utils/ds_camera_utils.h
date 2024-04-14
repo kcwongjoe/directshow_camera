@@ -377,7 +377,7 @@ namespace DirectShowCameraUtils
 
         IAMCameraControl* amCameraControl = NULL;
         hr = videoInputFilter->QueryInterface(IID_IAMCameraControl, (void**)&amCameraControl);
-        success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting camera control");
+        success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting IAMCameraControl");
 
         //Run the function
         if (success)
@@ -397,6 +397,54 @@ namespace DirectShowCameraUtils
 
             // Release
             SafeRelease(&amCameraControl);
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @brief A decorator to extract IKsPropertySet from IBaseFilter
+     * @tparam func void(IKsPropertySet*)
+     * @param[in] videoInputFilter Video Input Filter to get the IKsPropertySet
+     * @param[in] func Lambda funciton for processing IKsPropertySet
+     * @param[out] errorString Error String
+     * @return bool Return true if success.
+     */
+    template <typename KsPropertyFunc> bool KsPropertyDecorator(
+        IBaseFilter* videoInputFilter,
+        KsPropertyFunc func,
+        std::string& errorString = NULL
+    )
+    {
+        bool success;
+        HRESULT hr = NO_ERROR;
+
+        IKsPropertySet* ksPropertySet = NULL;
+        hr = videoInputFilter->QueryInterface(IID_IKsPropertySet, (void**)&ksPropertySet);
+        success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting IKsPropertySet");
+
+        //Run the function
+        if (success)
+        {
+            try
+            {
+                func(ksPropertySet);
+            }
+            catch (...)
+            {
+                // Release
+                SafeRelease(&ksPropertySet);
+
+                // Rethrow
+                throw;
+            }
+
+            // Release
+            SafeRelease(&ksPropertySet);
 
             return true;
         }

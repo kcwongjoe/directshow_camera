@@ -5,6 +5,10 @@
 //************Content************
 
 #include "directshow_camera/properties/ds_camera_property.h"
+#include "directshow_camera/properties/ds_camera_camera_control_property.h"
+#include "directshow_camera/properties/ds_camera_am_video_proc_amp_property.h"
+#include "directshow_camera/properties/ds_camera_powerline_frequency_property.h"
+#include "directshow_camera/properties/ds_camera_digital_zoom_level_property.h"
 
 namespace DirectShowCamera
 {
@@ -55,8 +59,9 @@ namespace DirectShowCamera
          * @brief Refresh properties from video input filter.
          * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
          * @param[out] errorString Error string
+         * @return Return true if success.
         */
-        void Refresh(IBaseFilter* videoInputFilter, std::string& errorString);
+        bool Refresh(IBaseFilter* videoInputFilter, std::string& errorString);
 
         /**
          * @brief Mark this object as initialized.
@@ -170,6 +175,12 @@ namespace DirectShowCamera
         */
         std::shared_ptr<DirectShowCameraProperty> getFocus() const;
 
+        /**
+        * @brief Get powerline frequency, 0 : Disable, 1 : 50 Hz, 2: 60 Hz
+        * @return Return powerline frequency
+        */
+        std::shared_ptr<DirectShowCameraProperty> getPowerlineFrequency() const;
+
 #pragma endregion Properties
 
 #pragma region operator
@@ -198,7 +209,9 @@ namespace DirectShowCamera
                 result += (std::string)*m_zoom + "\n";
                 result += (std::string)*m_exposure + "\n";
                 result += (std::string)*m_iris + "\n";
-                result += (std::string)*m_focus;
+                result += (std::string)*m_focus + "\n";
+                result += (std::string)*m_powerlineFrequency + "\n";
+                result += (std::string)*m_digitalZoomLevel;
             }
             else
             {
@@ -222,38 +235,66 @@ namespace DirectShowCamera
 
         /**
         * @brief Set the DirectShow Camera Property to the default value from IBaseFilter
-        * 
+        *
+        * @tparam PropertyType The property type, DirectShowCameraProperty, DirectShowCameraAMVideoProcAmpProperty ,DirectShowCameraCameraControlProperty, DirectShowCameraPowerlineFrequencyProperty or DirectShowCameraDigitalZoomLevelProperty
         * @param[in] property The property to set
         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
         * @param[out] errorString Error string
         * @param[in] asAuto (Optional) If this value is true, properties will try to set as auto. Default as true
         */
-        bool SetToDefaultValue(
-            std::shared_ptr<DirectShowCameraProperty>& property,
+        template<class PropertyType>
+        bool ResetToDefaultValue(
+            std::shared_ptr<PropertyType>& property,
             IBaseFilter* videoInputFilter,
             std::string& errorString,
             const bool asAuto
-        );
+        )
+        {
+            // Check PropertyType type
+            static_assert(
+                std::is_same<PropertyType, DirectShowCameraProperty>::value ||
+                std::is_same<PropertyType, DirectShowCameraAMVideoProcAmpProperty>::value ||
+                std::is_same<PropertyType, DirectShowCameraCameraControlProperty>::value ||
+                std::is_same<PropertyType, DirectShowCameraPowerlineFrequencyProperty>::value ||
+                std::is_same<PropertyType, DirectShowCameraDigitalZoomLevelProperty>::value
+                ,
+                "PropertyType must be DirectShowCameraProperty, DirectShowCameraAMVideoProcAmpProperty, DirectShowCameraCameraControlProperty, DirectShowCameraPowerlineFrequencyProperty, DirectShowCameraDigitalZoomLevelProperty."
+                );
+
+            std::string errorStr;
+            bool result = property->setToDefaultValue(videoInputFilter, errorStr);
+
+            // Amend error string
+            if (!errorStr.empty())
+            {
+                errorString = errorString + '\n' + errorStr;
+            }
+
+            return result;
+        }
+
     private:
 
         // Properties
-        std::shared_ptr<DirectShowCameraProperty> m_brightness;
-        std::shared_ptr<DirectShowCameraProperty> m_contrast;
-        std::shared_ptr<DirectShowCameraProperty> m_hue;
-        std::shared_ptr<DirectShowCameraProperty> m_saturation;
-        std::shared_ptr<DirectShowCameraProperty> m_sharpness;
-        std::shared_ptr<DirectShowCameraProperty> m_gamma;
-        std::shared_ptr<DirectShowCameraProperty> m_colorEnable;
-        std::shared_ptr<DirectShowCameraProperty> m_whiteBalance;
-        std::shared_ptr<DirectShowCameraProperty> m_backlightCompensation;
-        std::shared_ptr<DirectShowCameraProperty> m_gain;
-        std::shared_ptr<DirectShowCameraProperty> m_pan;
-        std::shared_ptr<DirectShowCameraProperty> m_tilt;
-        std::shared_ptr<DirectShowCameraProperty> m_roll;
-        std::shared_ptr<DirectShowCameraProperty> m_zoom;
-        std::shared_ptr<DirectShowCameraProperty> m_exposure;
-        std::shared_ptr<DirectShowCameraProperty> m_iris;
-        std::shared_ptr<DirectShowCameraProperty> m_focus;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_brightness;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_contrast;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_hue;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_saturation;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_sharpness;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_gamma;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_colorEnable;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_whiteBalance;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_backlightCompensation;
+        std::shared_ptr<DirectShowCameraAMVideoProcAmpProperty> m_gain;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_pan;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_tilt;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_roll;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_zoom;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_exposure;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_iris;
+        std::shared_ptr<DirectShowCameraCameraControlProperty> m_focus;
+        std::shared_ptr<DirectShowCameraPowerlineFrequencyProperty> m_powerlineFrequency;
+        std::shared_ptr<DirectShowCameraDigitalZoomLevelProperty> m_digitalZoomLevel;
 
         bool m_isinitialized = false;
 

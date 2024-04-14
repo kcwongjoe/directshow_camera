@@ -25,23 +25,25 @@ namespace DirectShowCamera
 
     void DirectShowCameraProperties::Construct()
     {
-        m_brightness = std::make_shared<DirectShowCameraProperty>("Brightness", VideoProcAmp_Brightness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_contrast = std::make_shared<DirectShowCameraProperty>("Contrast", VideoProcAmp_Contrast, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_hue = std::make_shared<DirectShowCameraProperty>("Hue", VideoProcAmp_Hue, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_saturation = std::make_shared<DirectShowCameraProperty>("Saturation", VideoProcAmp_Saturation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_sharpness = std::make_shared<DirectShowCameraProperty>("Sharpness", VideoProcAmp_Sharpness, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_gamma = std::make_shared<DirectShowCameraProperty>("Gamma", VideoProcAmp_Gamma, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_colorEnable = std::make_shared<DirectShowCameraProperty>("Color Enable", VideoProcAmp_ColorEnable, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP); // 0(off), 1(on)
-        m_whiteBalance = std::make_shared<DirectShowCameraProperty>("White Balance", VideoProcAmp_WhiteBalance, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_backlightCompensation = std::make_shared<DirectShowCameraProperty>("Backlight Compensation", VideoProcAmp_BacklightCompensation, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);  // 0(off), 1(on)
-        m_gain = std::make_shared<DirectShowCameraProperty>("Gain", VideoProcAmp_Gain, DirectShowCameraProperty::USE_AM_VIDEO_PROC_AMP);
-        m_pan = std::make_shared<DirectShowCameraProperty>("Pan", CameraControl_Pan, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        m_tilt = std::make_shared<DirectShowCameraProperty>("Tilt", CameraControl_Tilt, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        m_roll = std::make_shared<DirectShowCameraProperty>("Roll", CameraControl_Roll, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        m_zoom = std::make_shared<DirectShowCameraProperty>("Zoom", CameraControl_Zoom, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        m_exposure = std::make_shared<DirectShowCameraProperty>("Exposure", CameraControl_Exposure, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        m_iris = std::make_shared<DirectShowCameraProperty>("Iris", CameraControl_Iris, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
-        m_focus = std::make_shared<DirectShowCameraProperty>("Focus", CameraControl_Focus, DirectShowCameraProperty::USE_AM_CAMERA_CONTROL);
+        m_brightness = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Brightness", VideoProcAmp_Brightness);
+        m_contrast  = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Contrast", VideoProcAmp_Contrast);
+        m_hue = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Hue", VideoProcAmp_Hue);
+        m_saturation = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Saturation", VideoProcAmp_Saturation);
+        m_sharpness = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Sharpness", VideoProcAmp_Sharpness);
+        m_gamma = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Gamma", VideoProcAmp_Gamma);
+        m_colorEnable = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Color Enable", VideoProcAmp_ColorEnable); // 0(off), 1(on)
+        m_whiteBalance = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("White Balance", VideoProcAmp_WhiteBalance);
+        m_backlightCompensation = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Backlight Compensation", VideoProcAmp_BacklightCompensation);  // 0(off), 1(on)
+        m_gain = std::make_shared<DirectShowCameraAMVideoProcAmpProperty>("Gain", VideoProcAmp_Gain);
+        m_pan = std::make_shared<DirectShowCameraCameraControlProperty>("Pan", CameraControl_Pan);
+        m_tilt = std::make_shared<DirectShowCameraCameraControlProperty>("Tilt", CameraControl_Tilt);
+        m_roll = std::make_shared<DirectShowCameraCameraControlProperty>("Roll", CameraControl_Roll);
+        m_zoom = std::make_shared<DirectShowCameraCameraControlProperty>("Zoom", CameraControl_Zoom);
+        m_exposure = std::make_shared<DirectShowCameraCameraControlProperty>("Exposure", CameraControl_Exposure);
+        m_iris = std::make_shared<DirectShowCameraCameraControlProperty>("Iris", CameraControl_Iris);
+        m_focus = std::make_shared<DirectShowCameraCameraControlProperty>("Focus", CameraControl_Focus);
+        m_powerlineFrequency = std::make_shared<DirectShowCameraPowerlineFrequencyProperty>();
+        m_digitalZoomLevel = std::make_shared<DirectShowCameraDigitalZoomLevelProperty>();
     }
 
 #pragma endregion Constructor and Destructor
@@ -67,60 +69,49 @@ namespace DirectShowCamera
         m_exposure->Reset();
         m_iris->Reset();
         m_focus->Reset();
+        m_powerlineFrequency->Reset();
+        m_digitalZoomLevel->Reset();
 
         m_isinitialized = false;
     }
 
     void DirectShowCameraProperties::ResetToDefaultValue(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto)
     {
-        SetToDefaultValue(m_brightness,videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_contrast, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_hue, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_saturation, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_sharpness, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_gamma, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_colorEnable, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_whiteBalance, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_backlightCompensation, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_gain, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_pan, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_tilt, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_roll, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_zoom, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_exposure, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_iris, videoInputFilter, errorString, asAuto);
-        SetToDefaultValue(m_focus, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_brightness,videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_contrast, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_hue, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_saturation, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_sharpness, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_gamma, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_colorEnable, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_whiteBalance, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_backlightCompensation, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_gain, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_pan, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_tilt, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_roll, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_zoom, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_exposure, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_iris, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_focus, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_powerlineFrequency, videoInputFilter, errorString, asAuto);
+        ResetToDefaultValue(m_digitalZoomLevel, videoInputFilter, errorString, asAuto);
 
         m_isinitialized = true;
     }
 
-    bool DirectShowCameraProperties::SetToDefaultValue(
-        std::shared_ptr<DirectShowCameraProperty>& property,
-        IBaseFilter* videoInputFilter,
-        std::string& errorString,
-        const bool asAuto
-    )
+    bool DirectShowCameraProperties::Refresh(IBaseFilter* videoInputFilter, std::string& errorString)
     {
-        std::string errorStr;
-        bool result =  property->setToDefaultValue(videoInputFilter, errorStr);
-
-        // Amend error string
-        if (!errorStr.empty())
-        {
-            errorString = errorString + '\n' + errorStr;
-        }
-
-        return result;
-    }
-
-    void DirectShowCameraProperties::Refresh(IBaseFilter* videoInputFilter, std::string& errorString)
-    {
+        // Reset
         Reset();
-        bool success = true;
-
+        
         // Get properties
-        success = DirectShowCameraUtils::AmVideoProcAmpDecorator(videoInputFilter,
-            [this, errorString](IAMVideoProcAmp* videoProcAmp)
+
+        // Get properties from IAMVideoProcAmp
+        std::string amVideoProcAmpErrorString;
+        const auto amVideoProcAmpSuccess = DirectShowCameraUtils::AmVideoProcAmpDecorator(
+            videoInputFilter,
+            [this](IAMVideoProcAmp* videoProcAmp)
             {
                 // Import property
                 m_brightness->ImportProperty(videoProcAmp);
@@ -134,11 +125,15 @@ namespace DirectShowCamera
                 m_backlightCompensation->ImportProperty(videoProcAmp);
                 m_gain->ImportProperty(videoProcAmp);
             },
-            errorString
+            amVideoProcAmpErrorString
         );
+        if (!amVideoProcAmpErrorString.empty())  errorString += amVideoProcAmpErrorString;
 
-        success = DirectShowCameraUtils::AmCameraControlDecorator(videoInputFilter,
-            [this, errorString](IAMCameraControl* cameraControl)
+        // Get properties from IAMCameraControl
+        std::string amCameraControlErrorString;
+        const auto amCameraControlSuccess = DirectShowCameraUtils::AmCameraControlDecorator(
+            videoInputFilter,
+            [this](IAMCameraControl* cameraControl)
             {
                 // Import property
                 m_pan->ImportProperty(cameraControl);
@@ -149,10 +144,35 @@ namespace DirectShowCamera
                 m_iris->ImportProperty(cameraControl);
                 m_focus->ImportProperty(cameraControl);
             },
-            errorString
+            amCameraControlErrorString
         );
+        if (!amCameraControlErrorString.empty())  errorString += amCameraControlErrorString;
 
-        m_isinitialized = true;
+        // Get properties from IVideoProcAmp
+        std::string videoProcAmpErrorString;
+        const auto videoProcAmpSuccess = DirectShowCameraUtils::VideoProcAmpDecorator(
+            videoInputFilter,
+            [this, videoInputFilter](IVideoProcAmp* videoProcAmp)
+            {
+                // Import property
+                m_powerlineFrequency->ImportProperty(videoProcAmp);
+                m_digitalZoomLevel->ImportProperty(videoProcAmp, videoInputFilter);
+            },
+            videoProcAmpErrorString
+        );
+        if (!videoProcAmpErrorString.empty())  errorString += videoProcAmpErrorString;
+        
+        // Check success
+        if (amVideoProcAmpSuccess && amCameraControlSuccess && videoProcAmpSuccess)
+        {
+            m_isinitialized = true;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     void DirectShowCameraProperties::MarkAsInitialized()
@@ -247,6 +267,11 @@ namespace DirectShowCamera
     std::shared_ptr<DirectShowCameraProperty> DirectShowCameraProperties::getFocus() const
     {
         return m_focus;
+    }
+
+    std::shared_ptr<DirectShowCameraProperty> DirectShowCameraProperties::getPowerlineFrequency() const
+    {
+        return m_powerlineFrequency;
     }
 
 #pragma endregion Properties

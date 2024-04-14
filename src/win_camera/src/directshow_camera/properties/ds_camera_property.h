@@ -10,42 +10,32 @@
 namespace DirectShowCamera
 {
     /**
-     * @brief A class to store the DirectShow Camera Property
+     * @brief A class to store the DirectShow Camera Property. This is just a basic class. To enable the DirectShow feature, use DirectShowCameraAMVideoProcAmpProperty or DirectShowCameraCameraControlProperty instead.
      * 
      */
     class DirectShowCameraProperty
     {
-    // Const
-    public: 
-        static const int USE_AM_VIDEO_PROC_AMP = 0;
-        static const int USE_AM_CAMERA_CONTROL = 1;
-        static const int USE_VIDEO_PROC_AMP = 2;
-
     public:
 
 #pragma region Constructor and Destructor
 
         /**
-         * @brief Dummy constructor, use DirectShowCameraProperty(string, long, int) instead.
+         * @brief Dummy constructor, use DirectShowCameraProperty(string) instead.
         */
         DirectShowCameraProperty();
 
         /**
          * @brief Constructor
          * @param[in] name Property Name, use for casting to string
-         * @param[in] propertyEnum Property Enumeration in directshow
-         * @param[in] queryInterface Query interface, USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
         */
         DirectShowCameraProperty(
-            const std::string name,
-            const long propertyEnum,
-            const int queryInterface
+            const std::string name
         );
 
         /**
          * @brief Reset
         */
-        void Reset();
+        virtual void Reset();
 
 #pragma endregion Constructor and Destructor
 
@@ -86,7 +76,7 @@ namespace DirectShowCamera
          * @param[in] supportAuto Support auto?
          * @param[in] supportManual Support manual?
         */
-        void ImportProperty(
+        void DirectShowCameraProperty::ImportProperty(
             const bool supported,
             const long min,
             const long max,
@@ -95,96 +85,9 @@ namespace DirectShowCamera
             const bool isAuto,
             const long value,
             const bool supportAuto,
-            const bool supportManual
+            const bool supportManual,
+            const long capsFlag = 0
         );
-
-        /**
-         * @brief Import property from IAMVideoProcAmp/IAMCameraControl
-         * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-         * @param[in] cameraControl IAMVideoProcAmp or IAMCameraControl
-         * @return Return true if success.
-        */
-        template<class CameraControl>
-        bool ImportProperty(CameraControl* cameraControl)
-        {
-            // Check CameraControl type
-            static_assert(
-                std::is_same<CameraControl, IAMVideoProcAmp>::value ||
-                std::is_same<CameraControl, IAMCameraControl>::value,
-                "CameraControl must be IAMVideoProcAmp or IAMCameraControl."
-                );
-
-            HRESULT hr = NO_ERROR;
-            long min;
-            long max;
-            long step;
-            long defaultValue;
-            long availableCapsFlag;
-
-            // get range
-            hr = cameraControl->GetRange(getDSEnum(), &min, &max, &step, &defaultValue, &availableCapsFlag);
-
-            if (hr == S_OK)
-            {
-                m_supportAuto = isAutoCapsFlag(availableCapsFlag);
-                m_supportManual = isManualCapsFlag(availableCapsFlag);
-
-                // Set range
-                m_min = min;
-                m_max = max;
-                m_step = step;
-                m_defaultValue = defaultValue;
-
-                // Set current value
-                ImportPropertyValue(cameraControl);
-
-                // Set as initialzied
-                m_supported = true;
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /**
-         * @brief Import current value of the property from IAMVideoProcAmp/IAMCameraControl
-         * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-         * @param[in] cameraControl IAMVideoProcAmp or IAMCameraControl
-         * @return Return true if success.
-        */
-        template<class CameraControl>
-        bool ImportPropertyValue(CameraControl* cameraControl)
-        {
-            // Check CameraControl type
-            static_assert(
-                std::is_same<CameraControl, IAMVideoProcAmp>::value ||
-                std::is_same<CameraControl, IAMCameraControl>::value,
-                "CameraControl must be IAMVideoProcAmp or IAMCameraControl."
-                );
-
-            HRESULT hr = NO_ERROR;
-
-            // Get current value
-            long value;
-            long capsFlag;
-            hr = cameraControl->Get(getDSEnum(), &value, &capsFlag);
-
-            if (hr == S_OK)
-            {
-                // Set current value
-                m_value = value;
-                m_isAuto = isAutoCapsFlag(capsFlag);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
 #pragma endregion Import
 
@@ -218,12 +121,6 @@ namespace DirectShowCamera
          * @return Return the property name
         */
         std::string getName() const;
-
-        /**
-         * @brief Get the property Enumeration in DirectShow
-         * @return Return the property Enumeration in DirectShow
-        */
-        long getDSEnum() const;
 
         /**
          * @brief Get the range of the property
@@ -270,7 +167,7 @@ namespace DirectShowCamera
 #pragma endregion Getter
 
 #pragma region operator
-
+        
         operator std::string() const
         {
             std::string result;
@@ -306,88 +203,23 @@ namespace DirectShowCamera
 
 #pragma endregion operator
 
-    private:
+    protected:
 
-    /**
-     * @brief Set value to IAMVideoProcAmp or IAMCameraControl
-     * @tparam CameraControl IAMVideoProcAmp or IAMCameraControl
-     * @param[in] cameraControl
-     * @param[in] value
-     * @param[in] isAutoMode
-     * @return
-    */
-    template<class CameraControl> bool setValueTemplate(
-        CameraControl* cameraControl,
-        const long value,
-        const bool isAutoMode
-    )
-    {
-        // Check CameraControl type
-        static_assert(
-            std::is_same<CameraControl, IAMVideoProcAmp>::value ||
-            std::is_same<CameraControl, IAMCameraControl>::value,
-            "CameraControl must be IAMVideoProcAmp or IAMCameraControl."
-            );
+        bool CheckValue(
+            const long value,
+            const bool isAutoMode,
+            std::string& errorString
+        );
 
-        bool result = true;
+    protected:
 
-        // Set
-        HRESULT hr = cameraControl->Set(m_enum, value, getCapsFlag(isAutoMode));
-        if (hr == S_OK)
-        {
-            // Success, update variable
-            m_value = value;
-            m_isAuto = isAutoMode;
-            result = true;
-        }
-        else
-        {
-            // Fail
-            result = false;
-        }
-
-        return result;
-    }
-
-#pragma region CapsFlag
-
-    /**
-     * @brief Check whether the Capsflags contains auto mode.
-     * @param[in] capsFlags CapsFlag
-     * @return Return true if the Capsflags contains auto mode.
-    */
-    bool isAutoCapsFlag(const long capsFlags) const;
-
-    /**
-     * @brief Check whether the Capsflags contains manual mode.
-     * @param[in] capsFlags CapsFlag
-     * @return Return true if the Capsflags contains manual mode.
-    */
-    bool isManualCapsFlag(const long capsFlags) const;
-
-    /**
-     * @brief Get CapsFlag based on the mode
-     * @param[in] isAutoMode Is auto mode?
-     * @return Return CapsFlag
-    */
-    long getCapsFlag(const bool isAuto) const;
-
-#pragma endregion CapsFlag
-
-    private:
+        typedef std::function<bool(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString)> SetValueFunction;
+        SetValueFunction m_setValueFunc = nullptr;
 
         /**
          * @brief Property Name, use for casting to string
         */
         std::string m_name;
-        /**
-         * @brief Property Enumeration in directshow
-        */
-        long m_enum = 0;
-        /**
-         * @brief USE_AM_VIDEO_PROC_AMP or USE_AM_CAMERA_CONTROL
-        */
-        int m_queryInterface = -1;
 
         long m_min = 0;
         long m_max = 0;
@@ -395,6 +227,7 @@ namespace DirectShowCamera
         long m_defaultValue = 0;
         bool m_isAuto = true;
         long m_value = 0;
+        long m_capsFlag = 0;
 
         bool m_supported = false;
         bool m_supportAuto = false;
