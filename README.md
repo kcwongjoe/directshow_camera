@@ -27,7 +27,7 @@ OpenCV version: 4.9.0 (Option)
 
 2.  Clone this repository
     ```
-    git clone --recurse-submodules https://github.com/kcwongjoe/directshow_camera.git
+    git clone --recurse-submodules https://github.com/kcwongjoe/win_camera.git
     ```
 
 3.  Build solution from the cmake command line. Solution will be built in the *build* folder.

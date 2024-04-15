@@ -1,3 +1,9 @@
+/**
+* Copy right (c) 2024 Ka Chun Wong. All rights reserved.
+* This is a open source project under MIT license (see LICENSE for details).
+* If you find any bugs, please feel free to report under https://github.com/kcwongjoe/directshow_camera/issues
+**/
+
 #include "directshow_camera/properties/ds_camera_am_video_proc_amp_property.h"
 
 #include "directshow_camera/utils/ds_camera_utils.h"
