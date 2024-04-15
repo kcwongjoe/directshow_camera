@@ -164,18 +164,18 @@ namespace WinCamera
         bool result = false;
 
         // Get device input filter
-        IBaseFilter* videoInputFilter;
-        result = m_directShowCamera->getCamera(device, &videoInputFilter);
+        IBaseFilter* directShowFilter;
+        result = m_directShowCamera->getCamera(device, &directShowFilter);
 
         // Open
         if (result)
         {
-            result = Open(&videoInputFilter, videoFormat);
+            result = Open(&directShowFilter, videoFormat);
         }
         else
         {
             // Release device input filter
-            DirectShowCameraUtils::SafeRelease(&videoInputFilter);
+            DirectShowCameraUtils::SafeRelease(&directShowFilter);
 
             // Throw DirectShow Camera Exception
             if (!result) ThrowDirectShowException();
@@ -185,14 +185,14 @@ namespace WinCamera
     }
 
     bool WinCamera::Open(
-        IBaseFilter** videoInputFilter,
+        IBaseFilter** directShowFilter,
         std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat
     )
     {
         bool result = false;
 
         // Initialize camera
-        result = m_directShowCamera->Open(videoInputFilter, videoFormat);
+        result = m_directShowCamera->Open(directShowFilter, videoFormat);
 
     #ifdef WITH_OPENCV2
         if (result)

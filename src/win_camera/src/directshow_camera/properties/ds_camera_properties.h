@@ -28,10 +28,10 @@ namespace DirectShowCamera
 
         /**
          * @brief Constuct the DirectShow Camera Properties from IBaseFilter
-         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+         * @param[in] directShowFilter DirectShow Filter. Property will be load from this filter.
          * @param[out] errorString Error string
         */
-        DirectShowCameraProperties(IBaseFilter* videoInputFilter, std::string& errorString);
+        DirectShowCameraProperties(IBaseFilter* directShowFilter, std::string& errorString);
 
         /**
          * @brief Destructor
@@ -49,19 +49,19 @@ namespace DirectShowCamera
 
         /**
          * @brief Reset the DirectShow Camera Properties to the default value from IBaseFilter
-         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+         * @param[in] directShowFilter DirectShow Filter. Property will be load from this filter.
          * @param[out] errorString Error string
          * @param[in] asAuto (Optional) If this value is true, properties will try to set as auto. Default as true
         */
-        void ResetToDefaultValue(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto = true);
+        void ResetToDefaultValue(IBaseFilter* directShowFilter, std::string& errorString, const bool asAuto = true);
 
         /**
-         * @brief Refresh properties from video input filter.
-         * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+         * @brief Refresh properties from DirectShow Filter.
+         * @param[in] directShowFilter DirectShow Filter. Property will be load from this filter.
          * @param[out] errorString Error string
          * @return Return true if success.
         */
-        bool Refresh(IBaseFilter* videoInputFilter, std::string& errorString);
+        bool Refresh(IBaseFilter* directShowFilter, std::string& errorString);
 
         /**
          * @brief Mark this object as initialized.
@@ -238,14 +238,14 @@ namespace DirectShowCamera
         *
         * @tparam PropertyType The property type, DirectShowCameraProperty, DirectShowCameraAMVideoProcAmpProperty ,DirectShowCameraCameraControlProperty, DirectShowCameraPowerlineFrequencyProperty or DirectShowCameraDigitalZoomLevelProperty
         * @param[in] property The property to set
-        * @param[in] videoInputFilter Video input filter. Property will be load from this filter.
+        * @param[in] directShowFilter DirectShow Filter. Property will be load from this filter.
         * @param[out] errorString Error string
         * @param[in] asAuto (Optional) If this value is true, properties will try to set as auto. Default as true
         */
         template<class PropertyType>
         bool ResetToDefaultValue(
             std::shared_ptr<PropertyType>& property,
-            IBaseFilter* videoInputFilter,
+            IBaseFilter* directShowFilter,
             std::string& errorString,
             const bool asAuto
         )
@@ -262,7 +262,7 @@ namespace DirectShowCamera
                 );
 
             std::string errorStr;
-            bool result = property->setToDefaultValue(videoInputFilter, errorStr);
+            bool result = property->setToDefaultValue(directShowFilter, errorStr);
 
             // Amend error string
             if (!errorStr.empty())

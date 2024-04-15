@@ -313,13 +313,13 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to extract IAMVideoProcAmp from IBaseFilter
      * @tparam func void(IAMVideoProcAmp*)
-     * @param[in] videoInputFilter Video Input Filter to get the IAMVideoProcAmp
+     * @param[in] directShowFilter DirectShow Filter to get the IAMVideoProcAmp
      * @param[in] func Lambda funciton for processing IAMVideoProcAmp
      * @param[out] errorString Error String
      * @return bool Return true if success.
     */
     template <typename AmVideoProcAmpFunc> bool AmVideoProcAmpDecorator(
-        IBaseFilter* videoInputFilter,
+        IBaseFilter* directShowFilter,
         AmVideoProcAmpFunc func,
         std::string& errorString
     )
@@ -328,7 +328,7 @@ namespace DirectShowCameraUtils
         HRESULT hr = NO_ERROR;
 
         IAMVideoProcAmp* amVideoProcAmp = NULL;
-        hr = videoInputFilter->QueryInterface(IID_IAMVideoProcAmp, (void**)&amVideoProcAmp);
+        hr = directShowFilter->QueryInterface(IID_IAMVideoProcAmp, (void**)&amVideoProcAmp);
         success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting IAMVideoProcAmp");
 
         //Run the function
@@ -361,13 +361,13 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to extract IAMCameraControl from IBaseFilter
      * @tparam func void(IAMCameraControl*)
-     * @param[in] videoInputFilter Video Input Filter to get the IAMCameraControl
+     * @param[in] directShowFilter DirectShow Filter to get the IAMCameraControl
      * @param[in] func Lambda funciton for processing IAMCameraControl
      * @param[out] errorString Error String
      * @return bool Return true if success.
      */
     template <typename CameraControlFunc> bool AmCameraControlDecorator(
-        IBaseFilter* videoInputFilter,
+        IBaseFilter* directShowFilter,
         CameraControlFunc func,
         std::string& errorString = NULL
     )
@@ -376,7 +376,7 @@ namespace DirectShowCameraUtils
         HRESULT hr = NO_ERROR;
 
         IAMCameraControl* amCameraControl = NULL;
-        hr = videoInputFilter->QueryInterface(IID_IAMCameraControl, (void**)&amCameraControl);
+        hr = directShowFilter->QueryInterface(IID_IAMCameraControl, (void**)&amCameraControl);
         success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting IAMCameraControl");
 
         //Run the function
@@ -409,13 +409,13 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to extract IKsPropertySet from IBaseFilter
      * @tparam func void(IKsPropertySet*)
-     * @param[in] videoInputFilter Video Input Filter to get the IKsPropertySet
+     * @param[in] directShowFilter DirectShow Filter to get the IKsPropertySet
      * @param[in] func Lambda funciton for processing IKsPropertySet
      * @param[out] errorString Error String
      * @return bool Return true if success.
      */
     template <typename KsPropertyFunc> bool KsPropertyDecorator(
-        IBaseFilter* videoInputFilter,
+        IBaseFilter* directShowFilter,
         KsPropertyFunc func,
         std::string& errorString = NULL
     )
@@ -424,7 +424,7 @@ namespace DirectShowCameraUtils
         HRESULT hr = NO_ERROR;
 
         IKsPropertySet* ksPropertySet = NULL;
-        hr = videoInputFilter->QueryInterface(IID_IKsPropertySet, (void**)&ksPropertySet);
+        hr = directShowFilter->QueryInterface(IID_IKsPropertySet, (void**)&ksPropertySet);
         success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting IKsPropertySet");
 
         //Run the function
@@ -457,13 +457,13 @@ namespace DirectShowCameraUtils
     /**
      * @brief A decorator to extract IVideoProcAmp from IBaseFilter
      * @tparam func void(IVideoProcAmp *)
-     * @param[in] videoInputFilter Video Input Filter to get the IVideoProcAmp 
+     * @param[in] directShowFilter DirectShow Filter to get the IVideoProcAmp 
      * @param[in] func Lambda funciton for processing IVideoProcAmp 
      * @param[out] errorString Error String
      * @return bool Return true if success.
      */
     template <typename VideoProcAmpFunc> bool VideoProcAmpDecorator(
-        IBaseFilter* videoInputFilter,
+        IBaseFilter* directShowFilter,
         VideoProcAmpFunc func,
         std::string& errorString = NULL
     )
@@ -473,7 +473,7 @@ namespace DirectShowCameraUtils
 
         // Get IKsTopologyInfo
         IKsTopologyInfo* ksTopologyInfo = NULL;
-        hr = videoInputFilter->QueryInterface(__uuidof(IKsTopologyInfo), (void**)&ksTopologyInfo);
+        hr = directShowFilter->QueryInterface(__uuidof(IKsTopologyInfo), (void**)&ksTopologyInfo);
         success = DirectShowCamera::CheckHResultUtils::CheckQueryInterfaceResult(hr, errorString, "Error on getting ksTopologyInfo");
 
         //Get IVideoProcAmp

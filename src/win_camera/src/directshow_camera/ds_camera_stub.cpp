@@ -39,7 +39,7 @@ namespace DirectShowCamera
 #pragma region Connection
 
     bool DirectShowCameraStub::Open(
-        IBaseFilter** videoInputFilter,
+        IBaseFilter** directShowFilter,
         std::optional<const DirectShowVideoFormat> videoFormat
     )
     {
@@ -428,21 +428,21 @@ namespace DirectShowCamera
         return true;
     }
 
-    bool DirectShowCameraStub::getCamera(const int cameraIndex, IBaseFilter** videoInputFilter)
+    bool DirectShowCameraStub::getCamera(const int cameraIndex, IBaseFilter** directShowFilter)
     {
-        *videoInputFilter = NULL;
+        *directShowFilter = NULL;
         return true;
     }
 
-    bool DirectShowCameraStub::getCamera(const std::string devicePath, IBaseFilter** videoInputFilter)
+    bool DirectShowCameraStub::getCamera(const std::string devicePath, IBaseFilter** directShowFilter)
     {
-        *videoInputFilter = NULL;
+        *directShowFilter = NULL;
         return true;
     }
 
-    bool DirectShowCameraStub::getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
+    bool DirectShowCameraStub::getCamera(const DirectShowCameraDevice device, IBaseFilter** directShowFilter)
     {
-        return getCamera(device.getDevicePath(), videoInputFilter);
+        return getCamera(device.getDevicePath(), directShowFilter);
     }
 
 #pragma endregion getCamera

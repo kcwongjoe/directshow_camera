@@ -46,10 +46,10 @@ namespace DirectShowCamera
         /**
          * @brief Import property from IVideoProcAmp
          * @param[in] videoProcAmp IVideoProcAmp
-         * @param[in] videoInputFilter IBaseFilter
+         * @param[in] directShowFilter IBaseFilter
          * @return Return true if success.
         */
-        bool ImportProperty(IVideoProcAmp* videoProcAmp, IBaseFilter* videoInputFilter = NULL);
+        bool ImportProperty(IVideoProcAmp* videoProcAmp, IBaseFilter* directShowFilter = NULL);
 
         /**
          * @brief Import current value of the property from IVideoProcAmp
@@ -60,10 +60,10 @@ namespace DirectShowCamera
 
         /**
         * @brief Import Maximum Digital Magnification from IBaseFilter
-        * @param[in] videoInputFilter IBaseFilter
+        * @param[in] directShowFilter IBaseFilter
         * @return Return true if success.
         */
-        bool ImportMaximumDigitalMagnification(IBaseFilter* videoInputFilter);
+        bool ImportMaximumDigitalMagnification(IBaseFilter* directShowFilter);
 
 #pragma endregion Import
 

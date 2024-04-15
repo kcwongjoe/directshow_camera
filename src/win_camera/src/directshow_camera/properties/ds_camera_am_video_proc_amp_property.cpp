@@ -25,14 +25,14 @@ namespace DirectShowCamera
     {
         // Set setValue Function for DirectShowCameraProperty::setValue
         m_setValueFunc = [this](
-            IBaseFilter* videoInputFilter,
+            IBaseFilter* directShowFilter,
             const long value,
             const bool isAutoMode,
             std::string& errorString
             )
         {
             const auto result = DirectShowCameraUtils::AmVideoProcAmpDecorator(
-                videoInputFilter,
+                directShowFilter,
                 [this, value, isAutoMode, &errorString](IAMVideoProcAmp* amVideoProcAmp)
                 {
                     // Set value from IAMVideoProcAmp

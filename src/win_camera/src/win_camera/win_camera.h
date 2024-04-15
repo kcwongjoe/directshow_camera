@@ -280,7 +280,7 @@ namespace WinCamera
         );
 
         /**
-         * @brief Exposure fusion. Reference: [Tom Mertens, Jan Kautz, and Frank Van Reeth. Exposure fusion. In Computer Graphics and Applications, 2007. PG'07. 15th Pacific Conference on, pages 382–390. IEEE, 2007.](https://mericam.github.io/exposure_fusion/index.html)
+         * @brief Exposure fusion. Reference: [Tom Mertens, Jan Kautz, and Frank Van Reeth. Exposure fusion. In Computer Graphics and Applications, 2007. PG'07. 15th Pacific Conference on, pages 382-390. IEEE, 2007.](https://mericam.github.io/exposure_fusion/index.html)
          * @param[in] exposures Exposures time to be captured
          * @param[in] exposureFusionAsyncResult (Optional) void(cv::Mat) async processing the exposure fusion and return the result.  Default is nullptr. If this funciton is set, exposureFusion() wil return a empty cv::Mat.
          * @param[out] exposureImages (Optional) Images captured in different exposures.
@@ -356,12 +356,12 @@ namespace WinCamera
 
         /**
          * @brief Open the camera
-         * @param[in] videoInputFilter Video filter
+         * @param[in] directShowFilter Video filter
          * @param[in] videoFormat (Optional) Video format to be set. Default as nullopt.
          * @return Return true if success.
         */
         bool Open(
-            IBaseFilter** videoInputFilter,
+            IBaseFilter** directShowFilter,
             std::optional<const DirectShowCamera::DirectShowVideoFormat> videoFormat = std::nullopt
         );
 

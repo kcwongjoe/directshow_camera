@@ -22,14 +22,14 @@ namespace DirectShowCamera
     {
         // Set setValue Function for DirectShowCameraProperty::setValue
         m_setValueFunc = [this](
-            IBaseFilter* videoInputFilter,
+            IBaseFilter* directShowFilter,
             const long value,
             const bool isAutoMode,
             std::string& errorString
             )
         {
             const auto result = DirectShowCameraUtils::VideoProcAmpDecorator(
-                videoInputFilter,
+                directShowFilter,
                 [this, value, isAutoMode, &errorString](IVideoProcAmp* videoProcAmp)
                 {
                     // Set value from IVideoProcAmp
@@ -66,7 +66,7 @@ namespace DirectShowCamera
 
 #pragma region Import
 
-    bool DirectShowCameraDigitalZoomLevelProperty::ImportProperty(IVideoProcAmp* videoProcAmp, IBaseFilter* videoInputFilter)
+    bool DirectShowCameraDigitalZoomLevelProperty::ImportProperty(IVideoProcAmp* videoProcAmp, IBaseFilter* directShowFilter)
     {
         HRESULT hr = NO_ERROR;
         long min;
@@ -96,9 +96,9 @@ namespace DirectShowCamera
             m_supported = true;
 
             // Try to import maximum digital magnification
-            if (videoInputFilter != NULL)
+            if (directShowFilter != NULL)
             {
-                ImportMaximumDigitalMagnification(videoInputFilter);
+                ImportMaximumDigitalMagnification(directShowFilter);
             }
 
             return true;
@@ -133,7 +133,7 @@ namespace DirectShowCamera
         }
     }
 
-    bool DirectShowCameraDigitalZoomLevelProperty::ImportMaximumDigitalMagnification(IBaseFilter* videoInputFilter)
+    bool DirectShowCameraDigitalZoomLevelProperty::ImportMaximumDigitalMagnification(IBaseFilter* directShowFilter)
     {
         // Import maximum digital magnification if it is not imported yet.
         if (m_maximumDigitalMagnification != -1) return false;
@@ -149,7 +149,7 @@ namespace DirectShowCamera
 
         // Get KsPorpertySet
         DirectShowCameraUtils::KsPropertyDecorator(
-            videoInputFilter,
+            directShowFilter,
             [this, &success](IKsPropertySet* ksPropertySet)
         {
             // Check KSPROPERTY_VIDEOPROCAMP_DIGITAL_MULTIPLIER_LIMIT support

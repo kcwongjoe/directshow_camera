@@ -2,19 +2,20 @@
 
 A DirectShow-based camera library in c++ for window. Supported USB Camera.
 
-# Table of contents
+## Table of contents
 
 1. [Requirements](#Requirements)
 2. [Deploy](#Deploy)
-3. [License](#License)
+3. [Supported camera properties](#Supported-camera-properties)
+4. [License](#License)
 
-# Requirements
+## Requirements
 
 Minimum C++ 17
 
 OpenCV version: 4.9.0 (Option)
 
-# Deploy
+## Deploy
 
 1.  Install Window SDK
 
@@ -39,5 +40,9 @@ OpenCV version: 4.9.0 (Option)
 
 4. Run *win_camera_examples* to get start.
 
-# License
+## Supported camera properties
+
+Brightness, Contrast, Hue, Saturation, Sharpness, Gamma, Color Enable, White Balance, Backlight Compensation, Gain, Pan, Tilt, Roll, Zoom, Exposure, Iris, Focus, Powerline Frequency, Digital Zoom Level
+
+## License
 This project is licensed under [MIT](LICENSE) license.

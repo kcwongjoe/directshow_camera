@@ -41,7 +41,7 @@ namespace DirectShowCamera
             m_sampleGrabberVideoFormat = DirectShowVideoFormat();
 
             // Release stream config
-            DirectShowCameraUtils::SafeRelease(&m_streamConfig);
+            DirectShowCameraUtils::SafeRelease(&m_amStreamConfig);
 
             // Release sample grabber callback
             if (m_sampleGrabber != NULL) m_sampleGrabber->SetCallback(NULL, 1);
@@ -51,7 +51,7 @@ namespace DirectShowCamera
             DirectShowCameraUtils::SafeRelease(&m_sampleGrabber);
 
             // Disconnect filters from capture device
-            DirectShowCameraUtils::NukeDownStream(m_filterGraphManager, m_videoInputFilter);
+            DirectShowCameraUtils::NukeDownStream(m_filterGraphManager, m_directShowFilter);
 
             // Release media event
             DirectShowCameraUtils::SafeRelease(&m_mediaEvent);
@@ -65,8 +65,8 @@ namespace DirectShowCamera
             // Release grabber filter
             DirectShowCameraUtils::SafeRelease(&m_grabberFilter);
 
-            // Release video input filter
-            DirectShowCameraUtils::SafeRelease(&m_videoInputFilter);
+            // Release DirectShow Filter
+            DirectShowCameraUtils::SafeRelease(&m_directShowFilter);
 
             // Release capture graph builder
             DirectShowCameraUtils::DestroyGraph(m_filterGraphManager);
@@ -89,7 +89,7 @@ namespace DirectShowCamera
 #pragma region Connection
 
     bool DirectShowCamera::Open(
-        IBaseFilter** videoInputFilter,
+        IBaseFilter** directShowFilter,
         std::optional<const DirectShowVideoFormat> videoFormat
     )
     {
@@ -98,7 +98,7 @@ namespace DirectShowCamera
 
         if (!m_isOpening)
         {
-            m_videoInputFilter = *videoInputFilter;
+            m_directShowFilter = *directShowFilter;
 
             m_sampleGrabberCallback = new SampleGrabberCallback();
             // Create the capture graph builder
@@ -139,17 +139,17 @@ namespace DirectShowCamera
                 result = m_mediaControlHandler.CreateMediaControl(m_filterGraphManager, m_errorString);
             }
 
-            // Add video input filter
+            // Add DirectShow Filter
             if (result)
             {
-                const auto hr = m_filterGraphManager->AddFilter(m_videoInputFilter, NULL);
-                result = CheckHResultUtils::CheckIGBAddFilterResult(hr, m_errorString, "Error on adding video input filter");
+                const auto hr = m_filterGraphManager->AddFilter(m_directShowFilter, NULL);
+                result = CheckHResultUtils::CheckIGBAddFilterResult(hr, m_errorString, "Error on adding DirectShow Filter");
             }
 
             // Set capture pin
             if (result)
             {
-                const auto hr = m_captureGraphBuilder->FindInterface(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, IID_IAMStreamConfig, (void**)&m_streamConfig);
+                const auto hr = m_captureGraphBuilder->FindInterface(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_directShowFilter, IID_IAMStreamConfig, (void**)&m_amStreamConfig);
                 result = CheckHResultUtils::CheckICGB2FindInterfaceResult(hr, m_errorString, "Error on setting capture pin");
             }
 
@@ -173,7 +173,7 @@ namespace DirectShowCamera
                 // Get format
                 if (result)
                 {
-                    const auto hr = m_streamConfig->GetFormat(&amMediaType);
+                    const auto hr = m_amStreamConfig->GetFormat(&amMediaType);
                     result = CheckHResultUtils::CheckIIAMSCGetFormatResult(hr, m_errorString, "Error on getting media type");
                 }
             }
@@ -236,11 +236,11 @@ namespace DirectShowCamera
                 result = CheckHResultUtils::CheckIGBAddFilterResult(hr, m_errorString, "Error on adding Null Renderer filter");
             }
 
-            //  Connect all filter as stream : Video Input Filter - Grabber Filter - Null Renderer Filter
+            //  Connect all filter as stream : DirectShow Filter - Grabber Filter - Null Renderer Filter
             if (result)
             {
-                const auto hr = m_captureGraphBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_videoInputFilter, m_grabberFilter, m_nullRendererFilter);
-                result = CheckHResultUtils::CheckICGB2RenderStreamResult(hr, m_errorString, "Error on connecting filter (Video Input Filter - Grabber Filter - Null Renderer Filter)");
+                const auto hr = m_captureGraphBuilder->RenderStream(&PIN_CATEGORY_CAPTURE, &MEDIATYPE_Video, m_directShowFilter, m_grabberFilter, m_nullRendererFilter);
+                result = CheckHResultUtils::CheckICGB2RenderStreamResult(hr, m_errorString, "Error on connecting filter (DirectShow Filter - Grabber Filter - Null Renderer Filter)");
             }
 
             // get video format of connected grabber filter
@@ -259,11 +259,11 @@ namespace DirectShowCamera
             const bool syncSourceAsNull = false;
             if (result && syncSourceAsNull)
             {
-                IMediaFilter* iMediaFilter = 0;
-                const auto hr = m_filterGraphManager->QueryInterface(IID_IMediaFilter, (void**)&iMediaFilter);
+                IMediaFilter* mediaFilter = 0;
+                const auto hr = m_filterGraphManager->QueryInterface(IID_IMediaFilter, (void**)&mediaFilter);
                 if (hr == S_OK) {
-                    iMediaFilter->SetSyncSource(NULL);
-                    iMediaFilter->Release();
+                    mediaFilter->SetSyncSource(NULL);
+                    mediaFilter->Release();
                 }
             }
 
@@ -281,7 +281,7 @@ namespace DirectShowCamera
 
                 // Get property
                 if (m_property != nullptr) m_property.reset();
-                m_property = std::make_shared<DirectShowCameraProperties>(m_videoInputFilter, m_errorString);
+                m_property = std::make_shared<DirectShowCameraProperties>(m_directShowFilter, m_errorString);
 
                 // Update video format
                 UpdateVideoFormatList();
@@ -554,7 +554,7 @@ namespace DirectShowCamera
             // Get frame size
             int frameTotalSize = 0;
             GUID mediaSubType;
-            DirectShowCameraUtils::AmMediaTypeDecorator(m_streamConfig,
+            DirectShowCameraUtils::AmMediaTypeDecorator(m_amStreamConfig,
                 [this, &frameTotalSize, &mediaSubType](AM_MEDIA_TYPE* mediaType)
                 {
                     VIDEOINFOHEADER* videoInfoHeader = reinterpret_cast<VIDEOINFOHEADER*>(mediaType->pbFormat);
@@ -615,9 +615,9 @@ namespace DirectShowCamera
     bool DirectShowCamera::UpdateVideoFormatList()
     {
         bool result = false;
-        if (m_streamConfig != NULL)
+        if (m_amStreamConfig != NULL)
         {
-            result = m_videoFormats.Update(m_streamConfig, m_errorString);
+            result = m_videoFormats.Update(m_amStreamConfig, m_errorString);
         }
         else
         {
@@ -631,7 +631,7 @@ namespace DirectShowCamera
     {
         if (m_videoFormats.Size() > 0)
         {
-            DirectShowCameraUtils::AmMediaTypeDecorator(m_streamConfig,
+            DirectShowCameraUtils::AmMediaTypeDecorator(m_amStreamConfig,
                 [this](AM_MEDIA_TYPE* mediaType)
                 {
                     m_currentVideoFormatIndex = getVideoFormatIndex(mediaType);
@@ -729,7 +729,7 @@ namespace DirectShowCamera
 
         if (result)
         {
-            if (m_streamConfig == NULL)
+            if (m_amStreamConfig == NULL)
             {
                 // Error, not initialized
                 result = false;
@@ -744,7 +744,7 @@ namespace DirectShowCamera
             else
             {
                 // Set
-                hr = m_streamConfig->SetFormat(m_videoFormats.getAMMediaType(videoFormatIndex));
+                hr = m_amStreamConfig->SetFormat(m_videoFormats.getAMMediaType(videoFormatIndex));
                 result = CheckHResultUtils::CheckIIAMSCSetFormatResult(hr, m_errorString, "Error on setting camera resolution");
 
                 if (result)
@@ -769,7 +769,7 @@ namespace DirectShowCamera
     {
         if (m_isOpening && m_property != nullptr)
         {
-            m_property->Refresh(m_videoInputFilter, m_errorString);
+            m_property->Refresh(m_directShowFilter, m_errorString);
         }
     }
 
@@ -780,9 +780,9 @@ namespace DirectShowCamera
 
     void DirectShowCamera::ResetPropertiesToDefault(const bool asAuto)
     {
-        if (m_videoInputFilter != NULL && m_property != nullptr)
+        if (m_directShowFilter != NULL && m_property != nullptr)
         {
-            m_property->ResetToDefaultValue(m_videoInputFilter, m_errorString, asAuto);
+            m_property->ResetToDefaultValue(m_directShowFilter, m_errorString, asAuto);
         }
     }
 
@@ -792,9 +792,9 @@ namespace DirectShowCamera
         const bool isAuto
     )
     {
-        if (m_videoInputFilter != NULL)
+        if (m_directShowFilter != NULL)
         {
-            return property->setValue(m_videoInputFilter, value, isAuto, m_errorString);
+            return property->setValue(m_directShowFilter, value, isAuto, m_errorString);
         }
         else
         {
@@ -883,20 +883,20 @@ namespace DirectShowCamera
         return success;
     }
 
-    bool DirectShowCamera::getCamera(const int cameraIndex, IBaseFilter** videoInputFilter)
+    bool DirectShowCamera::getCamera(const int cameraIndex, IBaseFilter** directShowFilter)
     {
         int count = 0;
         bool found = false;
         bool success = DirectShowCameraUtils::IPropertyDecorator(
             CLSID_VideoInputDeviceCategory,
-            [&videoInputFilter, &cameraIndex, &count, &found](IMoniker* moniker, IPropertyBag* propertyBag)
+            [&directShowFilter, &cameraIndex, &count, &found](IMoniker* moniker, IPropertyBag* propertyBag)
             {
-                // Found, obtain the video input filter
+                // Found, obtain the DirectShow Filter
                 if (count == cameraIndex)
                 {
 #pragma warning( push )
 #pragma warning( disable : 6387)
-                    moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+                    moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)directShowFilter);
 #pragma warning( pop )
                     found = true;
                 }
@@ -910,12 +910,12 @@ namespace DirectShowCamera
         return success && found;
     }
 
-    bool DirectShowCamera::getCamera(const std::string devicePath, IBaseFilter** videoInputFilter)
+    bool DirectShowCamera::getCamera(const std::string devicePath, IBaseFilter** directShowFilter)
     {
         bool found = false;
         bool success = DirectShowCameraUtils::IPropertyDecorator(
             CLSID_VideoInputDeviceCategory,
-            [&videoInputFilter, &devicePath, &found](IMoniker* moniker, IPropertyBag* propertyBag)
+            [&directShowFilter, &devicePath, &found](IMoniker* moniker, IPropertyBag* propertyBag)
             {
                 // Initialize variables
                 HRESULT hr;
@@ -929,13 +929,13 @@ namespace DirectShowCamera
                     std::string currentDevicePath = Win32Utils::BSTRToString(var.bstrVal);
                     VariantClear(&var);
 
-                    // Found, obtain the video input filter
+                    // Found, obtain the DirectShow Filter
                     if (currentDevicePath == devicePath)
                     {
                         // Get device name
 #pragma warning( push )
 #pragma warning( disable : 6387)
-                        moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+                        moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)directShowFilter);
 #pragma warning( pop )
                         found = true;
                     }
@@ -947,15 +947,15 @@ namespace DirectShowCamera
         return success && found;
     }
 
-    bool DirectShowCamera::getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter)
+    bool DirectShowCamera::getCamera(const DirectShowCameraDevice device, IBaseFilter** directShowFilter)
     {
         // try to match via device path first, fallback to friendly name
-        bool found = getCamera(device.getDevicePath(), videoInputFilter);
+        bool found = getCamera(device.getDevicePath(), directShowFilter);
         if (!found)
         {
             DirectShowCameraUtils::IPropertyDecorator(
                 CLSID_VideoInputDeviceCategory,
-                [&videoInputFilter, &device, &found](IMoniker* moniker, IPropertyBag* propertyBag)
+                [&directShowFilter, &device, &found](IMoniker* moniker, IPropertyBag* propertyBag)
                 {
                     // Initialize variables
                     HRESULT hr;
@@ -973,7 +973,7 @@ namespace DirectShowCamera
                         {
 #pragma warning( push )
 #pragma warning( disable : 6387)
-                            moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)videoInputFilter);
+                            moniker->BindToObject(NULL, NULL, IID_IBaseFilter, (void**)directShowFilter);
 #pragma warning( pop )
                             found = true;
                         }

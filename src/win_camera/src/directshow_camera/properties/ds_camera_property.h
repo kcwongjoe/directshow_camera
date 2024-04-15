@@ -95,22 +95,22 @@ namespace DirectShowCamera
 
         /**
          * @brief Set the property to default value.
-         * @param[in] videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
+         * @param[in] directShowFilter DirectShow Filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
          * @param[out] errorString Error string
          * @param[in] asAuto (Optional) The property will try to set as auto mode if this value is true. Default is true.
          * @return Return true if success
         */
-        bool setToDefaultValue(IBaseFilter* videoInputFilter, std::string& errorString, const bool asAuto = true);
+        bool setToDefaultValue(IBaseFilter* directShowFilter, std::string& errorString, const bool asAuto = true);
 
         /**
          * @brief Set property
-         * @param[in] videoInputFilter Video Input filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
+         * @param[in] directShowFilter DirectShow Filter (Camera). If it is NULL, value will not set in through directshow and just update the object value.
          * @param[in] value Value to be set
          * @param[in] isAutoMode Set as auto mode?
          * @param[out] errorString Error String
          * @return Return true if success.
         */
-        bool setValue(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString);
+        bool setValue(IBaseFilter* directShowFilter, const long value, const bool isAutoMode, std::string& errorString);
 
 #pragma endregion Setter
 
@@ -213,7 +213,7 @@ namespace DirectShowCamera
 
     protected:
 
-        typedef std::function<bool(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString)> SetValueFunction;
+        typedef std::function<bool(IBaseFilter* directShowFilter, const long value, const bool isAutoMode, std::string& errorString)> SetValueFunction;
         SetValueFunction m_setValueFunc = nullptr;
 
         /**

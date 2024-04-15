@@ -25,7 +25,7 @@ namespace DirectShowCamera
         virtual void Release() = 0;
 
         virtual bool Open(
-            IBaseFilter** videoInputFilter,
+            IBaseFilter** directShowFilter,
             std::optional<const DirectShowVideoFormat> videoFormat = std::nullopt
         ) = 0;
         virtual void Close() = 0;
@@ -72,9 +72,9 @@ namespace DirectShowCamera
 
         // Get camera
         virtual bool getCameras(std::vector<DirectShowCameraDevice>& cameraDevices) = 0;
-        virtual bool getCamera(const int cameraIndex, IBaseFilter** videoInputFilter) = 0;
-        virtual bool getCamera(const std::string devicePath, IBaseFilter** videoInputFilter) = 0;
-        virtual bool getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter) = 0;
+        virtual bool getCamera(const int cameraIndex, IBaseFilter** directShowFilter) = 0;
+        virtual bool getCamera(const std::string devicePath, IBaseFilter** directShowFilter) = 0;
+        virtual bool getCamera(const DirectShowCameraDevice device, IBaseFilter** directShowFilter) = 0;
 
         virtual void ResetLastError() = 0;
         virtual std::string getLastError() const = 0;

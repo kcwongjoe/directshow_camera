@@ -56,12 +56,12 @@ namespace DirectShowCamera
 
         /**
          * @brief Build the directshow graph
-         * @param[in] videoInputFilter Video input filter. Look up from DirectShowCamera::getCamera()
+         * @param[in] directShowFilter DirectShow Filter. Look up from DirectShowCamera::getCamera()
          * @param[in] videoFormat (Optional) Video Format to be set. Look up from DirectShowCameraDevice::getDirectShowVideoFormats()
          * @return Return true if success
         */
         bool Open(
-            IBaseFilter** videoInputFilter,
+            IBaseFilter** directShowFilter,
             std::optional<const DirectShowVideoFormat> videoFormat = std::nullopt
         ) override;
 
@@ -252,28 +252,28 @@ namespace DirectShowCamera
         bool getCameras(std::vector<DirectShowCameraDevice>& cameraDevices) override;
 
         /**
-         * @brief Get the video input filter based on the camera index
+         * @brief Get the DirectShow Filter based on the camera index
          * @param[in] cameraIndex Camera index
-         * @param[out] videoInputFilter Output video input filter
+         * @param[out] directShowFilter Output DirectShow Filter
          * @return Return true if success.
         */
-        bool getCamera(const int cameraIndex, IBaseFilter** videoInputFilter) override;
+        bool getCamera(const int cameraIndex, IBaseFilter** directShowFilter) override;
 
         /**
-         * @brief Get the video input filter based on the Camera device path
+         * @brief Get the DirectShow Filter based on the Camera device path
          * @param[in] devicePath Camera device path
-         * @param[out] videoInputFilter Output video input filter
+         * @param[out] directShowFilter Output DirectShow Filter
          * @return Return true if success.
         */
-        bool getCamera(const std::string devicePath, IBaseFilter** videoInputFilter) override;
+        bool getCamera(const std::string devicePath, IBaseFilter** directShowFilter) override;
 
         /**
-         * @brief Get the video input filter based on the Camera device object
+         * @brief Get the DirectShow Filter based on the Camera device object
          * @param[in] device Camera device
-         * @param[out] videoInputFilter Output video input filter
+         * @param[out] directShowFilter Output DirectShow Filter
          * @return Return true if success.
         */
-        bool getCamera(const DirectShowCameraDevice device, IBaseFilter** videoInputFilter) override;
+        bool getCamera(const DirectShowCameraDevice device, IBaseFilter** directShowFilter) override;
 
 #pragma endregion Camera
 

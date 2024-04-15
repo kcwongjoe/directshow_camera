@@ -88,7 +88,7 @@ namespace DirectShowCamera
 #pragma region Setter
 
     bool DirectShowCameraProperty::setToDefaultValue(
-        IBaseFilter* videoInputFilter,
+        IBaseFilter* directShowFilter,
         std::string& errorString,
         const bool asAuto
     )
@@ -97,12 +97,12 @@ namespace DirectShowCamera
         bool isAutoMode = false;
         if (asAuto && m_supportAuto) isAutoMode = true;
 
-        bool result = setValue(videoInputFilter, m_defaultValue, isAutoMode, errorString);
+        bool result = setValue(directShowFilter, m_defaultValue, isAutoMode, errorString);
 
         return result;
     }
 
-    bool DirectShowCameraProperty::setValue(IBaseFilter* videoInputFilter, const long value, const bool isAutoMode, std::string& errorString)
+    bool DirectShowCameraProperty::setValue(IBaseFilter* directShowFilter, const long value, const bool isAutoMode, std::string& errorString)
     {
         // Check value
         bool result = CheckValue(value, isAutoMode, errorString);
@@ -110,7 +110,7 @@ namespace DirectShowCamera
 
         // Set value
         bool success = true;
-        if (videoInputFilter == NULL || m_setValueFunc == nullptr)
+        if (directShowFilter == NULL || m_setValueFunc == nullptr)
         {
             // Only update object value
             m_value = value;
@@ -119,7 +119,7 @@ namespace DirectShowCamera
         else
         {
             // Set value via IBaseFilter
-            m_setValueFunc(videoInputFilter, value, isAutoMode, errorString);
+            m_setValueFunc(directShowFilter, value, isAutoMode, errorString);
         }
 
         return result;
