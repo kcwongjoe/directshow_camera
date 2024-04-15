@@ -1,3 +1,5 @@
+# Directshow Camera project will not be updated anymore. Please go to [Win Camera](https://github.com/kcwongjoe/win_camera)
+
 # Directshow Camera
 
 A window-based camera library in c++.
