@@ -280,5 +280,10 @@ namespace DirectShowCamera
         return m_powerlineFrequency;
     }
 
+    std::shared_ptr<DirectShowCameraProperty> DirectShowCameraProperties::getDigitalZoomLevel() const
+    {
+        return m_digitalZoomLevel;
+    }
+
 #pragma endregion Properties
 }
