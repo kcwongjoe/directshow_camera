@@ -15,7 +15,7 @@ namespace DirectShowCameraUtils
     bool checkCoCreateInstanceResult(HRESULT hr, std::string* errorString, std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
@@ -59,7 +59,7 @@ namespace DirectShowCameraUtils
     bool checkCreateClassEnumeratorResult(HRESULT hr, std::string* errorString, std::string errorDescription)
     {
         bool result = true;
-        if (!SUCCEEDED(hr))
+        if (hr != S_OK)
         {
             result = false;
 
