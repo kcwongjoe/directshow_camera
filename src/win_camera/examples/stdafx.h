@@ -4,8 +4,8 @@
 * If you find any bugs, please feel free to report under https://github.com/kcwongjoe/win_camera/issues
 **/
 
-#ifndef WIN_CAMERA__STDAFX_H
-#define WIN_CAMERA__STDAFX_H
+#ifndef WIN_CAMERA_EXAMPLE__STDAFX_H
+#define WIN_CAMERA_EXAMPLE__STDAFX_H
 
 #include <string>
 #include <vector>
