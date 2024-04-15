@@ -11,7 +11,7 @@
 //************Content************
 #include "directshow_camera/camera/abstract_ds_camera.h"
 #include "directshow_camera/properties/ds_camera_properties.h"
-#include "directshow_camera/ds_camera_stub_default.h"
+#include "directshow_camera/stub/ds_camera_stub_default.h"
 #include "directshow_camera/video_format/ds_video_format_list.h"
 #include "directshow_camera/device/ds_camera_device.h"
 

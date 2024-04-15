@@ -4,7 +4,7 @@
 * If you find any bugs, please feel free to report under https://github.com/kcwongjoe/directshow_camera/issues
 **/
 
-#include "directshow_camera/ds_camera_stub.h"
+#include "directshow_camera/stub/ds_camera_stub.h"
 
 namespace DirectShowCamera
 {

@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "win_camera/win_camera.h"
-#include "directshow_camera/ds_camera_stub.h"
+#include "directshow_camera/stub/ds_camera_stub.h"
 
 
 class TestUVCCameraStubF : public ::testing::Test {
