@@ -15,6 +15,8 @@
 
 #include <guiddef.h>
 
+#include <vector>
+
 namespace WinCamera
 {
 

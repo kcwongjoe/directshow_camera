@@ -8,6 +8,8 @@
 
 #include "win_camera/win_camera.h"
 
+#include <iostream>
+
 void eg2_properties()
 {
     std::cout << "Example 2: Properties" << std::endl;

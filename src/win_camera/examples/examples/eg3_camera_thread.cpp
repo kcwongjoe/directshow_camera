@@ -8,6 +8,8 @@
 
 #include "win_camera/win_camera_thread.h"
 
+#include <iostream>
+
 void eg3_camera_thread()
 {
     std::cout << "Example 3: Camera Thread" << std::endl;

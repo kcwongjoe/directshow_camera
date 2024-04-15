@@ -10,8 +10,12 @@
 
 //************Content************
 
-#include <thread>
 #include "win_camera/win_camera.h"
+
+#include <thread>
+#include <string>
+#include <functional>
+#include <memory>
 
 namespace WinCamera
 {

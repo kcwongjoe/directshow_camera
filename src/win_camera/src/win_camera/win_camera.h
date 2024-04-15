@@ -36,6 +36,11 @@
 
 #include "directshow_camera/camera/ds_camera.h"
 
+#include <functional>
+#include <optional>
+#include <memory>
+#include <vector>
+
 // Include Opencv
 #ifdef WITH_OPENCV2
 #include "opencv_utils/cv_mat_convertor.h"

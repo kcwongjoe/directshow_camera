@@ -9,6 +9,8 @@
 #include "win_camera/win_camera.h"
 #include "directshow_camera/stub/ds_camera_stub.h"
 
+#include <iostream>
+
 void eg6_stub()
 {
     std::cout << "Example 6: Stub" << std::endl;

@@ -10,8 +10,6 @@
 
 //************Content************
 
-#include <math.h>
-
 namespace WinCamera
 {
     class WinCameraUtils

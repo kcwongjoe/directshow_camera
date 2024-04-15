@@ -10,6 +10,7 @@
 #include "examples/eg4_exposure_fusion.h"
 #include "examples/eg5_disconnect_process.h"
 #include "examples/eg6_stub.h"
+
 #include <iostream>
 
 int main(int argc, char *argv[])

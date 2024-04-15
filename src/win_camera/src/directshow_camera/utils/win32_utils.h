@@ -8,9 +8,10 @@
 #ifndef WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__WIN32_UTILS_H
 #define WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__WIN32_UTILS_H
 
-#include <atlconv.h>
-
 //************Content************
+
+#include <atlconv.h>
+#include <string>
 
 namespace Win32Utils
 {

@@ -6,6 +6,8 @@
 
 #include "win_camera/win_camera_utils.h"
 
+#include <math.h>
+
 namespace WinCamera
 {
     double WinCameraUtils::DSExposureValueToSec(const long dsValue)

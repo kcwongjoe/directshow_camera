@@ -8,6 +8,8 @@
 
 #include "win_camera/win_camera.h"
 
+#include <iostream>
+
 void eg1_capture()
 {
     std::cout << "Example 1: Capture frames and save as image.jpg" << std::endl;

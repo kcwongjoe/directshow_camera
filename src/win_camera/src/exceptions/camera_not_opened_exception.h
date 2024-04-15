@@ -11,6 +11,7 @@
 //************Content************
 
 #include <exception>
+#include <string>
 
 namespace WinCamera
 {

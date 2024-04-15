@@ -16,6 +16,10 @@
 #include "directshow_camera/device/ds_camera_device.h"
 
 #include <thread>
+#include <functional>
+#include <optional>
+#include <vector>
+#include <string>
 
 namespace DirectShowCamera
 {

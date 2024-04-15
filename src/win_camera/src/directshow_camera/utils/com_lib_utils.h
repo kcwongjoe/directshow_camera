@@ -10,6 +10,8 @@
 
 //************Content************
 
+#include <string>
+
 namespace COMLibUtils
 {
     class COMLibUtils

@@ -13,6 +13,9 @@
 #include "directshow_camera/camera/ds_camera.h"
 #include "directshow_camera/properties/ds_camera_property.h"
 
+#include <functional>
+#include <memory>
+
 // To prevent circular dependence, forward declaration WinCamera is used here and then pass WInCamera function in cpp file. For variable passing, use shared_ptr.
 namespace WinCamera { class WinCamera; }
 

@@ -12,6 +12,9 @@
 
 #include "win_camera/properties/win_camera_property.h"
 
+#include <functional>
+#include <memory>
+
 namespace WinCamera { class WinCamera; }
 
 namespace WinCamera

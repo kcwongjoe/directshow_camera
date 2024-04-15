@@ -14,6 +14,10 @@
 #include "directshow_camera/device/ds_camera_device.h"
 #include "directshow_camera/video_format/ds_video_format.h"
 
+#include <string>
+#include <vector>
+#include <iostream>
+
 namespace WinCamera
 {
     /**

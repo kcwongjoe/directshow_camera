@@ -12,6 +12,9 @@
 
 #include "directshow_camera/utils/ds_video_format_utils.h"
 
+#include <string> 
+#include <iostream>
+
 namespace DirectShowCamera
 {
     /**

@@ -9,7 +9,9 @@
 #define WIN_CAMERA__DIRECTSHOW_CAMERA__UTILS__CHECK_HRESULT_UTILS_H
 
 //************Content************
+
 #include <winerror.h>
+#include <string>
 
 namespace DirectShowCamera
 {

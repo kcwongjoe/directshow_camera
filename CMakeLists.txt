@@ -13,7 +13,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
 
 # Path
-set(WIN_CAMERA_ROOT_PATH ${CMAKE_SOURCE_DIR})
+set(WIN_CAMERA_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 Set(WIN_CAMERA_SOURCES_PATH "${WIN_CAMERA_ROOT_PATH}/src/win_camera")
 
 # Add cmake module
@@ -35,13 +35,17 @@ install_opencv()
 # -------- Source --------
 add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/src")
 
-# -------- Example --------
-add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/examples")
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+    # Only build examples and test when this project is built as the main project
 
-# -------- Test --------
+    # -------- Example --------
+    add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/examples")
 
-include(CTest)
-if(BUILD_TESTING)
-    enable_testing()
-    add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/test")
+    # -------- Test --------
+
+    include(CTest)
+    if(BUILD_TESTING)
+        enable_testing()
+        add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/test")
+    endif()
 endif()

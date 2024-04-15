@@ -15,6 +15,7 @@
 
 #include <cstring>
 #include <set>
+#include <vector>
 
 namespace DirectShowCamera
 {

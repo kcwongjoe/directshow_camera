@@ -16,6 +16,8 @@
 #include "directshow_camera/properties/ds_camera_powerline_frequency_property.h"
 #include "directshow_camera/properties/ds_camera_digital_zoom_level_property.h"
 
+#include <memory>
+
 namespace DirectShowCamera
 {
     /**

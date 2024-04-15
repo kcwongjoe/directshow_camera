@@ -8,6 +8,8 @@
 
 #include "win_camera/win_camera.h"
 
+#include <iostream>
+
 void eg4_exposure_fusion()
 {
     std::cout << "Example 4: Exposure Fusion" << std::endl;

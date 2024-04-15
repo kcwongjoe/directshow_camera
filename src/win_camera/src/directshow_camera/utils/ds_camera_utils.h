@@ -14,6 +14,9 @@
 
 #include "directshow_camera/ds_header.h"
 
+#include <string>
+#include <functional>
+
 namespace DirectShowCameraUtils
 {
 

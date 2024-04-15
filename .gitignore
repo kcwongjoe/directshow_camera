@@ -6,9 +6,6 @@
 vcpkg
 vcpkg_installed
 
-# dependencies
-dependencies
-
 # PlantUML
 plantuml.jar
 /docs/plantuml.jar
