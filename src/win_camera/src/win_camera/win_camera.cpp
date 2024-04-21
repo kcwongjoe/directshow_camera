@@ -521,39 +521,48 @@ namespace WinCamera
 
 #pragma region Frame
 
-    bool WinCamera::getFrame(unsigned char* frame, int& numOfBytes, const bool onlyGetNewFrame)
+    bool WinCamera::getFrame(Frame& frame, const bool onlyGetNewFrame)
     {
-        bool result = false;
+        // Check
+        if (!m_directShowCamera->isCapturing()) return false;
 
-        if (m_directShowCamera->isCapturing())
+        // Check frame index if user only want a new Frame
+        if (onlyGetNewFrame)
         {
-            unsigned long frameIndex;
-            bool success = m_directShowCamera->getFrame(frame, numOfBytes, frameIndex, onlyGetNewFrame, m_lastFrameIndex);
-
-
-            if (onlyGetNewFrame && frameIndex == m_lastFrameIndex)
+            if (m_lastFrameIndex == m_directShowCamera->getLastFrameIndex())
             {
-                // Get old frame but we want new frame only.
-                result = false;
+                // No new frame
+                return false;
             }
-            else if (!success)
-            {
-                result = false;
-            }
-            else
-            {
-                result = true;
-            }
-
-            // Update frame index
-            m_lastFrameIndex = frameIndex;
-        }
-        else
-        {
-            result = false;
         }
 
-        return result;
+        // Get frame information
+        const auto width = getDirectShowVideoFormat().getWidth();
+        const auto height = getDirectShowVideoFormat().getHeight();
+        const long bufferSize = m_directShowCamera->getFrameTotalSize();
+        const auto frameType = m_directShowCamera->getFrameType();
+
+        // Get frame
+        frame.ImportData(
+            bufferSize,
+            width,
+            height,
+            frameType,
+            [this, onlyGetNewFrame](unsigned char* data, unsigned long& frameIndex)
+            {   
+                int numOfBytes;
+                bool success = m_directShowCamera->getFrame(
+                    data, 
+                    numOfBytes,
+                    frameIndex
+                );
+            }
+        );
+
+        // Update frame index
+        m_lastFrameIndex = frame.getFrameIndex();
+
+        return true;
     }
 
     long WinCamera::getFrameIndex() const
@@ -620,8 +629,18 @@ namespace WinCamera
         }
 
         // Get frame
+        Frame frame;
+        bool success = getFrame(frame, onlyGetNewMat);
         int numOfBytes;
-        bool success = getFrame(m_matBuffer, numOfBytes, onlyGetNewMat);
+
+        // Allocate buffer
+        if (m_matBuffer != NULL)
+        {
+            delete[] m_matBuffer;
+            m_matBuffer = NULL;
+        }
+
+        m_matBuffer = frame.getFrame( numOfBytes, true);
 
         if (success)
         {

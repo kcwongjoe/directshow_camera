@@ -136,18 +136,20 @@ namespace DirectShowCamera
          * @param[out] frame Frame bytes
          * @param[out] numOfBytes Number of bytes of the frames.
          * @param[out] frameIndex Index of frame, use to indicate whether a new frame.
-         * @param[in] copyNewFrameOnly Set it as true if only want to collect new frame. Default is false
-         * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
          * @return Return true if success.
         */
         bool getFrame
         (
             unsigned char* pixels,
             int& numOfBytes,
-            unsigned long& frameIndex,
-            const bool copyNewFrameOnly = false,
-            const unsigned long previousFrameIndex = 0
+            unsigned long& frameIndex
         ) override;
+
+        /**
+        * @brief Get the last frame index. It use to identify whether a new frame. Index will only be updated when you call getFrame() or gatMat();
+        * @return Return the last frame index.
+        */
+        unsigned long getLastFrameIndex() const override;
 
         /**
          * @brief Set Minimum FPS. FPS below this value will be identified as 0. Default as 0.5

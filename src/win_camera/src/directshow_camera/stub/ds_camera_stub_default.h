@@ -103,26 +103,21 @@ namespace DirectShowCamera
         }
 
         /**
-         * @brief Get default frame
+         * @brief Get default frame. It will be generated based on the frame index value.
          * @param[out] frame Frame bytes
-         * @param[out] frameIndex Frame index
          * @param[out] numOfBytes Number of bytes of this frame
+         * @param[in] frameIndex Frame index
          * @param[in] width Frame width
          * @param[in] height Frame height
-         * @param[in] previousFrameIndex Previous frame index
         */
         static void getFrame(
             unsigned char* frame,
             int& numOfBytes,
-            unsigned long& frameIndex,
+            const unsigned long frameIndex,
             const int width,
-            const int height,
-            const unsigned long previousFrameIndex
+            const int height
         )
         {
-            // Frame index
-            frameIndex = previousFrameIndex + 1;
-
             // Size
             int totalSize = width * height * 3;
             numOfBytes = totalSize;

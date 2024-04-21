@@ -14,7 +14,7 @@
 void eg6_stub()
 {
     std::cout << "Example 6: Stub" << std::endl;
-    std::cout << "Hardware camera may not always available. This example shows how to use the stub to simulate a camera." << std::endl;
+    std::cout << "Hardware camera may not be always available. This example shows how to use the stub to simulate a camera." << std::endl;
 
     // Define a flag to indicate whether open as stub.
     // So you just have to comment this line to disable the stub.
@@ -90,7 +90,13 @@ void eg6_stub()
     // User define a image
     int width = camera.getWidth();
     int height = camera.getHeight();
-    cameraStub->setGetFrameFunction([width, height](unsigned char* pixels, int& numOfBytes, unsigned long& frameIndex, const bool copyNewFrameOnly, const unsigned long previousFrameIndex)
+    cameraStub->setGetFrameFunction(
+        [width, height](
+            unsigned char* pixels,
+            int& numOfBytes,
+            unsigned long& frameIndex,
+            const unsigned long previousFrameIndex
+        )
         {
             // Frame index
             frameIndex = previousFrameIndex + 1;

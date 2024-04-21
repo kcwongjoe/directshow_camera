@@ -13,14 +13,13 @@ namespace DirectShowCamera
     SampleGrabberCallback::SampleGrabberCallback()
     {
         // initialize buffer
-        m_pixelsBuffer = new unsigned char[m_bufferSize];
+        m_pixelsBuffer = std::make_unique<unsigned char[]>(m_bufferSize);
         AddRef();
     }
 
     SampleGrabberCallback::~SampleGrabberCallback()
     {
-        // Release buffers
-        delete[] m_pixelsBuffer;
+
     }
 
 #pragma endregion Constructor and Destructor
@@ -34,11 +33,11 @@ namespace DirectShowCamera
 
         // Reallocate buffer
         m_bufferSize = numOfBytes;
-        delete[] m_pixelsBuffer;
-        m_pixelsBuffer = new unsigned char[m_bufferSize];
+        m_pixelsBuffer.reset();
+        m_pixelsBuffer = std::make_unique<unsigned char[]>(m_bufferSize);
 
         // Set all bytes as 0
-        memset(m_pixelsBuffer, 0, m_bufferSize);
+        memset(m_pixelsBuffer.get(), 0, m_bufferSize);
 
         // Release all lock
         m_bufferMutex.unlock();
@@ -56,40 +55,43 @@ namespace DirectShowCamera
     bool SampleGrabberCallback::getFrame(
         unsigned char* frame,
         int& numOfBytes,
-        unsigned long& frameIndex,
-        const bool copyNewFrameOnly,
-        const unsigned long previousFrameIndex
+        unsigned long& frameIndex
     )
     {
-        int currentframeIndex = m_frameIndex;
-        bool result = false;
+        // Check
+        if (frame == nullptr)  return false;
 
-        if (frame)
+        // Copy frame
+        try
         {
-            // Copy data
-            if (!copyNewFrameOnly || (copyNewFrameOnly && currentframeIndex != previousFrameIndex))
-            {
-                // Lock mutex
-                m_bufferMutex.lock();
+            //     Lock mutex
+            m_bufferMutex.lock();
 
-                // Copy
-                memcpy(frame, m_pixelsBuffer, m_bufferSize);
-                    
-                // Return frame size
-                numOfBytes = m_bufferSize;
+            //     Copy
+            memcpy(frame, m_pixelsBuffer.get(), m_bufferSize);
 
-                // Unlock mutex
-                m_bufferMutex.unlock();
+            //     Return frame size
+            numOfBytes = m_bufferSize;
 
-                // Return success
-                result = true;
-            }
+            //     Return frame index
+            frameIndex = m_frameIndex;
 
-            // Return frame index
-            frameIndex = currentframeIndex;
+            //     Unlock mutex
+            m_bufferMutex.unlock();
+        }
+        catch (...)
+        {
+            // Unlock mutex
+            m_bufferMutex.unlock();
+            return false;
         }
 
-        return result;
+        return true;
+    }
+
+    unsigned long SampleGrabberCallback::getLastFrameIndex() const
+    {
+        return m_frameIndex;
     }
 
     double SampleGrabberCallback::getFPS() const
@@ -177,7 +179,7 @@ namespace DirectShowCamera
                 m_bufferMutex.lock();
 
                 // Copy to buffer
-                memcpy(m_pixelsBuffer, directShowBufferPointer, m_bufferSize);
+                memcpy(m_pixelsBuffer.get(), directShowBufferPointer, m_bufferSize);
 
                 // Update frame index
                 if (m_frameIndex >= ULONG_MAX - 1)

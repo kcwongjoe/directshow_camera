@@ -14,6 +14,8 @@
 
 #include "win_camera/win_camera_device.h"
 
+#include "win_camera/frame.h"
+
 #include "win_camera/properties/win_camera_property_brightness.h"
 #include "win_camera/properties/win_camera_property_contrast.h"
 #include "win_camera/properties/win_camera_property_hue.h"
@@ -188,10 +190,10 @@ namespace WinCamera
          * @brief Get frame
          * @param[out] frame Frame bytes (BGR)
          * @param[out] numOfBytes Number of bytes of the frame.
-         * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame. Default as false
+         * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame which has not been get by getFrame. Default as false
          * @return Return true if success
         */
-        bool getFrame(unsigned char* frame, int& numOfBytes, const bool onlyGetNewFrame = false);
+        bool getFrame(Frame& frame, const bool onlyGetNewFrame = false);
 
         /**
          * @brief Return the last frame index. It use to identify whether a new frame. Index will only be updated when you call getFrame() or gatMat();

@@ -35,11 +35,10 @@ namespace DirectShowCamera
         */
         typedef std::function<
             void(
-                unsigned char* pixels,
-                int& numOfBytes,
-                unsigned long& frameIndex,
-                const bool copyNewFrameOnly,
-                const unsigned long previousFrameIndex
+                unsigned char* pixels,                  // [out]Frame in bytes
+                int& numOfBytes,                        // [out]Number of bytes of the frame
+                unsigned long& frameIndex,              // [out]Frame index
+                const unsigned long previousFrameIndex  // [in]Previous frame index
             )> GetFrameFunc;
     public:
 
@@ -136,18 +135,20 @@ namespace DirectShowCamera
          * @param[out] frame Frame in bytes
          * @param[out] numOfBytes Number of bytes of the frames.
          * @param[out] frameIndex Index of frame, use to indicate whether a new frame.
-         * @param[in] copyNewFrameOnly Set it as true if only want to collect new frame. Default is false
-         * @param[in] previousFrameIndex The previous frame index, use to idendify whether a new frame. This variable work with copyNewFrameOnly. Default as 0.
          * @return Return true if success.
         */
         bool getFrame
         (
             unsigned char* frame,
             int& numOfBytes,
-            unsigned long& frameIndex,
-            const bool copyNewFrameOnly = false,
-            const unsigned long previousFrameIndex = 0
+            unsigned long& frameIndex
         ) override;
+
+        /**
+        * @brief Get the last frame index.
+        * @return Return the last frame index.
+        */
+        unsigned long getLastFrameIndex() const override;
 
         /**
          * @brief Set Minimum FPS. FPS below this value will be identified as 0. Default as 0.5
@@ -298,6 +299,10 @@ namespace DirectShowCamera
         */
         std::string getLastError() const override;
 
+    public:
+        // Set it as true if you want to increase frame index after get frame
+        bool UpdateFrameIndexAfterGetFrame = true;
+
     private:
         // Config
         std::shared_ptr<DirectShowCameraProperties> m_properties = nullptr;
@@ -336,6 +341,9 @@ namespace DirectShowCamera
          * @return Return -1 if not found
         */
         int getVideoFormatIndex(const DirectShowVideoFormat videoFormat) const;
+
+    private:
+        unsigned long m_frameIndex = 0;
 
     };
 }

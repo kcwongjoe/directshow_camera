@@ -487,20 +487,25 @@ namespace DirectShowCamera
     (
         unsigned char* frame,
         int& numOfBytes,
-        unsigned long& frameIndex,
-        const bool copyNewFrameOnly,
-        const unsigned long previousFrameIndex
+        unsigned long& frameIndex
     )
     {
-        if (m_isCapturing && frame)
-        {
-            m_sampleGrabberCallback->getFrame(frame, numOfBytes, frameIndex, copyNewFrameOnly, previousFrameIndex);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        // Check
+        if (!m_isCapturing) return false;
+        if (frame == nullptr) return false;
+
+        // Get frame
+        m_sampleGrabberCallback->getFrame(frame, numOfBytes, frameIndex);
+
+        return true;
+    }
+
+    unsigned long DirectShowCamera::getLastFrameIndex() const
+    {
+        // Check
+        if (!m_isCapturing) return 0;
+
+        return m_sampleGrabberCallback->getLastFrameIndex();
     }
 
     void DirectShowCamera::setMinimumFPS(const double minimumFPS)

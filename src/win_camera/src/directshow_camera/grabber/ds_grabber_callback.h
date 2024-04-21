@@ -10,14 +10,15 @@
 
 //************Content************
 
-#include <mutex>
-#include <chrono>
-
 #include <windows.h>
 
 #include "directshow_camera/grabber/qedit.h"
 
 #include "directshow_camera/video_format/ds_guid.h"
+
+#include <mutex>
+#include <chrono>
+#include <memory>
 
 namespace DirectShowCamera
 {
@@ -66,17 +67,19 @@ namespace DirectShowCamera
          * @param[out] frame Frame in bytes
          * @param[out] numOfBytes Number of the byte of the frame. It will change if the size is change in 5 frame.
          * @param[out] frameIndex (Option) A frame index,such as a frame id. It can be use to identify whether it is a new frame.
-         * @param[in] copyNewFrameOnly (Option) Set as true if only interesting on new frame and it will not copy the frame. It should be used with previousFrameIndex. Default as false.
-         * @param[in] previousFrameIndex (Option) The previous frame index. It use to identify whether the current frame is a new frame. Default as 0.
-         * @return Return true if the current is copied. If a new frame is required and the frame doesn't change, it will returns false. If eroor occurred, it return false.
+         * @return Return true if the current is copied. If error occurred, it return false.
         */
         bool getFrame(
             unsigned char* frame,
             int& numOfBytes,
-            unsigned long& frameIndex,
-            const bool copyNewFrameOnly = false,
-            const unsigned long previousFrameIndex = 0
+            unsigned long& frameIndex
         );
+
+        /**
+        * @brief Get the last frame index. It can be used to identify whether a new frame. Index will only be updated when you call getFrame()
+        * @return Return the last frame index.
+        */
+        unsigned long getLastFrameIndex() const;
 
         /**
          * @brief Get frame per second
@@ -108,18 +111,17 @@ namespace DirectShowCamera
 #pragma endregion Frame
 
         //------------------------------------------------
-        STDMETHODIMP_(ULONG) AddRef();
-        STDMETHODIMP_(ULONG) Release();
+        STDMETHODIMP_(ULONG) AddRef() override;
+        STDMETHODIMP_(ULONG) Release() override;
 
         //------------------------------------------------
-        STDMETHODIMP QueryInterface(REFIID, void** ppvObject);
+        STDMETHODIMP QueryInterface(REFIID, void** ppvObject) override;
 
         //------------------------------------------------
-        STDMETHODIMP SampleCB(double, IMediaSample* pSample);
-
+        STDMETHODIMP SampleCB(double, IMediaSample* pSample) override;
 
         // Not implemented
-        STDMETHODIMP BufferCB(double, BYTE*, long);
+        STDMETHODIMP BufferCB(double, BYTE*, long) override;
     private:
 
         /**
@@ -130,7 +132,7 @@ namespace DirectShowCamera
         /**
          * @brief Current frame data.
         */
-        unsigned char* m_pixelsBuffer;
+        std::unique_ptr<unsigned char[]> m_pixelsBuffer;
 
         /**
          * @brief The current frame size in bytes.

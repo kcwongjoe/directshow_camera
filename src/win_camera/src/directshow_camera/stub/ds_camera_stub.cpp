@@ -212,9 +212,7 @@ namespace DirectShowCamera
     bool DirectShowCameraStub::getFrame(
         unsigned char* frame,
         int& numOfBytes,
-        unsigned long& frameIndex,
-        const bool copyNewFrameOnly,
-        const unsigned long previousFrameIndex
+        unsigned long& frameIndex
     )
     {
         if (m_isCapturing && frame)
@@ -222,18 +220,28 @@ namespace DirectShowCamera
             if (m_getFrameFunc)
             {
                 // Return the user define image
-                m_getFrameFunc(frame, numOfBytes, frameIndex, copyNewFrameOnly, previousFrameIndex);
+                m_getFrameFunc(frame, numOfBytes, frameIndex, m_frameIndex);
+
+                // Update frame index
+                m_frameIndex = frameIndex;
             }
             else
             {
-                // Return the default image
+                // Update frame index
+                if (UpdateFrameIndexAfterGetFrame)
+                {
+                    m_frameIndex = m_frameIndex + 1;
+                }
+
+                frameIndex = m_frameIndex;
+
+                // Return the default image, image will be generated based on the frame index value
                 DirectShowCameraStubDefaultSetting::getFrame(
                     frame,
                     numOfBytes,
                     frameIndex,
                     m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getWidth(),
-                    m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getHeight(),
-                    previousFrameIndex
+                    m_videoFormats.getVideoFormat(m_currentVideoFormatIndex).getHeight()
                 );
             }
 
@@ -243,6 +251,11 @@ namespace DirectShowCamera
         {
             return false;
         }
+    }
+
+    unsigned long DirectShowCameraStub::getLastFrameIndex() const
+    {
+        return m_frameIndex;
     }
 
     void DirectShowCameraStub::setMinimumFPS(const double minimumFPS)
