@@ -83,8 +83,9 @@ void eg6_stub()
 
     // Capture a frame
     std::cout << "Capture frame in cv::Mat and save as image.jpg" << std::endl;
-    cv::Mat frame = camera.getMat();
-    cv::imwrite("image.jpg", frame);
+    WinCamera::Frame frame;
+    camera.getFrame(frame);
+    cv::imwrite("image.jpg", frame.getMat());
 
 #ifdef USE_STUB
     // User define a image
@@ -130,8 +131,8 @@ void eg6_stub()
 
     // Capture a frame
     std::cout << "Capture a user defined frame in cv::Mat and save as image.jpg" << std::endl;
-    frame = camera.getMat();
-    cv::imwrite("image2.jpg", frame);
+    camera.getFrame(frame);
+    cv::imwrite("image2.jpg", frame.getMat());
 #endif
 
 #ifdef USE_STUB

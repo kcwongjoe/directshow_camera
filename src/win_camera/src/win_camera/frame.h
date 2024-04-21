@@ -12,6 +12,8 @@
 
 #include <guiddef.h>
 
+#include "opencv_utils/cv_mat_convertor.h"
+
 #include <memory>
 #include <ostream>
 #include <string>
@@ -26,6 +28,8 @@ namespace WinCamera
 
     public:
 
+
+#pragma region Constructor and Destructor
         /**
         * @brief Constructor
         */
@@ -35,6 +39,10 @@ namespace WinCamera
         * @brief Clear the frame
         */
         void Clear();
+
+#pragma endregion Constructor and Destructor
+
+#pragma region Frame
 
         /**
         * @brief Import data
@@ -63,6 +71,10 @@ namespace WinCamera
          * @return Return the frame in bytes (BGR)
         */
         unsigned char* getFrame(int& numOfBytes, const bool clone = false);
+
+#pragma endregion Frame
+
+#pragma region Getter
 
         /**
         * @brief Return true if the frame is empty
@@ -94,6 +106,26 @@ namespace WinCamera
         */
         int getFrameSize() const;
 
+#pragma endregion Getter
+
+#ifdef WITH_OPENCV2
+#pragma region OpenCV
+
+        /**
+         * @brief Set cv::mat settings
+         * @param[in] settings Settings
+        */
+        void setCVMatSettings(const OpenCVMatSettings settings);
+
+        /**
+         * @brief Get cv::Mat of the current frame
+         * @return Return cv::Mat
+        */
+        cv::Mat getMat();
+
+#pragma endregion OpenCV
+#endif
+
     private:
         std::unique_ptr<unsigned char[]> m_data = nullptr;
         long m_frameSize = 0; // In number of byte
@@ -103,6 +135,10 @@ namespace WinCamera
         GUID m_frameType;
 
         unsigned long m_frameIndex = 0;
+
+#ifdef WITH_OPENCV2
+        OpenCVMatConverter m_matConvertor;
+#endif
     };
 
 }

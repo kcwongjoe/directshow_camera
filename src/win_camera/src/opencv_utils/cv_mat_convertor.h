@@ -17,6 +17,8 @@
 
 #include <vector>
 
+#include "opencv_utils/cv_mat_settings.h"
+
 namespace WinCamera
 {
 
@@ -34,14 +36,15 @@ namespace WinCamera
         OpenCVMatConverter();
 
         /**
-         * @brief Set it as true if the input byte is BGR order, otherwise the input byte is RGB order. Default as false.
+         * @brief Reset
         */
-        bool isBGR = true;
+        void Reset();
 
         /**
-         * @brief Set it as true to flip iamge vertically. Default as true
+         * @brief Set cv::mat settings
+         * @param[in] settings Settings
         */
-        bool isVerticalFlip = true;
+        void setCVMatSettings(const OpenCVMatSettings settings);
 
         /**
         * @brief Set the video type
@@ -73,6 +76,7 @@ namespace WinCamera
         GUID m_videoType;
         std::vector<GUID> m_supportVideoType;
 
+        OpenCVMatSettings m_cvMatSettings;
     };
 
 }

@@ -12,6 +12,11 @@
 
 #include "win_camera/win_camera.h"
 
+// Include Opencv
+#ifdef WITH_OPENCV2
+#include <opencv2/opencv.hpp>
+#endif
+
 #include <thread>
 #include <string>
 #include <functional>
@@ -26,7 +31,7 @@ namespace WinCamera
     class WinCameraThread {
     public:
 
-        typedef std::function<void(cv::Mat image)> CapturedProcess;
+        typedef std::function<void(Frame& frame)> CapturedProcess;
 
     public:
 #pragma region Constructor and Destructor
@@ -52,7 +57,7 @@ namespace WinCamera
         /**
          * @brief Set the capture process
          *
-         * @param[in] capturedProcess void(cv::mat image) The function to process the captured image.
+         * @param[in] capturedProcess void(Frame frame) The function to process the captured image.
          */
         void setCapturedProcess(CapturedProcess capturedProcess);
 
@@ -96,6 +101,9 @@ namespace WinCamera
 
 #pragma endregion Thread control
 
+#ifdef WITH_OPENCV2
+// Save image require OpenCV
+
 #pragma region Save Image
 
         /**
@@ -108,7 +116,7 @@ namespace WinCamera
         /**
          * @brief Set as true to save image automatically.
          * @param[in] enable Set as true to save image.
-         * @param[in] saveInAsync (Option) Set as true to save image in async mode. Default as true;
+         * @param[in] saveInAsync (Optional) Set as true to save image in async mode. Default as true;
          * @note The image will be saved in the folder set by setSaveImagePath()
          * @see setSaveImagePath()
         */
@@ -116,12 +124,14 @@ namespace WinCamera
 
 #pragma endregion Save Image
 
+#endif
+
         /**
          * @brief Get the last capture image
          *
          * @return Return the last capture image
          */
-        cv::Mat getImage();
+        Frame& getFrame();
 
         /**
          * @brief Get the camera pointer
@@ -148,12 +158,14 @@ namespace WinCamera
         std::thread m_thread;
         int m_waitForStopTimeout = 3000;
 
+#ifdef WITH_OPENCV2
         std::string m_saveImagePath;
         bool m_saveImage = false;
         bool m_saveImageInAsync = true;
+#endif
 
         std::shared_ptr<WinCamera> m_camera = nullptr;
-        cv::Mat m_capturedImage;
+        Frame m_capturedFrame;
         CapturedProcess m_capturedProcess = nullptr;
     };
 }

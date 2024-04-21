@@ -235,7 +235,7 @@ namespace DirectShowCamera
         /**
          * @brief Reset properties to default
          *
-         * @param[in] asAuto (Option) Set as true if you also want to set properties to auto. Default as true.
+         * @param[in] asAuto (Optional) Set as true if you also want to set properties to auto. Default as true.
          */
         void ResetPropertiesToDefault(const bool asAuto = true) override;
 

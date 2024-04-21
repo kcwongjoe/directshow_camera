@@ -19,7 +19,7 @@ namespace Win32Utils
     /**
      * @brief Convert BSTR to string
      * @param[in] bstr BSTR
-     * @param[in] cp (Option) CodePage, Default as CP_UTF8
+     * @param[in] cp (Optional) CodePage, Default as CP_UTF8
      * @return Return string
     */
     std::string BSTRToString(const BSTR bstr, const int cp = CP_UTF8);

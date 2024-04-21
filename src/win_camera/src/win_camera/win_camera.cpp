@@ -43,12 +43,6 @@ namespace WinCamera
     {
         // Check if DirectShowCamera has error during initialization
         ThrowDirectShowException();
-
-#ifdef WITH_OPENCV2
-        m_matConvertor = OpenCVMatConverter();
-        m_matConvertor.isBGR = true;
-        m_matConvertor.isVerticalFlip = true;
-#endif
         InitProperties();
     }
 
@@ -199,13 +193,6 @@ namespace WinCamera
 
         // Initialize camera
         result = m_directShowCamera->Open(directShowFilter, videoFormat);
-
-    #ifdef WITH_OPENCV2
-        if (result)
-        {
-            AllocateMatBuffer();
-        }
-    #endif
 
         // Throw DirectShow Camera Exception
         if (!result) ThrowDirectShowException();
@@ -490,10 +477,6 @@ namespace WinCamera
             const auto resultSetVideoFormat = m_directShowCamera->setVideoFormat(videoFormat);
             if (!resultSetVideoFormat) ThrowDirectShowException();
 
-#ifdef WITH_OPENCV2
-            AllocateMatBuffer();
-#endif
-
             // Restart capturing
             if (requireStart)
             {
@@ -559,13 +542,60 @@ namespace WinCamera
             }
         );
 
+#ifdef WITH_OPENCV2
+        frame.setCVMatSettings(m_openCVMatSettings);
+#endif
+
         // Update frame index
         m_lastFrameIndex = frame.getFrameIndex();
 
         return true;
     }
 
-    long WinCamera::getFrameIndex() const
+    bool WinCamera::getNewFrame(Frame& frame, const int step, const int timeout, const int skip)
+    {
+        const unsigned long lastFrameIndex = m_lastFrameIndex;
+        const unsigned long expectedFrameIndex = lastFrameIndex + 1 + skip;
+        bool expectedFrameIndexOverFlow = false;
+        if (lastFrameIndex > expectedFrameIndex)
+        {
+            // Expected frame index overflow
+            expectedFrameIndexOverFlow = true;
+        }
+
+        int pastTime = 0;
+
+        // Wait for new frame
+        while (
+            (
+                (expectedFrameIndexOverFlow && m_lastFrameIndex > 2147483647) ||
+                (m_lastFrameIndex < expectedFrameIndex)
+            ) &&
+            pastTime <= timeout
+        )
+        {
+            // Sleep
+            std::this_thread::sleep_for(std::chrono::milliseconds(step));
+
+            // Get frame and update the last frame index
+            const auto success = getFrame(frame, true);
+
+            // Update past time
+            pastTime += step;
+        }
+
+        // Return
+        if (pastTime > timeout)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    long WinCamera::getLastFrameIndex() const
     {
         return m_lastFrameIndex;
     }
@@ -579,123 +609,9 @@ namespace WinCamera
 
 #ifdef WITH_OPENCV2
 
-    void WinCamera::setMatAsBGR(const bool asBGR)
+    OpenCVMatSettings& WinCamera::getOpenCVMatSettings()
     {
-        m_matConvertor.isBGR = asBGR;
-    }
-
-    void WinCamera::VerticalFlipMat(const bool verticalFlip)
-    {
-        m_matConvertor.isVerticalFlip = verticalFlip;
-    }
-
-    bool WinCamera::AllocateMatBuffer()
-    {
-        bool result = false;
-
-        if (isOpened())
-        {
-            // Get frame size
-            const long bufferSize = m_directShowCamera->getFrameTotalSize();
-
-            if (m_matBufferSize != bufferSize)
-            {
-                // Allocate buffer
-                if (m_matBuffer != NULL)
-                {
-                    delete[] m_matBuffer;
-                    m_matBuffer = NULL;
-                }
-
-                m_matBuffer = new unsigned char[bufferSize];
-                m_matBufferSize = bufferSize;
-
-                result = true;
-            }
-
-            // Update convertor media type
-            m_matConvertor.setVideoType(m_directShowCamera->getFrameType());
-        }
-
-        return result;
-    }
-
-    cv::Mat WinCamera::getMat(const bool onlyGetNewMat)
-    {
-        // Reallocate frame buffer size if changed
-        if (m_matBufferSize != m_directShowCamera->getFrameTotalSize())
-        {
-            AllocateMatBuffer();
-        }
-
-        // Get frame
-        Frame frame;
-        bool success = getFrame(frame, onlyGetNewMat);
-        int numOfBytes;
-
-        // Allocate buffer
-        if (m_matBuffer != NULL)
-        {
-            delete[] m_matBuffer;
-            m_matBuffer = NULL;
-        }
-
-        m_matBuffer = frame.getFrame( numOfBytes, true);
-
-        if (success)
-        {
-            return m_matConvertor.convert(m_matBuffer, getWidth(), getHeight());
-        }
-        else
-        {
-            cv::Mat result;
-            return result;
-        }
-    }
-
-    cv::Mat WinCamera::getLastMat()
-    {
-        return m_matConvertor.convert(m_matBuffer, getWidth(), getHeight());
-    }
-
-    cv::Mat WinCamera::getNewMat(const int step, const int timeout, const int skip)
-    {
-        auto lastFrameIndex = m_lastFrameIndex;
-        int pastTime = 0;
-        cv::Mat result;
-
-        // Wait for new frame
-        while (m_lastFrameIndex < lastFrameIndex + 1 + skip && pastTime <= timeout)
-        {
-            // Sleep
-            std::this_thread::sleep_for(std::chrono::milliseconds(step));
-
-            // Get mat and update m_lastFrameIndex
-            result = getMat(true);
-
-            // Update past time
-            pastTime += step;
-        }
-
-        // Output
-        if (pastTime > timeout)
-        {
-            // Timeout
-            return cv::Mat();
-        }
-        else
-        {
-            // New frame collected
-            if (result.empty())
-            {
-                return getLastMat();
-            }
-            else
-            {
-                return result;
-            }
-            
-        }
+        return m_openCVMatSettings;
     }
 
     cv::Mat WinCamera::ExposureFusion(
@@ -734,7 +650,9 @@ namespace WinCamera
 
             std::this_thread::sleep_for(std::chrono::milliseconds(minSetExposureDelay + (int)(exposures[i] * 1000)));
 
-            cv::Mat newMat = getMat(false);
+            Frame frame;
+            getFrame(frame, false);
+            cv::Mat newMat = frame.getMat();
             if (!newMat.empty())
             {
                 exposureImages->push_back(newMat);

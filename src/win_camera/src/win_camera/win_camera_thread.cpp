@@ -28,11 +28,6 @@ namespace WinCamera
     WinCameraThread::~WinCameraThread()
     {
         Stop(false);
-
-        if (this)
-        {
-            m_capturedImage.release();
-        }
     }
 
     void WinCameraThread::Reset()
@@ -40,7 +35,7 @@ namespace WinCamera
         m_stopThread = false;
         m_stopCapture = false;
         m_waitForStopTimeout = 3000;
-        m_capturedImage = cv::Mat();
+        m_capturedFrame.Clear();
     }
 
 #pragma endregion Constructor and Destructor
@@ -123,11 +118,10 @@ namespace WinCamera
                 {
 
                     // Get Image
-                    cv::Mat image = m_camera->getMat(true);
-                    if (!image.empty())
+                    bool success = m_camera->getFrame(m_capturedFrame, true);
+                    if (success)
                     {
-                        m_capturedImage = image;
-
+#ifdef WITH_OPENCV2
                         // Save Image
                         if (m_saveImage)
                         {
@@ -139,28 +133,32 @@ namespace WinCamera
                             std::string imageName = Utils::TimeUtils::ToString(nowTimet, "%Y_%m_%d_%H_%M_%S") + "_" + std::to_string(Utils::TimeUtils::GetMilliseconds(now)) + ".jpg";
                             std::string imagePath = (m_saveImagePath.empty()) ? imageName : m_saveImagePath + "/" + imageName;
 
+                            // Get cv::Mat
+                            cv::Mat cvMatImage = m_capturedFrame.getMat();
+
                             // Save
                             if (m_saveImageInAsync)
                             {
                                 // Save image in async mode
-                                std::thread t([this, imagePath]() {
-                                    cv::imwrite(imagePath, m_capturedImage);
-                                    }
+                                std::thread t([this, imagePath, cvMatImage]() {
+                                    cv::imwrite(imagePath, cvMatImage);
+                                }
                                 );
                                 t.detach();
                             }
                             else
                             {
                                 // Save image in sync mode
-                                cv::imwrite(imagePath, m_capturedImage);
+                                cv::imwrite(imagePath, cvMatImage);
                             }
                         }
+#endif
 
                         // Process
                         if (m_capturedProcess != nullptr)
                         {
-                            m_capturedProcess(image);
-                        }                    
+                            m_capturedProcess(m_capturedFrame);
+                        }
                     }
                 }
                 else
@@ -233,8 +231,8 @@ namespace WinCamera
         return m_camera;
     }
 
-    cv::Mat WinCameraThread::getImage()
+    Frame& WinCameraThread::getFrame()
     {
-        return m_capturedImage;
+        return m_capturedFrame;
     }
 }

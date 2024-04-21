@@ -24,9 +24,9 @@ void eg3_camera_thread()
 
     // Set a process to handle the captured image
     cameraThread.setCapturedProcess(
-        [](cv::Mat image)
+        [](WinCamera::Frame& frame)
         {
-            std::cout << "Get a new image(" + std::to_string(image.cols) + " x " + std::to_string(image.rows) + ")" << std::endl;
+            std::cout << "Get a new image(" + std::to_string(frame.getWidth()) + " x " + std::to_string(frame.getHeight()) + ")" << std::endl;
         }
     );
 

@@ -66,7 +66,7 @@ namespace DirectShowCamera
          * @brief Get the current frame
          * @param[out] frame Frame in bytes
          * @param[out] numOfBytes Number of the byte of the frame. It will change if the size is change in 5 frame.
-         * @param[out] frameIndex (Option) A frame index,such as a frame id. It can be use to identify whether it is a new frame.
+         * @param[out] frameIndex (Optional) A frame index,such as a frame id. It can be use to identify whether it is a new frame.
          * @return Return true if the current is copied. If error occurred, it return false.
         */
         bool getFrame(

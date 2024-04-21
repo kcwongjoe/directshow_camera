@@ -8,7 +8,7 @@
 
 namespace WinCamera
 {
-
+#pragma region Constructor and Destructor
 
     Frame::Frame()
     {
@@ -20,8 +20,18 @@ namespace WinCamera
         m_width = -1;
         m_height = -1;
         m_frameSize = 0;
+        m_frameIndex = 0;
         if (m_data != nullptr) m_data.reset();
+
+
+#ifdef WITH_OPENCV2
+        m_matConvertor.Reset();
+#endif
     }
+
+#pragma endregion Constructor and Destructor
+
+#pragma region Frame
 
     void Frame::ImportData(
         const long frameSize,
@@ -72,6 +82,10 @@ namespace WinCamera
         }
     }
 
+#pragma endregion Frame
+
+#pragma region Getter
+
     bool Frame::isEmpty() const
     {
         return m_data == nullptr || m_frameSize == 0;
@@ -96,4 +110,24 @@ namespace WinCamera
     {
         return m_frameSize;
     }
+
+#pragma endregion Getter
+
+#ifdef WITH_OPENCV2
+#pragma region OpenCV
+
+    void Frame::setCVMatSettings(const OpenCVMatSettings settings)
+    {
+        m_matConvertor.setCVMatSettings(settings);
+    }
+
+    cv::Mat Frame::getMat()
+    {
+        m_matConvertor.setVideoType(m_frameType);
+
+        return m_matConvertor.convert(m_data.get(), getWidth(), getHeight());
+    }
+
+#pragma endregion OpenCV
+#endif
 }

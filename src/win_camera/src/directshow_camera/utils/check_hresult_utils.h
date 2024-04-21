@@ -32,7 +32,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for CreateClassEnumerator() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on CreateClassEnumerator()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on CreateClassEnumerator()"
          * @return Return true if success
         */
         static bool CheckCreateClassEnumeratorResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on CreateClassEnumerator()");
@@ -41,7 +41,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for ICaptureGraphBuilder2::SetFiltergraph() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on ICaptureGraphBuilder2::SetFiltergraph()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on ICaptureGraphBuilder2::SetFiltergraph()"
          * @return Return true if success
         */
         static bool CheckICGB2SetFiltergraphResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on ICaptureGraphBuilder2::SetFiltergraph()");
@@ -50,7 +50,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for IGraphBuilder::AddFilter() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on IGraphBuilder::AddFilter()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on IGraphBuilder::AddFilter()"
          * @return Return true if success
         */
         static bool CheckIGBAddFilterResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IGraphBuilder::AddFilter()");
@@ -59,7 +59,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for ICaptureGraphBuilder2::FindInterface() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on ICaptureGraphBuilder2::FindInterface()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on ICaptureGraphBuilder2::FindInterface()"
          * @return Return true if success
         */
         static bool CheckICGB2FindInterfaceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on ICaptureGraphBuilder2::FindInterface()");
@@ -68,7 +68,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for ICaptureGraphBuilder2::RenderStream() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on ICaptureGraphBuilder2::RenderStream()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on ICaptureGraphBuilder2::RenderStream()"
          * @return Return true if success
         */
         static bool CheckICGB2RenderStreamResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on ICaptureGraphBuilder2::RenderStream()");
@@ -77,7 +77,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for IAMStreamConfig::GetFormat() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on IAMStreamConfig::GetFormat()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on IAMStreamConfig::GetFormat()"
          * @return Return true if success
         */
         static bool CheckIIAMSCGetFormatResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IAMStreamConfig::GetFormat()");
@@ -86,7 +86,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for IAMStreamConfig::SetFormat() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on IAMStreamConfig::SetFormat()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on IAMStreamConfig::SetFormat()"
          * @return Return true if success
         */
         static bool CheckIIAMSCSetFormatResult(const HRESULT hr, std::string& errorStringL, const std::string errorDescription = "Error on IAMStreamConfig::SetFormat()");
@@ -95,7 +95,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for IAMStreamConfig::GetNumberOfCapabilities() and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on IAMStreamConfig::GetNumberOfCapabilities()"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on IAMStreamConfig::GetNumberOfCapabilities()"
          * @return Return true if success
         */
         static bool CheckIAMSCGetNumberOfCapabilitiesResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IAMStreamConfig::GetNumberOfCapabilities()");
@@ -104,7 +104,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for IUnknown::QueryInterface and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on IUnknown::QueryInterface"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on IUnknown::QueryInterface"
          * @return Return true if success
         */
         static bool CheckQueryInterfaceResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IUnknown::QueryInterface()");
@@ -113,7 +113,7 @@ namespace DirectShowCamera
          * @brief Check the HResult for IKsPropertySet::QuerySupported and convert to error string
          * @param[in] hr HRESULT
          * @param[out] errorString The output error string, errorDescription + " : " + HRSTRING
-         * @param[in] errorDescription (Option)Error description, default as "Error on IKsPropertySet::QuerySupported"
+         * @param[in] errorDescription (Optional)Error description, default as "Error on IKsPropertySet::QuerySupported"
          * @return Return true if success
         */
         static bool CheckIKsPropertySetQuerySupportedResult(const HRESULT hr, std::string& errorString, const std::string errorDescription = "Error on IKsPropertySet::QuerySupported()");

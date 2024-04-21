@@ -45,7 +45,8 @@
 
 // Include Opencv
 #ifdef WITH_OPENCV2
-#include "opencv_utils/cv_mat_convertor.h"
+#include <opencv2/opencv.hpp>
+#include "opencv_utils/cv_mat_settings.h"
 #endif
 
 namespace WinCamera
@@ -188,18 +189,29 @@ namespace WinCamera
 
         /**
          * @brief Get frame
-         * @param[out] frame Frame bytes (BGR)
+         * @param[out] frame Frame
          * @param[out] numOfBytes Number of bytes of the frame.
-         * @param[in] onlyGetNewFrame (Option) Set it as true if you only want to get the new frame which has not been get by getFrame. Default as false
-         * @return Return true if success
+         * @param[in] onlyGetNewFrame (Optional) Set it as true if you only want to get the new frame which has not been get by getFrame. Default as false
+         * @return Return true if success. If the frame is a old frame and onlyGetNewFrame is true, it will return false.
         */
         bool getFrame(Frame& frame, const bool onlyGetNewFrame = false);
+
+        /**
+         * @brief   Try to get a new Frame in sync mode. It will return the new frame if existed.
+         *          Otherwise, it will wait for the new frame and then return. If timeout, it will return false
+         * @param[out] frame Frame
+         * @param[in] step (Optional) Step for checking new frame in ms. Default as 50ms
+         * @param[in] timeout (Optional) Timeout in ms. Default as 3000ms
+         * @param[in] skip (Optional) Number of new Frame to be skipped. For example, if skip = 3, the fourth new frame will be returned. Default as 0.
+         * @return Return true if success. If timeout, it will return false.
+        */
+        bool getNewFrame(Frame& frame, const int step = 50, const int timeout = 3000, const int skip = 0);
 
         /**
          * @brief Return the last frame index. It use to identify whether a new frame. Index will only be updated when you call getFrame() or gatMat();
          * @return Return the last frame index.
         */
-        long getFrameIndex() const;
+        long getLastFrameIndex() const;
 
         /**
          * @brief Get frame per second
@@ -237,48 +249,9 @@ namespace WinCamera
         */
         int getNumOfPixel() const;
 
-    #ifdef WITH_OPENCV2
+#ifdef WITH_OPENCV2
 
-        /**
-         * @brief Set as true to return a vertical flip cv::Mat. Default as true.
-         * @param[in] verticalFlip Set it as true to return a vertical flip cv::Mat.
-        */
-        void VerticalFlipMat(const bool verticalFlip);
-
-        /**
-         * @brief Set as true to return a BGR cv::Mat. Default as false which return a RGB Mat.
-         * @param[in] asBGR Set as true to return a BGR cv::Mat.
-        */
-        void setMatAsBGR(const bool asBGR);
-
-        /**
-         * @brief Allocate frame buffer
-         * @return Return true if success
-        */
-        bool AllocateMatBuffer();
-
-        /**
-         * @brief Get cv::Mat of the current frame
-         *
-         * @param[in] onlyGetNewMat (Option) Set it as true if you only want to get the new Mat. Default as false
-         * @return Return cv::Mat
-        */
-        cv::Mat getMat(const bool onlyGetNewMat = false);
-
-        /**
-         * @brief Get cv::Mat from the Mat buffer. Buffer will not be updated if you have not to call getMat();
-         * @return Return the cv::Mat
-        */
-        cv::Mat getLastMat();
-
-        /**
-         * @brief Get new cv::Mat in sync mode.
-         * @param[in] step (Option) Step for checking new frame in ms. Default as 50ms
-         * @param[in] timeout (Option) Timeout in ms. Default as 3000ms
-         * @param[in] skip (Option) Number of new Mat to be skipped. For example, if skip = 3, the fourth new mat will be returned. Default as 0.
-         * @return Return the cv::Mat. Empty mat return if timeout.
-        */
-        cv::Mat getNewMat(const int step = 50, const int timeout = 3000, const int skip = 0);
+        OpenCVMatSettings& getOpenCVMatSettings();
 
         /**
          * @brief Exposure fusion
@@ -307,7 +280,7 @@ namespace WinCamera
             std::vector<cv::Mat>* exposureImages = nullptr,
             const int minSetExposureDelay = 200
         );
-    #endif
+#endif
 
 #pragma endregion Frame
 
@@ -411,11 +384,9 @@ namespace WinCamera
         std::shared_ptr<WinCameraPropertyPowerlineFrequency> m_powerline_frequency;
         std::shared_ptr<WinCameraPropertyDigitalZoomLevel> m_digital_zoom_level;
 
-    #ifdef WITH_OPENCV2
-        unsigned char* m_matBuffer = NULL;
-        int m_matBufferSize = 0;
-        OpenCVMatConverter m_matConvertor;
-    #endif
+#ifdef WITH_OPENCV2
+        OpenCVMatSettings m_openCVMatSettings;
+#endif
     };
 }
 

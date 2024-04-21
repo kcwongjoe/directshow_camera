@@ -31,15 +31,29 @@ namespace WinCamera
         };
     }
 
+    void OpenCVMatConverter::Reset()
+    {
+        m_videoType = MEDIASUBTYPE_None;
+        m_cvMatSettings.Reset();
+    }
+
+    void OpenCVMatConverter::setCVMatSettings(const OpenCVMatSettings settings)
+    {
+        m_cvMatSettings = settings;
+    }
+
     void OpenCVMatConverter::setVideoType(const GUID videoType)
     {
-        if (std::find(m_supportVideoType.begin(), m_supportVideoType.end(), videoType) != m_supportVideoType.end()) {
-            // Video type is supported, set it
-            m_videoType = videoType;
-        }
-        else
+        if (videoType != m_videoType)
         {
-            throw std::invalid_argument("Video type(" + DirectShowVideoFormatUtils::ToString(videoType) + ") is not supported");
+            if (std::find(m_supportVideoType.begin(), m_supportVideoType.end(), videoType) != m_supportVideoType.end()) {
+                // Video type is supported, set it
+                m_videoType = videoType;
+            }
+            else
+            {
+                throw std::invalid_argument("Video type(" + DirectShowVideoFormatUtils::ToString(videoType) + ") is not supported");
+            }
         }
     }
 
@@ -75,7 +89,7 @@ namespace WinCamera
             result = cv::Mat(height, width, CV_16UC1);
             unsigned char* matPtr = result.ptr();
 
-            if (isBGR)
+            if (m_cvMatSettings.BGR)
             {
                 // 2 byte - BGR
                 memcpy(matPtr, data, (long)height * (long)width * 2L);
@@ -108,10 +122,10 @@ namespace WinCamera
             unsigned char* dataPtrTemp = data;
             unsigned char* matPtr = result.ptr();
 
-            if (isBGR) {
+            if (m_cvMatSettings.BGR) {
                 // BGR
 
-                if (isVerticalFlip)
+                if (m_cvMatSettings.VerticalFlip)
                 {
                     // 3 byte - RGB - Vertical flip
                     for (long y = 0; y < height; y++) {
@@ -127,7 +141,7 @@ namespace WinCamera
             else
             {
                 // RGB
-                if (isVerticalFlip) {
+                if (m_cvMatSettings.VerticalFlip) {
                     // 3 byte - BGR - Vertical flip
 
                     int x = 0;

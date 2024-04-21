@@ -30,7 +30,7 @@ namespace Utils
         /**
          * @brief Get current time in string
          * 
-         * @param[in] format (Option) time format. Default as "%Y-%m-%d %H:%M:%S"
+         * @param[in] format (Optional) time format. Default as "%Y-%m-%d %H:%M:%S"
          *
          * @return std::string
          */
@@ -40,7 +40,7 @@ namespace Utils
          * @brief Convert time_t to string
          *
          * @param[in] time time to be conveted
-         * @param[in] format (Option) time format. Default as "%Y-%m-%d %H:%M:%S"
+         * @param[in] format (Optional) time format. Default as "%Y-%m-%d %H:%M:%S"
          * @return std::string
          */
         static std::string ToString(time_t time, std::string format = "%Y-%m-%d %H:%M:%S");
