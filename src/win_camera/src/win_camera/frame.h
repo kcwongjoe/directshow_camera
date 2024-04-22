@@ -36,6 +36,21 @@ namespace WinCamera
         Frame();
 
         /**
+        * @brief Destructor
+        */
+        ~Frame();
+
+        /**
+        * @brief Copy constructor
+        */
+        Frame(const Frame& other);
+
+        /**
+        * @brief Move constructor
+        */
+        Frame(Frame&& other) noexcept;
+
+        /**
         * @brief Clear the frame
         */
         void Clear();
@@ -125,6 +140,80 @@ namespace WinCamera
 
 #pragma endregion OpenCV
 #endif
+
+#pragma region Operator
+
+        /**
+        * @brief Copy assignment
+        */
+        Frame& operator=(const Frame& other)
+        {
+            if (this != &other)
+            {
+                m_width = other.m_width;
+                m_height = other.m_height;
+                m_frameSize = other.m_frameSize;
+                m_frameIndex = other.m_frameIndex;
+                m_frameType = other.m_frameType;
+                if (other.m_data != nullptr)
+                {
+                    m_data = std::make_unique<unsigned char[]>(m_frameSize);
+                    memcpy(m_data.get(), other.m_data.get(), m_frameSize);
+                }
+            }
+            return *this;
+        }
+
+
+        /**
+        * @brief Move assignment
+        */
+        Frame& operator=(Frame&& other) noexcept
+        {
+            if (this != &other)
+            {
+                m_width = other.m_width;
+                m_height = other.m_height;
+                m_frameSize = other.m_frameSize;
+                m_frameIndex = other.m_frameIndex;
+                m_frameType = other.m_frameType;
+                m_data = std::move(other.m_data);
+            }
+            return *this;
+        }
+
+        /**
+        * @brief equal operator
+        */
+        bool operator==(const Frame& other) const
+        {
+            if (m_width != other.m_width) return false;
+            if (m_height != other.m_height) return false;
+            if (m_frameSize != other.m_frameSize) return false;
+            if (m_frameIndex != other.m_frameIndex) return false;
+            if (m_frameType != other.m_frameType) return false;
+
+            if (m_data == nullptr && other.m_data != nullptr) return false;
+            if (m_data != nullptr && other.m_data == nullptr) return false;
+            if (m_data != nullptr && other.m_data != nullptr)
+            {
+                for (int i = 0; i < m_frameSize; i++)
+                {
+                    if (m_data[i] != other.m_data[i]) return false;
+                }
+            }
+            return true;
+        }
+
+        /**
+        * @brief not equal operator
+        */
+        bool operator!=(const Frame& other) const
+        {
+            return !(*this == other);
+        }
+
+#pragma endregion Operator
 
     private:
         std::unique_ptr<unsigned char[]> m_data = nullptr;

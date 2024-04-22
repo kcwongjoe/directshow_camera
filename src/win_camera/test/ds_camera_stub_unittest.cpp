@@ -125,36 +125,20 @@ TEST(TestUVCCameraStub, TestCapture)
     EXPECT_TRUE(camera.isCapturing()) << "Fail: camera.isCapturing()";
 
     // Get getFrame
-    int byteSize = width * height * 3;
-    std::unique_ptr<unsigned char[]> byteBuffer(new unsigned char[byteSize]);
-    int size = 0;
-    EXPECT_TRUE(camera.getFrame(byteBuffer.get(), size)) << "Fail: camera.getFrame()";
+    WinCamera::Frame frame;
+    EXPECT_TRUE(camera.getFrame(frame)) << "Fail: camera.getFrame()";
 
     // Get Expect frame
-    std::unique_ptr<unsigned char[]> expectByteBuffer(new unsigned char[byteSize]);
-    int expectSize = 0;
-    unsigned long frameIndex = 0;
+    WinCamera::Frame expectedFrame;
     DirectShowCamera::DirectShowCameraStubDefaultSetting::getFrame(
-        expectByteBuffer.get(),
-        expectSize,
-        frameIndex,
+        expectedFrame,
+        1,  //  Frame index is 1 as only call getFrame once
         width,
-        height,
-        0
+        height
     );
 
     // Check getFrame
-    EXPECT_EQ(expectSize, expectSize) << "Fail: camera.getFrame()";
-    bool sameByte = true;
-    for (int i=0;i<byteSize;i++)
-    {
-        if (byteBuffer.get()[i] != expectByteBuffer.get()[i])
-        {
-            sameByte = false;
-            break;
-        }
-    }
-    EXPECT_TRUE(sameByte) << "Fail: camera.getFrame()";
+    EXPECT_EQ(frame, expectedFrame) << "Fail: camera.getFrame()";
 
     // Close
     EXPECT_TRUE(camera.Close()) << "Fail: camera.close()";

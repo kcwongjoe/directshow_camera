@@ -15,6 +15,34 @@ namespace WinCamera
         Clear();
     }
 
+    Frame::~Frame()
+    {
+    }
+
+    Frame::Frame(const Frame& other)
+    {
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_frameSize = other.m_frameSize;
+        m_frameIndex = other.m_frameIndex;
+        m_frameType = other.m_frameType;
+        m_data = std::make_unique<unsigned char[]>(m_frameSize);
+        memcpy(m_data.get(), other.m_data.get(), m_frameSize);
+    }
+
+    Frame::Frame(Frame&& other) noexcept
+    {
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_frameSize = other.m_frameSize;
+        m_frameIndex = other.m_frameIndex;
+        m_frameType = other.m_frameType;
+        m_data = std::move(other.m_data);
+
+        // Reset other after move
+        other.Clear();
+    }
+
     void Frame::Clear()
     {
         m_width = -1;

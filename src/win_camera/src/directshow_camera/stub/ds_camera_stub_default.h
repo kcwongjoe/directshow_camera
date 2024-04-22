@@ -13,6 +13,8 @@
 #include "directshow_camera/video_format/ds_video_format.h"
 #include "directshow_camera/device/ds_camera_device.h"
 
+#include "win_camera/frame.h"
+
 #include <cstring>
 #include <set>
 #include <vector>
@@ -100,6 +102,37 @@ namespace DirectShowCamera
                 "A fake camera", 
                 "\\\\?\\usb#vid_0000&pid_0000&mi_0000&0000000&0&0000#{00000000-0000-0000-0000-000000000000}\\global",
                 videoFormats));
+        }
+
+        /**
+        * @brief Get frame
+        * @param[out] frame Frame
+        * @param[in] frameIndex Frame index
+        * @param[in] width Frame width
+        * @param[in] height Frame height
+        */
+        static void getFrame(
+            WinCamera::Frame& frame,
+            const unsigned long frameIndex,
+            const int width,
+            const int height
+        )
+        {
+            // Size
+            const int numOfBytes = width * height * 3;
+
+            // Import data
+            frame.ImportData(
+                numOfBytes,
+                width,
+                height,
+                MEDIASUBTYPE_RGB24, 
+                [frameIndex, width, height](unsigned char* data, unsigned long& frameIndexTobeSet) {
+                    frameIndexTobeSet = frameIndex;
+                    int frameSizeHasBeenSet = 0;
+                    getFrame(data, frameSizeHasBeenSet, frameIndex, width, height);
+                }
+            );
         }
 
         /**
