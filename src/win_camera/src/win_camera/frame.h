@@ -13,11 +13,13 @@
 #include <guiddef.h>
 
 #include "opencv_utils/cv_mat_convertor.h"
+#include "utils/gdi_plus_utils.h"
 
 #include <memory>
 #include <ostream>
 #include <string>
 #include <functional>
+#include <filesystem>
 
 namespace WinCamera
 {
@@ -214,6 +216,16 @@ namespace WinCamera
         }
 
 #pragma endregion Operator
+
+        /**
+        * @brief Save the frame to a image file. The Save function require running the GDI+ library which is running when the WinCamrea object exist.
+        * @param[in] path Path to save the image. Supported format are png, jpg, jpeg, bmp, tiff
+        * @param[in] (Optional) encoderParams Encoder parameters. default is NULL. See https://learn.microsoft.com/en-us/windows/win32/api/gdiplusimaging/nl-gdiplusimaging-encoderparameters
+        */
+        void Save(
+            const std::filesystem::path path,
+            const Gdiplus::EncoderParameters* encoderParams = NULL
+        );
 
     private:
         std::unique_ptr<unsigned char[]> m_data = nullptr;

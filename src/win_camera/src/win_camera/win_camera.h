@@ -54,6 +54,9 @@ namespace WinCamera
     /**
      * @brief WinCamera Class
      * 
+     * - Only one WinCamera object can be created at a time. 
+     * - Once created, GDI+ and COMLib will be initialized. If you have initialized GDI+ before creating WinCamera,
+     *   add "#define DONT_INIT_GDIPLUS_IN_WINCAMERA" into your code to prevent re-initialization in the WinCamera.
      */
     class WinCamera
     {
@@ -62,7 +65,7 @@ namespace WinCamera
     public:
 #ifdef WITH_OPENCV2
         typedef std::function<void(cv::Mat image)> ExposureFusionAsyncResult;
-#endif
+#endif // def WITH_OPENCV2
 
 #pragma region Constructor and Destructor
 
@@ -280,7 +283,7 @@ namespace WinCamera
             std::vector<cv::Mat>* exposureImages = nullptr,
             const int minSetExposureDelay = 200
         );
-#endif
+#endif // def WITH_OPENCV2
 
 #pragma endregion Frame
 
@@ -386,10 +389,10 @@ namespace WinCamera
 
 #ifdef WITH_OPENCV2
         OpenCVMatSettings m_openCVMatSettings;
-#endif
+#endif //def WITH_OPENCV2
     };
 }
 
 //*******************************
 
-#endif
+#endif //ndef WIN_CAMERA__WIN_CAMERA__WIN_CAMERA_H

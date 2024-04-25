@@ -6,6 +6,8 @@
 
 #include "win_camera/frame.h"
 
+#include "utils/path_utils.h"
+
 namespace WinCamera
 {
 #pragma region Constructor and Destructor
@@ -158,4 +160,45 @@ namespace WinCamera
 
 #pragma endregion OpenCV
 #endif
+
+    void Frame::Save(
+        const std::filesystem::path path,
+        const Gdiplus::EncoderParameters* encoderParams
+    )
+    {
+        // Get file Extension
+        const auto fileExtension = Utils::PathUtils::getExtension(path);
+
+        // Get encoder
+        CLSID pngClsid;
+        bool success = false;
+        if (fileExtension == "png")
+        {
+            success = Utils::GDIPLUSUtils::GetPngEncoderClsid(pngClsid);
+        }
+        else if (fileExtension == "jpg" || fileExtension == "jpeg")
+        {
+            success = Utils::GDIPLUSUtils::GetJpegEncoderClsid(pngClsid);
+        }
+        else if (fileExtension == "bmp")
+        {
+            success = Utils::GDIPLUSUtils::GetBmpEncoderClsid(pngClsid);
+        }
+        else if (fileExtension == "tiff")
+        {
+            success = Utils::GDIPLUSUtils::GetTiffEncoderClsid(pngClsid);
+        }
+        else
+        {
+            throw std::invalid_argument("File type(" + fileExtension + ") is not supported.");
+        }
+        if (!success) throw std::runtime_error("Can't get encoder for file type(" + fileExtension + ").");
+
+        // Create bitmap
+        Gdiplus::Bitmap bitmap(m_width, m_height, PixelFormat24bppRGB);
+        Utils::GDIPLUSUtils::DrawBitmap(bitmap, m_data.get(), m_frameSize);
+
+        // Save
+        bitmap.Save(path.wstring().c_str(), &pngClsid, encoderParams);
+    }
 }

@@ -13,6 +13,9 @@
 #include "exceptions/directshow_camera_exception.h"
 #include "exceptions/camera_not_opened_exception.h"
 
+#include "utils/gdi_plus_utils.h"
+
+
 namespace WinCamera
 {
 
@@ -43,12 +46,29 @@ namespace WinCamera
     {
         // Check if DirectShowCamera has error during initialization
         ThrowDirectShowException();
+
+        // Start GDI+
+#ifndef DONT_INIT_GDIPLUS_IN_WINCAMERA
+        const auto GDIPlusStatus = Utils::GDIPLUSUtils::StartGDIPlus();
+        if (GDIPlusStatus != Gdiplus::Status::Ok)
+        {
+            // Throw GDIPlusException
+            throw Utils::GDIPlusException("Failed to start GDI+", GDIPlusStatus);
+        }
+#endif
+
+        // Initialize properties
         InitProperties();
     }
 
     WinCamera::~WinCamera()
     {
         Close();
+
+        // Stop GDI+
+#ifndef DONT_INIT_GDIPLUS_IN_WINCAMERA
+        Utils::GDIPLUSUtils::StopGDIPlus();
+#endif
     }
 
 #pragma endregion Constructor and Destructor
