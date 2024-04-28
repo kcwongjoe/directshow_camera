@@ -562,9 +562,8 @@ namespace WinCamera
             }
         );
 
-#ifdef WITH_OPENCV2
-        frame.setCVMatSettings(m_openCVMatSettings);
-#endif
+        // Set frame settings
+        frame.setFrameSettings(m_frameSettings);
 
         // Update frame index
         m_lastFrameIndex = frame.getFrameIndex();
@@ -629,9 +628,9 @@ namespace WinCamera
 
 #ifdef WITH_OPENCV2
 
-    OpenCVMatSettings& WinCamera::getOpenCVMatSettings()
+    FrameSettings& WinCamera::getFrameSettings()
     {
-        return m_openCVMatSettings;
+        return m_frameSettings;
     }
 
     cv::Mat WinCamera::ExposureFusion(

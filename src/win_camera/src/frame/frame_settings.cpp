@@ -4,23 +4,19 @@
 * If you find any bugs, please feel free to report under https://github.com/kcwongjoe/win_camera/issues
 **/
 
-#include "opencv_utils/cv_mat_settings.h"
-
-#ifdef WITH_OPENCV2
+#include "frame/frame_settings.h"
 
 namespace WinCamera
 {
 
-    OpenCVMatSettings::OpenCVMatSettings()
+    FrameSettings::FrameSettings()
     {
         Reset();
     }
 
-    void OpenCVMatSettings::Reset()
+    void FrameSettings::Reset()
     {
         BGR = true;
         VerticalFlip = true;
     }
 }
-
-#endif

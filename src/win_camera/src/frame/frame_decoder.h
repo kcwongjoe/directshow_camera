@@ -5,8 +5,8 @@
 **/
 
 #pragma once
-#ifndef WIN_CAMERA__OPENCV_UTILS__OPENCV_MAT_CONVERTOR_H
-#define WIN_CAMERA__OPENCV_UTILS__OPENCV_MAT_CONVERTOR_H
+#ifndef WIN_CAMERA__OPENCV_UTILS__FRAME__FRAME_DECODER_H
+#define WIN_CAMERA__OPENCV_UTILS__FRAME__FRAME_DECODER_H
 
 //************Content************
 #ifdef WITH_OPENCV2
@@ -17,7 +17,7 @@
 
 #include <vector>
 
-#include "opencv_utils/cv_mat_settings.h"
+#include "frame/frame_settings.h"
 
 namespace WinCamera
 {
@@ -41,10 +41,10 @@ namespace WinCamera
         void Reset();
 
         /**
-         * @brief Set cv::mat settings
+         * @brief Set frame settings
          * @param[in] settings Settings
         */
-        void setCVMatSettings(const OpenCVMatSettings settings);
+        void setFrameSettings(const FrameSettings settings);
 
         /**
         * @brief Set the video type
@@ -76,7 +76,7 @@ namespace WinCamera
         GUID m_videoType;
         std::vector<GUID> m_supportVideoType;
 
-        OpenCVMatSettings m_cvMatSettings;
+        FrameSettings m_frameSettings;
     };
 
 }
@@ -85,4 +85,4 @@ namespace WinCamera
 
 //*******************************
 
-#endif
+#endif // ndef WIN_CAMERA__OPENCV_UTILS__FRAME__FRAME_DECODER_H

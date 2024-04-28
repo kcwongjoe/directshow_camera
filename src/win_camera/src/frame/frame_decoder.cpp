@@ -4,7 +4,7 @@
 * If you find any bugs, please feel free to report under https://github.com/kcwongjoe/win_camera/issues
 **/
 
-#include "opencv_utils/cv_mat_convertor.h"
+#include "frame/frame_decoder.h"
 
 #include "directshow_camera/video_format/ds_guid.h"
 #include "directshow_camera/utils/ds_video_format_utils.h"
@@ -34,12 +34,12 @@ namespace WinCamera
     void OpenCVMatConverter::Reset()
     {
         m_videoType = MEDIASUBTYPE_None;
-        m_cvMatSettings.Reset();
+        m_frameSettings.Reset();
     }
 
-    void OpenCVMatConverter::setCVMatSettings(const OpenCVMatSettings settings)
+    void OpenCVMatConverter::setFrameSettings(const FrameSettings settings)
     {
-        m_cvMatSettings = settings;
+        m_frameSettings = settings;
     }
 
     void OpenCVMatConverter::setVideoType(const GUID videoType)
@@ -89,7 +89,7 @@ namespace WinCamera
             result = cv::Mat(height, width, CV_16UC1);
             unsigned char* matPtr = result.ptr();
 
-            if (m_cvMatSettings.BGR)
+            if (m_frameSettings.BGR)
             {
                 // 2 byte - BGR
                 memcpy(matPtr, data, (long)height * (long)width * 2L);
@@ -122,10 +122,10 @@ namespace WinCamera
             unsigned char* dataPtrTemp = data;
             unsigned char* matPtr = result.ptr();
 
-            if (m_cvMatSettings.BGR) {
+            if (m_frameSettings.BGR) {
                 // BGR
 
-                if (m_cvMatSettings.VerticalFlip)
+                if (m_frameSettings.VerticalFlip)
                 {
                     // 3 byte - RGB - Vertical flip
                     for (long y = 0; y < height; y++) {
@@ -141,7 +141,7 @@ namespace WinCamera
             else
             {
                 // RGB
-                if (m_cvMatSettings.VerticalFlip) {
+                if (m_frameSettings.VerticalFlip) {
                     // 3 byte - BGR - Vertical flip
 
                     int x = 0;

@@ -13,7 +13,7 @@
 #include "directshow_camera/video_format/ds_video_format.h"
 #include "directshow_camera/device/ds_camera_device.h"
 
-#include "win_camera/frame.h"
+#include "frame/frame.h"
 
 #include <cstring>
 #include <set>

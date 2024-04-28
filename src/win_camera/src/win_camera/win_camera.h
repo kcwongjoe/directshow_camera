@@ -14,7 +14,8 @@
 
 #include "win_camera/win_camera_device.h"
 
-#include "win_camera/frame.h"
+#include "frame/frame.h"
+#include "frame/frame_settings.h"
 
 #include "win_camera/properties/win_camera_property_brightness.h"
 #include "win_camera/properties/win_camera_property_contrast.h"
@@ -46,7 +47,6 @@
 // Include Opencv
 #ifdef WITH_OPENCV2
 #include <opencv2/opencv.hpp>
-#include "opencv_utils/cv_mat_settings.h"
 #endif
 
 namespace WinCamera
@@ -252,9 +252,13 @@ namespace WinCamera
         */
         int getNumOfPixel() const;
 
-#ifdef WITH_OPENCV2
+        /**
+        * @brief Get the frame settings
+        * @return Return the frame settings by reference so that you can change the settings.
+        */
+        FrameSettings& getFrameSettings();
 
-        OpenCVMatSettings& getOpenCVMatSettings();
+#ifdef WITH_OPENCV2
 
         /**
          * @brief Exposure fusion
@@ -387,9 +391,7 @@ namespace WinCamera
         std::shared_ptr<WinCameraPropertyPowerlineFrequency> m_powerline_frequency;
         std::shared_ptr<WinCameraPropertyDigitalZoomLevel> m_digital_zoom_level;
 
-#ifdef WITH_OPENCV2
-        OpenCVMatSettings m_openCVMatSettings;
-#endif //def WITH_OPENCV2
+        FrameSettings m_frameSettings;
     };
 }
 

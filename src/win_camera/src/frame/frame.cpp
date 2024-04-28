@@ -4,7 +4,7 @@
 * If you find any bugs, please feel free to report under https://github.com/kcwongjoe/win_camera/issues
 **/
 
-#include "win_camera/frame.h"
+#include "frame/frame.h"
 
 #include "utils/path_utils.h"
 
@@ -146,9 +146,9 @@ namespace WinCamera
 #ifdef WITH_OPENCV2
 #pragma region OpenCV
 
-    void Frame::setCVMatSettings(const OpenCVMatSettings settings)
+    void Frame::setFrameSettings(const FrameSettings settings)
     {
-        m_matConvertor.setCVMatSettings(settings);
+        m_matConvertor.setFrameSettings(settings);
     }
 
     cv::Mat Frame::getMat()

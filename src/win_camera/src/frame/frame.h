@@ -5,14 +5,14 @@
 **/
 
 #pragma once
-#ifndef WIN_CAMERA__WIN_CAMERA__FRAME_H
-#define WIN_CAMERA__WIN_CAMERA__FRAME_H
+#ifndef WIN_CAMERA__WIN_CAMERA__FRAME__FRAME_H
+#define WIN_CAMERA__WIN_CAMERA__FRAME__FRAME_H
 
 //************Content************
 
 #include <guiddef.h>
 
-#include "opencv_utils/cv_mat_convertor.h"
+#include "frame/frame_decoder.h"
 #include "utils/gdi_plus_utils.h"
 
 #include <memory>
@@ -129,10 +129,10 @@ namespace WinCamera
 #pragma region OpenCV
 
         /**
-         * @brief Set cv::mat settings
+         * @brief Set frame settings
          * @param[in] settings Settings
         */
-        void setCVMatSettings(const OpenCVMatSettings settings);
+        void setFrameSettings(const FrameSettings settings);
 
         /**
          * @brief Get cv::Mat of the current frame

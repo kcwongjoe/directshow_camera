@@ -5,22 +5,20 @@
 **/
 
 #pragma once
-#ifndef WIN_CAMERA__OPENCV_UTILS__OPENCV_MAT_SETTINGS_H
-#define WIN_CAMERA__OPENCV_UTILS__OPENCV_MAT_SETTINGS_H
+#ifndef WIN_CAMERA__OPENCV_UTILS__FRAME__FRAME_SETTINGS_H
+#define WIN_CAMERA__OPENCV_UTILS__FRAME__FRAME_SETTINGS_H
 
 //************Content************
-#ifdef WITH_OPENCV2
-
 namespace WinCamera
 {
-    class OpenCVMatSettings
+    class FrameSettings
     {
     public:
 
         /**
          * @brief Constructer
         */
-        OpenCVMatSettings();
+        FrameSettings();
 
         /**
         * @brief Reset
@@ -40,8 +38,6 @@ namespace WinCamera
 
 }
 
-#endif
-
 //*******************************
 
-#endif
+#endif // ndef WIN_CAMERA__OPENCV_UTILS__FRAME__FRAME_SETTINGS_H
