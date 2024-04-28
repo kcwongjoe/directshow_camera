@@ -48,7 +48,7 @@ void eg1_capture()
 
     // You can vectical flip the image. The camera is default to vectical flip the image.
     std::cout << "Set camera to vertical flip the captured image." << std::endl;
-    camera.getFrameSettings().VerticalFlip = false;
+    camera.getFrameSettings().VerticalFlip = true;
 
     std::cout << "Capture frame which has been vertical flip and save as image3.jpg" << std::endl;
     camera.getNewFrame(frame);

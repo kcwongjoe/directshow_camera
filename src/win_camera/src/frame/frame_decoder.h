@@ -76,12 +76,12 @@ namespace WinCamera
 
         /**
         * @brief Clone the monochrome frame into another array
-        * @param[in] inputData Input data. Image data is stored row by row.
+        * @param[in] inputData Input data. Image data is stored row by row and has been flipped vertically.
         * @param[out] outputData Output data. Image data is stored row by row.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         */
         static void DecodeMonochromeFrame(
             unsigned char* inputData,
@@ -89,23 +89,23 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true
+            const bool verticalFlip = false
         );
 
         /**
         * @brief Clone the monochrome frame into another array
-        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] data Input data. Image data is stored row by row and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         */
         static std::shared_ptr<unsigned char[]> DecodeMonochromeFrame(
             unsigned char* data,
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true
+            const bool verticalFlip = false
         );
 
 #pragma endregion 8bit Monochrome
@@ -133,12 +133,12 @@ namespace WinCamera
 
         /**
         * @brief Clone the 16bit monochrome frame into another array
-        * @param[in] inputData Input data. Image data is stored row by row.
+        * @param[in] inputData Input data. Image data is stored row by row and has been flipped vertically.
         * @param[out] outputData Output data. Image data is stored row by row.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         */
         static void Decode16BitMonochromeFrame(
             unsigned char* inputData,
@@ -146,23 +146,23 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true
+            const bool verticalFlip = false
         );
 
         /**
         * @brief Clone the 16bit monochrome frame into another array
-        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] data Input data. Image data is stored row by row and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         */
         static std::shared_ptr<unsigned short[]> Decode16BitMonochromeFrame(
             unsigned char* data,
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true
+            const bool verticalFlip = false
         );
 
 #pragma endregion 16bit Monochrome
@@ -190,12 +190,12 @@ namespace WinCamera
 
         /**
         * @brief Decode the RGB frame into another array
-        * @param[in] inputData Input data. Image data is stored in pixel by pixel, row by row in BGR format.
+        * @param[in] inputData Input data. Image data is stored in pixel by pixel, row by row in BGR format and has been flipped vertically.
         * @param[out] outputData Output data. Image data is stored in pixel by pixel, row by row.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         * @param[in] outputRGB (Optional) Output as RGB. Default as false.
         */
         static void DecodeRGBFrame(
@@ -204,17 +204,17 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true,
+            const bool verticalFlip = false,
             const bool outputRGB = false
         );
 
         /**
         * @brief Decode the RGB frame into another array
-        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format.
+        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         * @param[in] outputRGB (Optional) Output as RGB. Default as false.
         */
         static std::shared_ptr<unsigned char[]> DecodeRGBFrame(
@@ -222,7 +222,7 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true,
+            const bool verticalFlip = false,
             const bool outputRGB = false
         );
 
@@ -230,12 +230,12 @@ namespace WinCamera
 
         /**
         * @brief Decode the frame into another array
-        * @param[in] inputData Input data. Image data is stored in pixel by pixel, row by row in BGR format(If color image).
+        * @param[in] inputData Input data. Image data is stored in pixel by pixel, row by row in BGR format(If color image) and has been flipped vertically.
         * @param[out] outputData Output data. Image data is stored in pixel by pixel, row by row.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         * @param[in] outputRGB (Optional) Output as RGB. Default as false.
         */
         static void DecodeFrame(
@@ -244,7 +244,7 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true,
+            const bool verticalFlip = false,
             const bool outputRGB = false
         );
 
@@ -252,11 +252,11 @@ namespace WinCamera
 
         /**
         * @brief Decode the frame into cv::Mat
-        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format(If color image).
+        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format(If color image) and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         * @param[in] outputRGB (Optional) Output as RGB. Default as false.
         */
         static cv::Mat DecodeFrameToCVMat(
@@ -264,49 +264,49 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true,
+            const bool verticalFlip = false,
             const bool outputRGB = false
         );
 
         /**
         * @brief Decode the monochrome frame into cv::Mat
-        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] data Input data. Image data is stored row by row and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         */
         static cv::Mat DecodeMonochromeFrameToCVMat(
             unsigned char* data,
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true
+            const bool verticalFlip = false
         );
 
         /**
         * @brief Decode the 16bit monochrome frame into cv::Mat
-        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] data Input data. Image data is stored row by row and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         */
         static cv::Mat Decode16BitMonochromeFrameToCVMat(
             unsigned char* data,
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true
+            const bool verticalFlip = false
         );
 
         /**
         * @brief Decode the RGB frame into cv::Mat
-        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format.
+        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format and has been flipped vertically.
         * @param[in] videoType Video Type
         * @param[in] width Width
         * @param[in] height Height
-        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
         * @param[in] outputRGB (Optional) Output as RGB. Default as false.
         */
         static cv::Mat DecodeRGBFrameFrameToCVMat(
@@ -314,7 +314,7 @@ namespace WinCamera
             const GUID videoType,
             const int width,
             const int height,
-            const bool verticalFlip = true,
+            const bool verticalFlip = false,
             const bool outputRGB = false
         );
 #endif // def WITH_OPENCV2
@@ -323,7 +323,7 @@ namespace WinCamera
 
         /**
         * @brief Clone the raw data into another array. It can be used to vertical flip the image.
-        * @param[in] inputData Input data. Image data is stored row by row.
+        * @param[in] inputData Input data. Image data is stored row by row and has been flipped vertically.
         * @param[out] outputData Output data. Image data is stored row by row.
         * @param[in] width Width
         * @param[in] height Height

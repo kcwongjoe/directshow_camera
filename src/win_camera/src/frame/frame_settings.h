@@ -31,9 +31,9 @@ namespace WinCamera
         bool BGR = true;
 
         /**
-         * @brief Set it as true to flip iamge vertically. Default as true
+         * @brief Set it as true to flip image vertically. Default as false
         */
-        bool VerticalFlip = true;
+        bool VerticalFlip = false;
 
         /**
         * @brief equal operator

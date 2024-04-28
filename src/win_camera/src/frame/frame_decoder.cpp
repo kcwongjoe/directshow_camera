@@ -210,6 +210,36 @@ namespace WinCamera
         {
             // Convert to RGB
             if (verticalFlip) {
+                // Notes: inputData default is vertical flipped. So do nothing if verticalFlip == true
+
+                // Copy 3 byte per pixel from BGR to RGB format
+                unsigned char* inputDataPtrTemp = inputData;
+                unsigned char* outputDataPtrTemp = outputData;
+                const int frameSize = width * height * 3;
+
+                // 3 byte - BGR - No Vertical flip
+                for (int i = 0; i < frameSize; i += 3) {
+
+                    // Copy R to B
+                    *outputDataPtrTemp = *(inputDataPtrTemp + 2);
+                    outputDataPtrTemp++;
+
+                    // Copy G
+                    *outputDataPtrTemp = *(inputDataPtrTemp + 1);
+                    outputDataPtrTemp++;
+
+                    // Copy B to R
+                    *outputDataPtrTemp = *inputDataPtrTemp;
+                    outputDataPtrTemp++;
+
+                    // Move to next pixel
+                    inputDataPtrTemp += 3;
+                }
+            }
+            else
+            {
+                // Notes: inputData default is vertical flipped. So image should be vertical flip if verticalFlip == false
+
                 // Copy 3 byte per pixel from BGR to RGB format and Vertical flip
 
                 const int numOfBytePerRow = width * 3;
@@ -245,32 +275,6 @@ namespace WinCamera
                     x++;
                 }
             }
-            else
-            {
-                // Copy 3 byte per pixel from BGR to RGB format
-                unsigned char* inputDataPtrTemp = inputData;
-                unsigned char* outputDataPtrTemp = outputData;
-                const int frameSize = width * height * 3;
-
-                // 3 byte - BGR - No Vertical flip
-                for (int i = 0; i < frameSize; i += 3) {
-
-                    // Copy R to B
-                    *outputDataPtrTemp = *(inputDataPtrTemp + 2);
-                    outputDataPtrTemp++;
-
-                    // Copy G
-                    *outputDataPtrTemp = *(inputDataPtrTemp + 1);
-                    outputDataPtrTemp++;
-
-                    // Copy B to R
-                    *outputDataPtrTemp = *inputDataPtrTemp;
-                    outputDataPtrTemp++;
-
-                    // Move to next pixel
-                    inputDataPtrTemp += 3;
-                }
-            }
         }
     }
 
@@ -295,7 +299,15 @@ namespace WinCamera
         return result;
     }
 
-    void FrameDecoder::DecodeFrame(unsigned char* inputData, unsigned char* outputData, const GUID videoType, const int width, const int height, const bool verticalFlip, const bool outputRGB)
+    void FrameDecoder::DecodeFrame(
+        unsigned char* inputData,
+        unsigned char* outputData,
+        const GUID videoType,
+        const int width,
+        const int height,
+        const bool verticalFlip,
+        const bool outputRGB
+    )
     {
         // Check
         CheckSupportVideoType(videoType);
@@ -422,18 +434,20 @@ namespace WinCamera
         const bool verticalFlip
     )
     {
+        // Notes: inputData default is vertical flipped. So do nothing if verticalFlip == true
+
         if (verticalFlip)
         {
-            // Vertical flip
+            // Return image in Vertical flip
+            memcpy(outputData, inputData, (long)height * (long)width * (long)bytesPerPixel);
+        }
+        else
+        {
+            // Return image in non-Vertical flip
             int numOfBytePerRow = width * bytesPerPixel;
             for (int y = 0; y < height; y++) {
                 memcpy(outputData + (numOfBytePerRow * (long)y), inputData + (numOfBytePerRow * (long)(height - y - 1)), numOfBytePerRow);
             }
-        }
-        else
-        {
-            // No vertical flip
-            memcpy(outputData, inputData, (long)height * (long)width * (long)bytesPerPixel);
         }
     }
 }

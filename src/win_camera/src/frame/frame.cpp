@@ -225,6 +225,17 @@ namespace WinCamera
         // Draw
         if (m_frameSettings.VerticalFlip)
         {
+            // Draw image which is vertical flip
+
+            // Note: The image is already vertical flip in m_data
+
+            Utils::GDIPLUSUtils::DrawBitmap(bitmap, m_data.get(), m_frameSize);
+        }
+        else
+        {
+            // Draw image which is not vertical flip
+            // As image is already vertical flip in m_data, we need to flip it
+
             // Create a image buffer
             auto data = new unsigned char[m_frameSize];
 
@@ -236,7 +247,7 @@ namespace WinCamera
                     m_frameType,
                     m_width,
                     m_height,
-                    true,
+                    false,
                     false
                 );
 
@@ -251,10 +262,6 @@ namespace WinCamera
                 delete[] data;
                 throw;
             }
-        }
-        else
-        {
-            Utils::GDIPLUSUtils::DrawBitmap(bitmap, m_data.get(), m_frameSize);
         }
 
         // Save

@@ -17,6 +17,6 @@ namespace WinCamera
     void FrameSettings::Reset()
     {
         BGR = true;
-        VerticalFlip = true;
+        VerticalFlip = false;
     }
 }
