@@ -13,6 +13,7 @@ namespace Utils
 
     // Initialize the static variable
     ULONG_PTR GDIPLUSUtils::s_gdiplusToken = NULL;
+    int GDIPLUSUtils::s_gdiplusCount = 0;
 
     Gdiplus::Status Utils::GDIPLUSUtils::StartGDIPlus()
     {
@@ -21,11 +22,13 @@ namespace Utils
             // Start GDI+
             Gdiplus::GdiplusStartupInput gdiplusStartupInput;
             const auto status = Gdiplus::GdiplusStartup(&s_gdiplusToken, &gdiplusStartupInput, NULL);
+            s_gdiplusCount++;
             return status;
         }
         else
         {
             // GDI+ has already been started
+            s_gdiplusCount++;
             return Gdiplus::Ok;
         }
 
@@ -104,9 +107,14 @@ namespace Utils
 
     void GDIPLUSUtils::StopGDIPlus()
     {
-        if (s_gdiplusToken != NULL)
+        if (s_gdiplusToken != NULL && s_gdiplusCount <= 1)
         {
             Gdiplus::GdiplusShutdown(s_gdiplusToken);
+            s_gdiplusToken = NULL;
+        }
+        else
+        {
+            s_gdiplusCount--;
         }
     }
 

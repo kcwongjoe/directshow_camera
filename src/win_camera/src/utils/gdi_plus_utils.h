@@ -86,6 +86,13 @@ namespace Utils
     private:
         static ULONG_PTR s_gdiplusToken;
 
+        /**
+        * Count the number of GDI+ start has been called. Called StartGDIPlus(), +1. Called StopGDIPlus(), -1.
+        * So that GDIPLUSUtils will works on multiThread. If thread 1 call StartGDIPlus() and thread 2 call StartGDIPlus().
+        * Then GDI+ will not stopped even thread 2 call StopGDIPlus(). It will only stop until thread 1 call StopGDIPlus() as well.
+        */
+        static int s_gdiplusCount;
+
     };
 
 #pragma endregion GDIPlusUtils
