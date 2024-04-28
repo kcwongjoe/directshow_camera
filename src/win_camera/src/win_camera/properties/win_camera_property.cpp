@@ -64,7 +64,8 @@ namespace WinCamera
         CheckOpeningAndSupported();
 
         // Set value
-        auto result = m_camera->setPropertyValue(getDirectShowProperty(), value, isAuto);
+        auto property = getDirectShowProperty();
+        auto result = m_camera->setPropertyValue(property, value, isAuto);
 
         // Throw if error
         if (!result)

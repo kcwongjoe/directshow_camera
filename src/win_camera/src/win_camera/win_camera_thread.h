@@ -101,9 +101,6 @@ namespace WinCamera
 
 #pragma endregion Thread control
 
-#ifdef WITH_OPENCV2
-// Save image require OpenCV
-
 #pragma region Save Image
 
         /**
@@ -123,8 +120,6 @@ namespace WinCamera
         void EnableSaveImage(const bool enable, const bool saveInAsync = true);
 
 #pragma endregion Save Image
-
-#endif
 
         /**
          * @brief Get the last capture image
@@ -158,11 +153,9 @@ namespace WinCamera
         std::thread m_thread;
         int m_waitForStopTimeout = 3000;
 
-#ifdef WITH_OPENCV2
         std::string m_saveImagePath;
         bool m_saveImage = false;
         bool m_saveImageInAsync = true;
-#endif
 
         std::shared_ptr<WinCamera> m_camera = nullptr;
         Frame m_capturedFrame;

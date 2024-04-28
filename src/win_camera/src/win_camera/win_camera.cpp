@@ -551,6 +551,7 @@ namespace WinCamera
             width,
             height,
             frameType,
+            m_frameSettings,
             [this, onlyGetNewFrame](unsigned char* data, unsigned long& frameIndex)
             {   
                 int numOfBytes;
@@ -561,9 +562,6 @@ namespace WinCamera
                 );
             }
         );
-
-        // Set frame settings
-        frame.setFrameSettings(m_frameSettings);
 
         // Update frame index
         m_lastFrameIndex = frame.getFrameIndex();

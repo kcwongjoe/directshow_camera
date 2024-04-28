@@ -85,7 +85,7 @@ namespace DirectShowCamera
          * @param[in] supportAuto Support auto?
          * @param[in] supportManual Support manual?
         */
-        void DirectShowCameraProperty::ImportProperty(
+        void ImportProperty(
             const bool supported,
             const long min,
             const long max,

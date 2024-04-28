@@ -28,6 +28,7 @@ namespace WinCamera
         m_frameSize = other.m_frameSize;
         m_frameIndex = other.m_frameIndex;
         m_frameType = other.m_frameType;
+        m_frameSettings = other.m_frameSettings;
         m_data = std::make_unique<unsigned char[]>(m_frameSize);
         memcpy(m_data.get(), other.m_data.get(), m_frameSize);
     }
@@ -39,6 +40,7 @@ namespace WinCamera
         m_frameSize = other.m_frameSize;
         m_frameIndex = other.m_frameIndex;
         m_frameType = other.m_frameType;
+        m_frameSettings = other.m_frameSettings;
         m_data = std::move(other.m_data);
 
         // Reset other after move
@@ -51,12 +53,8 @@ namespace WinCamera
         m_height = -1;
         m_frameSize = 0;
         m_frameIndex = 0;
+        m_frameSettings.Reset();
         if (m_data != nullptr) m_data.reset();
-
-
-#ifdef WITH_OPENCV2
-        m_matConvertor.Reset();
-#endif
     }
 
 #pragma endregion Constructor and Destructor
@@ -68,6 +66,7 @@ namespace WinCamera
         const int width,
         const int height,
         const GUID frameType,
+        const FrameSettings frameSettings,
         ImportDataFunc importDataFunc
     )
     {
@@ -84,6 +83,7 @@ namespace WinCamera
         m_height = height;
         m_frameType = frameType;
         m_frameSize = frameSize;
+        m_frameSettings = frameSettings;
 
         // Allocate memory
         m_data = std::make_unique<unsigned char[]>(frameSize);
@@ -141,21 +141,30 @@ namespace WinCamera
         return m_frameSize;
     }
 
+    FrameSettings& Frame::getFrameSettings()
+    {
+        return m_frameSettings;
+    }
+
 #pragma endregion Getter
 
 #ifdef WITH_OPENCV2
 #pragma region OpenCV
 
-    void Frame::setFrameSettings(const FrameSettings settings)
-    {
-        m_matConvertor.setFrameSettings(settings);
-    }
-
     cv::Mat Frame::getMat()
     {
-        m_matConvertor.setVideoType(m_frameType);
+        // Check
+        FrameDecoder::CheckSupportVideoType(m_frameType);
 
-        return m_matConvertor.convert(m_data.get(), getWidth(), getHeight());
+        // Convert
+        return FrameDecoder::DecodeFrameToCVMat(
+            m_data.get(),
+            m_frameType,
+            m_width, 
+            m_height,
+            m_frameSettings.VerticalFlip,
+            !m_frameSettings.BGR
+        );
     }
 
 #pragma endregion OpenCV
@@ -166,6 +175,9 @@ namespace WinCamera
         const Gdiplus::EncoderParameters* encoderParams
     )
     {
+        // Check video type
+        FrameDecoder::CheckSupportVideoType(m_frameType);
+
         // Get file Extension
         const auto fileExtension = Utils::PathUtils::getExtension(path);
 
@@ -195,8 +207,55 @@ namespace WinCamera
         if (!success) throw std::runtime_error("Can't get encoder for file type(" + fileExtension + ").");
 
         // Create bitmap
-        Gdiplus::Bitmap bitmap(m_width, m_height, PixelFormat24bppRGB);
-        Utils::GDIPLUSUtils::DrawBitmap(bitmap, m_data.get(), m_frameSize);
+        Gdiplus::PixelFormat pixelFormat;
+        if (FrameDecoder::isMonochromeFrameType(m_frameType))
+        {
+            pixelFormat = PixelFormat8bppIndexed;
+        }
+        else if (FrameDecoder::is16BitMonochromeFrameType(m_frameType))
+        {
+            pixelFormat = PixelFormat16bppGrayScale;
+        }
+        else
+        {
+            pixelFormat = PixelFormat24bppRGB;
+        }
+        Gdiplus::Bitmap bitmap(m_width, m_height, pixelFormat);
+
+        // Draw
+        if (m_frameSettings.VerticalFlip)
+        {
+            // Create a image buffer
+            auto data = new unsigned char[m_frameSize];
+
+            try {
+                // Flip the image into the buffer
+                FrameDecoder::DecodeFrame(
+                    m_data.get(),
+                    data,
+                    m_frameType,
+                    m_width,
+                    m_height,
+                    true,
+                    false
+                );
+
+                // Draw
+                Utils::GDIPLUSUtils::DrawBitmap(bitmap, data, m_frameSize);
+
+                // Delete the buffer
+                delete[] data;
+            }
+            catch (...)
+            {
+                delete[] data;
+                throw;
+            }
+        }
+        else
+        {
+            Utils::GDIPLUSUtils::DrawBitmap(bitmap, m_data.get(), m_frameSize);
+        }
 
         // Save
         bitmap.Save(path.wstring().c_str(), &pngClsid, encoderParams);

@@ -18,6 +18,7 @@
 #include <cstring>
 #include <set>
 #include <vector>
+#include <frame/frame_settings.h>
 
 namespace DirectShowCamera
 {
@@ -127,6 +128,7 @@ namespace DirectShowCamera
                 width,
                 height,
                 MEDIASUBTYPE_RGB24, 
+                WinCamera::FrameSettings(),
                 [frameIndex, width, height](unsigned char* data, unsigned long& frameIndexTobeSet) {
                     frameIndexTobeSet = frameIndex;
                     int frameSizeHasBeenSet = 0;

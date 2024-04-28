@@ -67,6 +67,7 @@ namespace WinCamera
         * @param[in] width Frame width in pixel
         * @param[in] height Frame height in pixel
         * @param[in] frameType Frame type
+        * @param[in] frameSettings Frame settings
         * @param[in] importDataFunc A function to import data. The function should be in the form of void(unsigned char* data, unsigned long& frameIndex)
         */
         void ImportData(
@@ -74,6 +75,7 @@ namespace WinCamera
             const int width,
             const int height,
             const GUID frameType,
+            const FrameSettings frameSettings,
             ImportDataFunc importDataFunc
         );
 
@@ -123,16 +125,16 @@ namespace WinCamera
         */
         int getFrameSize() const;
 
+        /**
+        * @brief Get the frame settings
+        * @return Return the frame settings by reference so that you can change the settings.
+        */
+        FrameSettings& getFrameSettings();
+
 #pragma endregion Getter
 
 #ifdef WITH_OPENCV2
 #pragma region OpenCV
-
-        /**
-         * @brief Set frame settings
-         * @param[in] settings Settings
-        */
-        void setFrameSettings(const FrameSettings settings);
 
         /**
          * @brief Get cv::Mat of the current frame
@@ -157,6 +159,7 @@ namespace WinCamera
                 m_frameSize = other.m_frameSize;
                 m_frameIndex = other.m_frameIndex;
                 m_frameType = other.m_frameType;
+                m_frameSettings = other.m_frameSettings;
                 if (other.m_data != nullptr)
                 {
                     m_data = std::make_unique<unsigned char[]>(m_frameSize);
@@ -179,6 +182,7 @@ namespace WinCamera
                 m_frameSize = other.m_frameSize;
                 m_frameIndex = other.m_frameIndex;
                 m_frameType = other.m_frameType;
+                m_frameSettings = other.m_frameSettings;
                 m_data = std::move(other.m_data);
             }
             return *this;
@@ -194,6 +198,7 @@ namespace WinCamera
             if (m_frameSize != other.m_frameSize) return false;
             if (m_frameIndex != other.m_frameIndex) return false;
             if (m_frameType != other.m_frameType) return false;
+            if (m_frameSettings != other.m_frameSettings) return false;
 
             if (m_data == nullptr && other.m_data != nullptr) return false;
             if (m_data != nullptr && other.m_data == nullptr) return false;
@@ -228,18 +233,26 @@ namespace WinCamera
         );
 
     private:
+
+        /**
+        * If iamge is color image, Raw data will be stored in BGR format row by row
+        * Let say if the image is
+        * 1(BGR) 2(BGR) 3(BGR)
+        * 4(BGR) 5(BGR) 6(BGR)
+        * 7(BGR) 8(BGR) 9(BGR)
+        * The raw data will be [1B,1G,1R,2B,2G,2R,3B,3G,3R,4B,4G,4R,5B,5G,5R,6B,6G,6R,7B,7G,7R,8B,8G,8R,9B,9G,9R]
+        * Notes that image captured by camera is default vertical flipped.
+        */
         std::unique_ptr<unsigned char[]> m_data = nullptr;
         long m_frameSize = 0; // In number of byte
 
         int m_width = -1;
         int m_height = -1;
         GUID m_frameType;
+        FrameSettings m_frameSettings;
 
         unsigned long m_frameIndex = 0;
 
-#ifdef WITH_OPENCV2
-        OpenCVMatConverter m_matConvertor;
-#endif
     };
 
 }

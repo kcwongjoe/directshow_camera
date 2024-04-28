@@ -39,14 +39,12 @@ void eg1_capture()
     std::cout << "Capture frame in cv::Mat and save as image.jpg" << std::endl;
     WinCamera::Frame frame;
     camera.getFrame(frame);
-    frame.Save("a.png");
-    cv::imwrite("image.jpg", frame.getMat());
+    frame.Save("image.jpg");
 
     // Capture a new frame
     std::cout << "Waiting for a new frame to be captured and save as image2.jpg" << std::endl;
     camera.getNewFrame(frame);
-    frame.Save("b.jpg");
-    cv::imwrite("image2.jpg", frame.getMat());
+    frame.Save("image2.jpg");
 
     // You can vectical flip the image. The camera is default to vectical flip the image.
     std::cout << "Set camera to vertical flip the captured image." << std::endl;
@@ -54,8 +52,7 @@ void eg1_capture()
 
     std::cout << "Capture frame which has been vertical flip and save as image3.jpg" << std::endl;
     camera.getNewFrame(frame);
-    frame.Save("c.bmp");
-    cv::imwrite("image3.jpg", frame.getMat());
+    frame.Save("image3.jpg");
 
     // Stop Capture
     camera.StopCapture();

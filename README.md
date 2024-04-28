@@ -11,7 +11,7 @@ A DirectShow-based camera library in c++ for window. Supported USB Camera.
 
 ## Requirements
 
-Minimum C++ 17
+Minimum C++ 20
 
 OpenCV version: 4.9.0 (Option)
 

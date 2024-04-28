@@ -34,6 +34,22 @@ namespace WinCamera
          * @brief Set it as true to flip iamge vertically. Default as true
         */
         bool VerticalFlip = true;
+
+        /**
+        * @brief equal operator
+        */
+        bool operator==(const FrameSettings& other) const
+        {
+            return BGR == other.BGR && VerticalFlip == other.VerticalFlip;
+        }
+
+        /**
+        * @brief not equal operator
+        */
+        bool operator!=(const FrameSettings& other) const
+        {
+            return !(*this == other);
+        }
     };
 
 }

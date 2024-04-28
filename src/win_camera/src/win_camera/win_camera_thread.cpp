@@ -121,7 +121,6 @@ namespace WinCamera
                     bool success = m_camera->getFrame(m_capturedFrame, true);
                     if (success)
                     {
-#ifdef WITH_OPENCV2
                         // Save Image
                         if (m_saveImage)
                         {
@@ -133,15 +132,12 @@ namespace WinCamera
                             std::string imageName = Utils::TimeUtils::ToString(nowTimet, "%Y_%m_%d_%H_%M_%S") + "_" + std::to_string(Utils::TimeUtils::GetMilliseconds(now)) + ".jpg";
                             std::string imagePath = (m_saveImagePath.empty()) ? imageName : m_saveImagePath + "/" + imageName;
 
-                            // Get cv::Mat
-                            cv::Mat cvMatImage = m_capturedFrame.getMat();
-
                             // Save
                             if (m_saveImageInAsync)
                             {
                                 // Save image in async mode
-                                std::thread t([this, imagePath, cvMatImage]() {
-                                    cv::imwrite(imagePath, cvMatImage);
+                                std::thread t([this, imagePath]() {
+                                    m_capturedFrame.Save(imagePath);
                                 }
                                 );
                                 t.detach();
@@ -149,10 +145,9 @@ namespace WinCamera
                             else
                             {
                                 // Save image in sync mode
-                                cv::imwrite(imagePath, cvMatImage);
+                                m_capturedFrame.Save(imagePath);
                             }
                         }
-#endif
 
                         // Process
                         if (m_capturedProcess != nullptr)

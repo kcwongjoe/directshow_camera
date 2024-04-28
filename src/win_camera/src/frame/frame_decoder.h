@@ -16,6 +16,7 @@
 #include <guiddef.h>
 
 #include <vector>
+#include <memory>
 
 #include "frame/frame_settings.h"
 
@@ -24,54 +25,320 @@ namespace WinCamera
 
     /**
      * @brief A converter to convert byte[] to cv::Mat.
-     * @details Reference: https://github.com/opencv/opencv/tree/master/modules/videoio/src/cap_dshow.cpp
     */
-    class OpenCVMatConverter
+    class FrameDecoder
     {
     public:
 
-        /**
-         * @brief Constructor
-        */
-        OpenCVMatConverter();
-
-        /**
-         * @brief Reset
-        */
-        void Reset();
-
-        /**
-         * @brief Set frame settings
-         * @param[in] settings Settings
-        */
-        void setFrameSettings(const FrameSettings settings);
-
-        /**
-        * @brief Set the video type
-        * @param[in] videoType Video type
-        */
-        void setVideoType(const GUID videoType);
-
-        /**
-        * @brief Get the video type
-        */
-        GUID getVideoType() const;
-
-        /**
-         * @brief Convet Byte[] to cv::Mat
-         * @param[out] data Byte[]
-         * @param[in] width Widht of frame
-         * @param[in] height Height of frmae
-         * @return Return cv::Mat which store data in BGR
-        */
-        cv::Mat convert(unsigned char* data, const int width, const int height);
+#pragma region Support Video Type
 
         /**
          * @brief Get the support video type
-         *
          * @return std::vector<GUID>
          */
-        std::vector<GUID> getSupportVideoType() const;
+        static std::vector<GUID> SupportVideoType();
+
+        /**
+        * @brief Check if the video type is supported
+        * @param[in] videoType Video Type
+        * @return bool Return true if the video type is supported
+        */
+        static bool isSupportedVideoType(const GUID videoType);
+
+        /**
+        * @brief Check if the video type is supported. If not supported, throw exception.
+        * @param[in] videoType Video Type
+        */
+        static void CheckSupportVideoType(const GUID videoType);
+
+#pragma endregion Support Video Type
+
+#pragma region 8bit Monochrome
+
+        /**
+        * @brief Get the support monochrome video type
+        * @return std::vector<GUID> Return the support monochrome video type
+        */
+        static std::vector<GUID> SupportMonochromeVideoType();
+
+        /**
+        * @brief Check if the video type is monochrome
+        * @param[in] videoType Video Type
+        * @return bool Return true if the video type is monochrome
+        */
+        static bool isMonochromeFrameType(const GUID videoType);
+
+        /**
+        * @brief Check if the video type is monochrome. If not monochrome, throw exception.
+        * @param[in] videoType Video Type
+        */
+        static void CheckMonochromeFrameType(const GUID videoType);
+
+        /**
+        * @brief Clone the monochrome frame into another array
+        * @param[in] inputData Input data. Image data is stored row by row.
+        * @param[out] outputData Output data. Image data is stored row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        */
+        static void DecodeMonochromeFrame(
+            unsigned char* inputData,
+            unsigned char* outputData,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true
+        );
+
+        /**
+        * @brief Clone the monochrome frame into another array
+        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        */
+        static std::shared_ptr<unsigned char[]> DecodeMonochromeFrame(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true
+        );
+
+#pragma endregion 8bit Monochrome
+
+#pragma region 16bit Monochrome
+
+        /**
+        * @brief Get the support 16bit monochrome video type
+        * @return std::vector<GUID> Return the support 16bit monochrome video type
+        */
+        static std::vector<GUID> Support16BitMonochromeVideoType();
+
+        /**
+        * @brief Check if the video type is 16bit monochrome
+        * @param[in] videoType Video Type
+        * @return bool Return true if the video type is 16bit monochrome
+        */
+        static bool is16BitMonochromeFrameType(const GUID videoType);
+
+        /**
+        * @brief Check if the video type is 16bit monochrome. If not 16bit monochrome, throw exception.
+        * @param[in] videoType Video Type
+        */
+        static void Check16BitMonochromeFrameType(const GUID videoType);
+
+        /**
+        * @brief Clone the 16bit monochrome frame into another array
+        * @param[in] inputData Input data. Image data is stored row by row.
+        * @param[out] outputData Output data. Image data is stored row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        */
+        static void Decode16BitMonochromeFrame(
+            unsigned char* inputData,
+            unsigned short* outputData,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true
+        );
+
+        /**
+        * @brief Clone the 16bit monochrome frame into another array
+        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        */
+        static std::shared_ptr<unsigned short[]> Decode16BitMonochromeFrame(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true
+        );
+
+#pragma endregion 16bit Monochrome
+
+#pragma region RGB
+
+        /**
+        * @brief Get the support RGB video type
+        * @return std::vector<GUID> Return the support RGB video type
+        */
+        static std::vector<GUID> SupportRGBVideoType();
+
+        /**
+        * @brief Check if the video type is RGB
+        * @param[in] videoType Video Type
+        * @return bool Return true if the video type is RGB
+        */
+        static bool isRGBFrameType(const GUID videoType);
+
+        /**
+        * @brief Check if the video type is RGB. If not RGB, throw exception.
+        * @param[in] videoType Video Type
+        */
+        static void CheckRGBFrameType(const GUID videoType);
+
+        /**
+        * @brief Decode the RGB frame into another array
+        * @param[in] inputData Input data. Image data is stored in pixel by pixel, row by row in BGR format.
+        * @param[out] outputData Output data. Image data is stored in pixel by pixel, row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] outputRGB (Optional) Output as RGB. Default as false.
+        */
+        static void DecodeRGBFrame(
+            unsigned char* inputData,
+            unsigned char* outputData,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true,
+            const bool outputRGB = false
+        );
+
+        /**
+        * @brief Decode the RGB frame into another array
+        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] outputRGB (Optional) Output as RGB. Default as false.
+        */
+        static std::shared_ptr<unsigned char[]> DecodeRGBFrame(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true,
+            const bool outputRGB = false
+        );
+
+#pragma endregion RGB
+
+        /**
+        * @brief Decode the frame into another array
+        * @param[in] inputData Input data. Image data is stored in pixel by pixel, row by row in BGR format(If color image).
+        * @param[out] outputData Output data. Image data is stored in pixel by pixel, row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] outputRGB (Optional) Output as RGB. Default as false.
+        */
+        static void DecodeFrame(
+            unsigned char* inputData,
+            unsigned char* outputData,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true,
+            const bool outputRGB = false
+        );
+
+#ifdef WITH_OPENCV2
+
+        /**
+        * @brief Decode the frame into cv::Mat
+        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format(If color image).
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] outputRGB (Optional) Output as RGB. Default as false.
+        */
+        static cv::Mat DecodeFrameToCVMat(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true,
+            const bool outputRGB = false
+        );
+
+        /**
+        * @brief Decode the monochrome frame into cv::Mat
+        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        */
+        static cv::Mat DecodeMonochromeFrameToCVMat(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true
+        );
+
+        /**
+        * @brief Decode the 16bit monochrome frame into cv::Mat
+        * @param[in] data Input data. Image data is stored row by row.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        */
+        static cv::Mat Decode16BitMonochromeFrameToCVMat(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true
+        );
+
+        /**
+        * @brief Decode the RGB frame into cv::Mat
+        * @param[in] data Input data. Image data is stored in pixel by pixel, row by row in BGR format.
+        * @param[in] videoType Video Type
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as true.
+        * @param[in] outputRGB (Optional) Output as RGB. Default as false.
+        */
+        static cv::Mat DecodeRGBFrameFrameToCVMat(
+            unsigned char* data,
+            const GUID videoType,
+            const int width,
+            const int height,
+            const bool verticalFlip = true,
+            const bool outputRGB = false
+        );
+#endif // def WITH_OPENCV2
+
+    private:
+
+        /**
+        * @brief Clone the raw data into another array. It can be used to vertical flip the image.
+        * @param[in] inputData Input data. Image data is stored row by row.
+        * @param[out] outputData Output data. Image data is stored row by row.
+        * @param[in] width Width
+        * @param[in] height Height
+        * @param[in] bytesPerPixel Bytes per pixel
+        * @param[in] verticalFlip (Optional) Flip the image vertically. Default as false.
+        */
+        static void CloneRawData(
+            unsigned char* inputData,
+            unsigned char* outputData,
+            const int width,
+            const int height,
+            const int bytesPerPixel,
+            const bool verticalFlip = false
+        );
+
     private:
         GUID m_videoType;
         std::vector<GUID> m_supportVideoType;
