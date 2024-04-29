@@ -33,9 +33,6 @@ macro(install_opencv)
                 opencv_photo
             )
 
-            # Add define WITH_OPENCV2
-            add_compile_definitions(WITH_OPENCV2)
-
             # Link OpenCV
             include_directories( ${OpenCV_INCLUDE_DIRS} )
             link_directories( ${OpenCV_LIB_DIR} )
@@ -43,8 +40,14 @@ macro(install_opencv)
             message("Fail to install OpenCV. Library is not found in ${OpenCV_DIR}.")
         endif()
     endif()
+endmacro()
 
-
+# A Macro to check OpenCV whether installed
+macro(check_opencv)
+    if (EXISTS ${OpenCV_DIR})
+        # Add define WITH_OPENCV2
+        add_compile_definitions(WITH_OPENCV2)
+    endif()
 endmacro()
 
 # Pre-build process: Copy opencv dll into the output folder

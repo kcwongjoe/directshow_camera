@@ -30,7 +30,11 @@ add_window10_sdk()
 
 # 2. OpenCV, See cmake/InstallOpenCV.cmake
 include(InstallOpenCV)
-install_opencv()
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+    # Only install OpenCV when this project is built as the main project
+    install_opencv()
+endif()
+check_opencv()
 
 # -------- Source --------
 add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/src")
