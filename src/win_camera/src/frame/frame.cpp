@@ -6,6 +6,9 @@
 
 #include "frame/frame.h"
 
+#include "directshow_camera/video_format/ds_guid.h"
+#include "directshow_camera/utils/ds_video_format_utils.h"
+
 #include "utils/path_utils.h"
 
 namespace WinCamera
@@ -92,24 +95,61 @@ namespace WinCamera
         importDataFunc(m_data.get(), m_frameIndex);
     }
 
-    unsigned char* Frame::getFrame(int& numOfBytes, const bool clone)
+    unsigned char* Frame::getFrameDataPtr(int& numOfBytes)
     {
         numOfBytes = m_frameSize;
+        return m_data.get();
+    }
 
-        if (clone)
+    std::shared_ptr<unsigned char[]> Frame::getFrameData(int& numOfBytes)
+    {
+        // Check
+        if (!FrameDecoder::isMonochromeFrameType(m_frameType) &&
+            !FrameDecoder::isRGBFrameType(m_frameType)
+        )
         {
-            // Allocate memory
-            auto data = new unsigned char[m_frameSize];
+            throw std::runtime_error("Frame type(" + DirectShowVideoFormatUtils::ToString(m_frameType) + ") is not 8 bit.");
+        }
 
-            // Copy
-            memcpy(data, m_data.get(), m_frameSize);
-
-            return data;
+        // Convert
+        if (FrameDecoder::isMonochromeFrameType(m_frameType))
+        {
+            // Monochrome
+            return FrameDecoder::DecodeMonochromeFrame(
+                m_data.get(),
+                m_frameType,
+                m_width,
+                m_height,
+                m_frameSettings.VerticalFlip
+            );
         }
         else
         {
-            return m_data.get();
+            // RGB
+            return FrameDecoder::DecodeRGBFrame(
+                m_data.get(),
+                m_frameType,
+                m_width,
+                m_height,
+                m_frameSettings.VerticalFlip,
+                !m_frameSettings.BGR
+            );
         }
+    }
+
+    std::shared_ptr<unsigned short[]> Frame::getFrame16bitData(int& numOfBytes)
+    {
+        // Check
+        FrameDecoder::Check16BitMonochromeFrameType(m_frameType);
+
+        // Convert
+        return FrameDecoder::Decode16BitMonochromeFrame(
+            m_data.get(),
+            m_frameType,
+            m_width,
+            m_height,
+            m_frameSettings.VerticalFlip
+        );
     }
 
 #pragma endregion Frame
@@ -139,6 +179,37 @@ namespace WinCamera
     int Frame::getFrameSize() const
     {
         return m_frameSize;
+    }
+
+    Frame::FrameType Frame::getFrameType() const
+    {
+        if (m_frameType == MEDIASUBTYPE_None)
+        {
+            return FrameType::None;
+        }
+        else if (FrameDecoder::isMonochromeFrameType(m_frameType))
+        {
+            return FrameType::Monochrome8bit;
+        }
+        else if (FrameDecoder::is16BitMonochromeFrameType(m_frameType))
+        {
+            return FrameType::Monochrome16bit;
+        }
+        else if (FrameDecoder::isRGBFrameType(m_frameType))
+        {
+            if (m_frameSettings.BGR)
+            {
+                return FrameType::ColorBGR24bit;
+            }
+            else
+            {
+                return FrameType::ColorRGB24bit;
+            }
+        }
+        else
+        {
+            return FrameType::Unknown;
+        }
     }
 
     FrameSettings& Frame::getFrameSettings()

@@ -27,6 +27,14 @@ namespace WinCamera
     {
     public:
         typedef std::function<void(unsigned char* data, unsigned long& frameIndex)> ImportDataFunc;
+        enum FrameType {
+            None,
+            Unknown,
+            Monochrome8bit,
+            Monochrome16bit,
+            ColorBGR24bit,
+            ColorRGB24bit
+        };
 
     public:
 
@@ -80,16 +88,28 @@ namespace WinCamera
         );
 
         /**
-         * @brief Get frame
+         * @brief   Get frame data pointer. This is the data pointer in the Frame object which is in the order of pixel by pixel (BGR if color),
+         *          row by row and is vertical flipped. Don't release the pointer. The pointer will be released when the frame is destroyed.
          * @param[out] numOfBytes   Number of bytes of the frame.
-         * @param[in] clone         Whether return a frame clone. If true, the frame will be cloned to the return pointer so that data will 
-         *                          still be there even this Frame has been deleted. You must release the memory of the return pointer after use
-         *                          by yourself. If false, the internal data pointer will return. If this Frame is deleted, the return data pointer
-         *                          will be invalid. For example, if you create this Frame as local variable and passing the data pointer to
-         *                          outside the function, you should set clone as true and release the data pointer after use.
-         * @return Return the frame in bytes (BGR)
+         * @return Return the frame in bytes (BGR if color) which is vertical flipped.
         */
-        unsigned char* getFrame(int& numOfBytes, const bool clone = false);
+        unsigned char* getFrameDataPtr(int& numOfBytes);
+
+        /**
+        * @brief    Return a cloned frame data. The data is in the order of pixel by pixel, row by row.
+        *           You will need to know the width, height and frame type to decode the data.
+        * @param[out] numOfBytes   Number of bytes of the frame.
+        * @return Return the frame in bytes
+        */
+        std::shared_ptr<unsigned char[]> getFrameData(int& numOfBytes);
+
+        /**
+        * @brief    Return a cloned frame 16 bit data. The data is in the order of pixel by pixel, row by row.
+        *           You will need to know the width, height and frame type to decode the data.
+        * @param[out] numOfBytes   Number of bytes of the frame.
+        * @return Return the frame in bytes
+        */
+        std::shared_ptr<unsigned short[]> getFrame16bitData(int& numOfBytes);
 
 #pragma endregion Frame
 
@@ -124,6 +144,12 @@ namespace WinCamera
          * @return Return the the frame size in bytes
         */
         int getFrameSize() const;
+
+        /**
+        * @brief Get the frame type
+        * @return Return the frame type
+        */
+        FrameType getFrameType() const;
 
         /**
         * @brief Get the frame settings
@@ -235,13 +261,12 @@ namespace WinCamera
     private:
 
         /**
-        * If iamge is color image, Raw data will be stored in BGR format row by row
+        * If image is color image, Raw data will be stored in BGR format pixel by pixel, row by row and vertical flipped.
         * Let say if the image is
-        * 1(BGR) 2(BGR) 3(BGR)
-        * 4(BGR) 5(BGR) 6(BGR)
-        * 7(BGR) 8(BGR) 9(BGR)
-        * The raw data will be [1B,1G,1R,2B,2G,2R,3B,3G,3R,4B,4G,4R,5B,5G,5R,6B,6G,6R,7B,7G,7R,8B,8G,8R,9B,9G,9R]
-        * Notes that image captured by camera is default vertical flipped.
+        * 1 2 3
+        * 4 5 6
+        * 7 8 9
+        * The raw data will be [9,8,7,4,5,6,1,2,3] and each number is 3 byte which is BGR.
         */
         std::unique_ptr<unsigned char[]> m_data = nullptr;
         long m_frameSize = 0; // In number of byte

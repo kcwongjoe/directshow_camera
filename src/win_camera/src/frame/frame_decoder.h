@@ -22,7 +22,6 @@
 
 namespace WinCamera
 {
-
     /**
      * @brief A converter to convert byte[] to cv::Mat.
     */

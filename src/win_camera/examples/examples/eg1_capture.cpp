@@ -41,6 +41,27 @@ void eg1_capture()
     camera.getFrame(frame);
     frame.Save("image.jpg");
 
+    // You can get the pixel data by the getFrameData function
+    // const auto width = frame.getWidth();
+    // const auto height = frame.getHeight();
+    // const auto frameType = frame.getFrameType(); // Let say the frame type is ColorBGR24bit. If you want to get RGB data, Set frame.getFrameSettings().BGR = false;
+    // int numOfBytes;
+    // auto frameData = frame.getFrameData(numOfBytes);
+    // int row = 0;
+    // int col = 0;
+    // for (int i = 0; i < numOfBytes; i+=3) {
+    //     const auto b = frameData[i];
+    //     const auto g = frameData[i+1];
+    //     const auto r = frameData[i+2];
+    //     std::cout << "Pixel at (" << row << "," << col << ") is (" << r << "," << g << "," << b << ")" << std::endl;
+    //
+    //     col++;
+    //     if (col >= width) {
+    //         col = 0;
+    //         row++;
+    //     }
+    // }
+
     // Capture a new frame
     std::cout << "Waiting for a new frame to be captured and save as image2.jpg" << std::endl;
     camera.getNewFrame(frame);
