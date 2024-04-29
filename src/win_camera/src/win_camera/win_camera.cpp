@@ -15,6 +15,8 @@
 
 #include "utils/gdi_plus_utils.h"
 
+#include <cassert>
+
 
 namespace WinCamera
 {

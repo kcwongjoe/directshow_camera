@@ -10,8 +10,8 @@
 
 //************Content************
 #ifdef WITH_OPENCV2
-
 #include <opencv2/opencv.hpp>
+#endif
 
 #include <guiddef.h>
 
@@ -346,8 +346,6 @@ namespace WinCamera
     };
 
 }
-
-#endif
 
 //*******************************
 

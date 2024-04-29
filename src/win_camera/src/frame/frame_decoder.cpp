@@ -9,7 +9,7 @@
 #include "directshow_camera/video_format/ds_guid.h"
 #include "directshow_camera/utils/ds_video_format_utils.h"
 
-#ifdef WITH_OPENCV2
+#include <stdexcept>
 
 namespace WinCamera
 {
@@ -451,5 +451,3 @@ namespace WinCamera
         }
     }
 }
-
-#endif
