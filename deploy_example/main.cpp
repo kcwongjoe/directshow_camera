@@ -7,7 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
-#include "directshow_camera/camera/camera.h"
+#include "camera/camera.h"
 
 
 int main(int argc, char *argv[])
