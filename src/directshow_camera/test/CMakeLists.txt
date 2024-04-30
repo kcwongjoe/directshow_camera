@@ -13,15 +13,20 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Get example files
-file(GLOB_RECURSE MY_TEST_FILES "*.cpp")
+file(GLOB_RECURSE DIRECTSHOW_CAMERA_TEST_SOURCE_FILES "*.cpp")
 
 # Add sources files
-add_executable(${TEST_PROJECT_NAME} ${MY_TEST_FILES})
+add_executable(${TEST_PROJECT_NAME} ${DIRECTSHOW_CAMERA_TEST_SOURCE_FILES})
 
 # Link header files
 target_include_directories(${TEST_PROJECT_NAME}
     PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Group source files
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES ${DIRECTSHOW_CAMERA_TEST_SOURCE_FILES}
 )
 
 # Link source library and doctest
@@ -32,6 +37,7 @@ target_link_libraries(${TEST_PROJECT_NAME}
         gtest_main
 )
 
+# Copy opencv dll
 prebuild_copy_opencv_dll(${TEST_PROJECT_NAME} "${CMAKE_BINARY_DIR}/src/directshow_camera/test")
 
 # Google test

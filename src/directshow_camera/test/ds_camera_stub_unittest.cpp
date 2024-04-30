@@ -1,11 +1,13 @@
+/**
+* Copy right (c) 2020-2024 Ka Chun Wong. All rights reserved.
+* This is a open source project under MIT license (see LICENSE for details).
+* If you find any bugs, please feel free to report under https://github.com/kcwongjoe/directshow_camera/issues
+**/
+
 #include <gtest/gtest.h>
 
-#include <uvc_camera.h>
-#include <iostream>
-#include <ds_camera_stub.h>
-
-
-using namespace DirectShowCamera;
+#include "camera/camera.h"
+#include "directshow_camera/stub/ds_camera_stub.h"
 
 
 class TestUVCCameraStubF : public ::testing::Test {
@@ -20,8 +22,9 @@ protected:
 
     }
 
-    DirectShowCameraStub* stub = new DirectShowCameraStub();
-    UVCCamera camera = UVCCamera(stub);
+    const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> stub = std::make_shared<DirectShowCamera::DirectShowCameraStub>();
+    DirectShowCamera::DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCamera::DirectShowCameraStub*>(stub.get());
+    DirectShowCamera::Camera camera = DirectShowCamera::Camera(stub);
 };
 
 /**
@@ -54,11 +57,11 @@ protected:
 TEST_F(TestUVCCameraStubF, TestGetCamera)
 {
     // Get cameras from UVCCamera
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<DirectShowCamera::CameraDevice> cameraDeivceList = camera.getCameras();
 
     // Get expect result
-    std::vector<DirectShowCameraDevice> expectDirectShowCameraDevices;
-    DirectShowCameraStubDefaultSetting::getCamera(&expectDirectShowCameraDevices);    
+    std::vector<DirectShowCamera::DirectShowCameraDevice> expectDirectShowCameraDevices;
+    DirectShowCamera::DirectShowCameraStubDefaultSetting::getCamera(expectDirectShowCameraDevices);
     
     // Check
     ASSERT_EQ(cameraDeivceList.size(), expectDirectShowCameraDevices.size()) << "Test UVCCamera(DirectShowCameraStub)::getCameras fail.";
@@ -99,17 +102,18 @@ TEST_F(TestUVCCameraStubF, TestGetCamera)
 TEST(TestUVCCameraStub, TestCapture)
 {
     // Create camera
-    DirectShowCameraStub* stub = new DirectShowCameraStub();
-    UVCCamera camera = UVCCamera(stub);
+    const std::shared_ptr<DirectShowCamera::AbstractDirectShowCamera> stub = std::make_shared<DirectShowCamera::DirectShowCameraStub>();
+    DirectShowCamera::DirectShowCameraStub* cameraStub = dynamic_cast<DirectShowCamera::DirectShowCameraStub*>(stub.get());
+    DirectShowCamera::Camera camera = DirectShowCamera::Camera(stub);
 
     // Get cameras from UVCCamera
-    std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+    std::vector<DirectShowCamera::CameraDevice> cameraDeivceList = camera.getCameras();
 
     // Open the first camera in the biggest resolution
     std::vector <std::pair<int, int>> resolutions = cameraDeivceList[0].getResolutions();
     int width = resolutions[resolutions.size() - 1].first;
     int height = resolutions[resolutions.size() - 1].second;
-    ASSERT_TRUE(camera.open(cameraDeivceList[0],
+    ASSERT_TRUE(camera.Open(cameraDeivceList[0],
             width,
             height
         )
@@ -117,43 +121,27 @@ TEST(TestUVCCameraStub, TestCapture)
     EXPECT_TRUE(camera.isOpened()) << "Fail: camera.isOpened()";
 
     // Start capture
-    EXPECT_TRUE(camera.startCapture()) << "Fail: camera.startCapture()";
+    EXPECT_TRUE(camera.StartCapture()) << "Fail: camera.startCapture()";
     EXPECT_TRUE(camera.isCapturing()) << "Fail: camera.isCapturing()";
 
     // Get getFrame
-    int byteSize = width * height * 3;
-    std::unique_ptr<unsigned char[]> byteBuffer(new unsigned char[byteSize]);
-    int size = 0;
-    EXPECT_TRUE(camera.getFrame(byteBuffer.get(), &size)) << "Fail: camera.getFrame()";
+    DirectShowCamera::Frame frame;
+    EXPECT_TRUE(camera.getFrame(frame)) << "Fail: camera.getFrame()";
 
     // Get Expect frame
-    std::unique_ptr<unsigned char[]> expectByteBuffer(new unsigned char[byteSize]);
-    int expectSize = 0;
-    unsigned long frameIndex = 0;
-    DirectShowCameraStubDefaultSetting::getFrame(
+    DirectShowCamera::Frame expectedFrame;
+    DirectShowCamera::DirectShowCameraStubDefaultSetting::getFrame(
+        expectedFrame,
+        1,  //  Frame index is 1 as only call getFrame once
         width,
-        height,
-        expectByteBuffer.get(),
-        &frameIndex,
-        &expectSize,
-        0
+        height
     );
 
     // Check getFrame
-    EXPECT_EQ(expectSize, expectSize) << "Fail: camera.getFrame()";
-    bool sameByte = true;
-    for (int i=0;i<byteSize;i++)
-    {
-        if (byteBuffer.get()[i] != expectByteBuffer.get()[i])
-        {
-            sameByte = false;
-            break;
-        }
-    }
-    EXPECT_TRUE(sameByte) << "Fail: camera.getFrame()";
+    EXPECT_EQ(frame, expectedFrame) << "Fail: camera.getFrame()";
 
     // Close
-    EXPECT_TRUE(camera.close()) << "Fail: camera.close()";
+    EXPECT_TRUE(camera.Close()) << "Fail: camera.close()";
     EXPECT_FALSE(camera.isOpened()) << "Fail: camera.close()";
     EXPECT_FALSE(camera.isCapturing()) << "Fail: camera.close()";
 

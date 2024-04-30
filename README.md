@@ -1,210 +1,76 @@
-# I am making a big change. Please don't use this library until I finish the change.
+# DirectShow Camera
 
-# Directshow Camera
+A DirectShow-based camera library in c++ for window. Supported USB Camera.
 
-A window-based camera library in c++.
+## Table of contents
 
-### Features
-* Work with OpenCV::Mat
-* Support all camera settings
-* Support Exposure Fusion
-* A looper to handle the camera cycle
-* Internal fake camera (Stub) for testing
+1. [Requirements](#Requirements)
+2. [Deploy](#Deploy)
+3. [Run Examples](#Run-Examples)
+4. [Supported camera properties](#Supported-camera-properties)
+5. [License](#License)
 
-# Table of contents
+## Requirements
 
-1. [Usage](#Usage)
-2. [Looper](#Looper)
-3. [Exposure Fusion](#Exposure-Fusion)
-4. [Using camera without OpenCV](#Using-camera-without-OpenCV)
-5. [Requirements](#Requirements)
-6. [Installation](#Installation)
-7. [Deploy example codes](#Deploy-example-codes)
-8. [License](#License)
+DirectShow Camera is based on DirectShow, which is a part of the Windows SDK. You have to install the Windows SDK to use this library.
 
-# Usage
+1.  Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
 
-```cpp
-#include <uvc_camera.h>
+2.  If your Windows SDK has installed apart from C:/Program Files (x86)/Windows Kits/10, you have to set your Window SDK path manually.
 
-using namespace DirectShowCamera;
+    Go to *config* folder, Rename *window_sdk_path_example.txt* to *window_sdk_path.txt* and type your Window SDK path in the text file.
 
-// Get a empty camera
-UVCCamera camera = UVCCamera();
+## Deploy
 
-// Get available camera list. You can use getResolutions() to acquire the resolutions
-std::vector<CameraDevice> cameraDeivceList = camera.getCameras();
+To add this library to your project, just use FetchContent_Declare() in your cmake file.
 
-// Open the first camera
-camera.open(cameraDeivceList[0]);
-
-// Start Capture
-camera.startCapture();
-
-// Wait 1 second
-std::this_thread::sleep_for(std::chrono::seconds(1));
-
-// Capture a frame
-cv::Mat frame = camera.getMat();
-
-// Close the camera
-camera.close();
-```
-
-*For more details, please see [example code](./examples) , [Documentation](https://www.kcwongjoe.com/directshow_camera/index.html) and [Software Diagrams](http://www.kcwongjoe.com/directshow_camera/software_diagrams.html)*
-
-# Looper
-
-Looper is a loop thread worked in detach mode, making the camera life cycle easy to handle.
-
-### Usage
-
-```cpp
-#include <uvc_camera_looper.h>
-#include <iostream>
-
-using namespace DirectShowCamera;
-
-// Create a looper
-UVCCameraLooper cameraLooper = UVCCameraLooper();
-
-// Open the first camera
-std::vector<CameraDevice> cameraDeivceList = cameraLooper.getCamera()->getCameras();
-cameraLooper.getCamera()->open(cameraDeivceList[0]);
-
-// Set a process to handle the captured image
-cameraLooper.setCapturedProcess(
-    [](cv::Mat image)
-    {
-        std::cout << "Get a new image" << std::endl;
-    }
-);
-
-// Start looper to capture image continously
-cameraLooper.start();
-
-// 1 second
-std::this_thread::sleep_for(std::chrono::seconds(1));
-
-// Stop looper
-cameraLooper.stop();
-```
-
-# Exposure Fusion
-
-Exposure fusion is a technique to capture a high quality image by fusing multi-exposure sequence.
-
-```cpp
-cv::Mat frame = camera.exposureFusion();
-```
-
-*Reference: [Tom Mertens, Jan Kautz, and Frank Van Reeth. Exposure fusion. In Computer Graphics and Applications, 2007. PG'07. 15th Pacific Conference on, pages 382–390. IEEE, 2007.](https://mericam.github.io/exposure_fusion/index.html)*
-
-# Using camera without OpenCV
-
-This library can be used without opencv.
-1. Find **ds_libs_setting.h** in the **include/directshow_camera** folder.
-2. Comment this line
-
-```cpp
-   //#define HAS_OPENCV
-```
-
-Then you can use the following code to get frame bytes in BGR order.
-
-```cpp
-int frameSize;
-unsigned char* image = new unsigned char[1208 * 760 * 3];
-camera.getFrame(&image, &size);
-```
-
-# Requirements
-
-Minimum C++ 17
-
-OpenCV version: 4.9.0 (Option)
-
-# Installation
-
-### 1. Install Window SDK
-
-1. Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
-
-### 2.1 Cmake
-
-1. Create **libs** folder in your project
-2. Clone this repository into the **libs** folder
-   ```
-   git clone https://github.com/kcwongjoe/directshow_camera.git
-   ```
-3. Add the code in your project *CMakeLists.txt*
-   ```cmake
-   # Set Window SDK Path. Change it to your Window SDK Path
-    set(CMAKE_WINDOWS_KITS_10_DIR "C:/Program Files (x86)/Windows Kits/10") 
-
-   # Camera library
-    add_subdirectory(./libs/directshow_camera)
-    target_link_libraries(${PROJECT_NAME}
-        PRIVATE
-            directshow_camera
+1.  Add the following code into your CMakeLists.txt file.
+    ```cmake
+    # Fetch DirectShowCamera
+    include(FetchContent)
+    FetchContent_Declare(
+        DirectShowCamera
+        GIT_REPOSITORY https://github.com/kcwongjoe/directshow_camera.git
     )
-   ```
+    FetchContent_MakeAvailable(DirectShowCamera)
 
-4. Install OpenCV library in CMake
-    1. Add the code in your project CMakeLists.txt
-        # OpenCV
-        set( OpenCV_DIR "your_path/opencv/build/x64/vc16" )  # Opencv path
+    # Do something.......
 
-        # Install
-        find_package(OpenCV REQUIRED
-            opencv_core
-            opencv_imgcodecs
-            opencv_imgproc
-            opencv_photo
-        )
+    # Link source library
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC directshow_camera)
+    ```
 
-        #   Link OpenCV
-        include_directories( ${OpenCV_INCLUDE_DIRS} )
-        link_directories( ${OpenCV_LIB_DIR} )
+2.  Build solution from the cmake command line. Solution will be built in the *yourproject/build* folder.
 
-        target_link_libraries(${PROJECT_NAME}
-            PRIVATE
-                OpenCV_LIBS
-        )
-   
+    ```shell
+    cmake -B ./build -G "Visual Studio 17 2022" -A x64
+    cmake --build build/
+    ```
 
-### 2.2 For dummy
+See the *deploy_example* folder for details.
 
-1. Copy all files inside **src** folder and **include/directshow_camera** folder to your project.
+## Run Examples
 
-# Deploy example codes
+Example code is a good start to learn how to use this library. You can find the example code in the *src/directshow_camera/examples* folder.
 
-1. Install Window SDK
+1.  Clone this repository
+    ```
+    git clone --recurse-submodules https://github.com/kcwongjoe/directshow_camera.git
+    ```
 
-    1. Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
-    2. Go to *config* folder, Rename *window_sdk_path_example.txt* to *window_sdk_path.txt* and type your Window SDK path in the text file.
+2.  Build solution from the cmake command line. Solution will be built in the *build* folder.
 
-2. Clone this repository
-   ```
-   git clone --recurse-submodules https://github.com/kcwongjoe/directshow_camera.git
-   ```
+    ```shell
+    cmake -B ./build -G "Visual Studio 17 2022" -A x64
+    cmake --build build/
+    ```
+    Change the `-A` to win32 for a x86 build. Notes that OpenCV doesn't provide a X86 pre-build, you have to build OpenCV by yourself if you want to use the OpenCV features.
 
+3. Run *directshow_camera_examples* project to get start.
 
-3. Install OpenCV
-    1.  Create **dependencies** folder in the project
-    2.  Download opencv from https://github.com/opencv/opencv/releases/download/4.9.0/opencv-4.9.0-windows.exe into **dependencies** folder
-    3.  Run 
-        ```
-        "C:\Program Files\7-Zip\7z.exe" x opencv-4.9.0-windows.exe -y
-        ```
-        in the **dependencies** folder 
+## Supported camera properties
 
-4. Create a **build** folder if not existed. Run **build.bat** in Solution folder
+Brightness, Contrast, Hue, Saturation, Sharpness, Gamma, Color Enable, White Balance, Backlight Compensation, Gain, Pan, Tilt, Roll, Zoom, Exposure, Iris, Focus, Powerline Frequency, Digital Zoom Level
 
-   Type `build x86` or `build x64`
-
-5. Go to *build* folder and open visual studio solution.
-6. Build solution in visual studio.
-
-# License
+## License
 This project is licensed under [MIT](LICENSE) license.

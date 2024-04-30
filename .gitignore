@@ -6,9 +6,6 @@
 vcpkg
 vcpkg_installed
 
-# dependencies
-dependencies
-
 # PlantUML
 plantuml.jar
 /docs/plantuml.jar
@@ -29,6 +26,9 @@ CMakeCache.txt
 # Config
 /config/vcpkg_path.txt
 /config/window_sdk_path.txt
+
+# VS code
+.vscode
 
 # Prerequisites
 *.d
