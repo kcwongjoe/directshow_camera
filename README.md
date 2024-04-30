@@ -1,4 +1,4 @@
-# Win Camera
+# DirectShow Camera
 
 A DirectShow-based camera library in c++ for window. Supported USB Camera.
 
@@ -26,18 +26,18 @@ To add this library to your project, just use FetchContent_Declare() in your cma
 
 1.  Add the following code into your CMakeLists.txt file.
     ```cmake
-    # Fetch WinCamera
+    # Fetch DirectShowCamera
     include(FetchContent)
     FetchContent_Declare(
-        WinCamera
+        DirectShowCamera
         GIT_REPOSITORY https://github.com/kcwongjoe/win_camera.git
     )
-    FetchContent_MakeAvailable(WinCamera)
+    FetchContent_MakeAvailable(DirectShowCamera)
 
     # Do something.......
 
     # Link source library
-    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC win_camera)
+    target_link_libraries(${PROJECT_NAME} LINK_PUBLIC directshow_camera)
     ```
 
 2.  Build solution from the cmake command line. Solution will be built in the *yourproject/build* folder.

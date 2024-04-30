@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
 # -------- Project --------
-project(win_camera LANGUAGES CXX VERSION 2.0.0)
+project(directshow_camera LANGUAGES CXX VERSION 2.0.0)
 
 # -------- Setting --------
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -13,11 +13,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
 
 # Path
-set(WIN_CAMERA_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-Set(WIN_CAMERA_SOURCES_PATH "${WIN_CAMERA_ROOT_PATH}/src/win_camera")
+set(DIRECTSHOW_CAMERA_PROJECT_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+Set(DIRECTSHOW_CAMERA_PROJECT_SOURCES_PATH "${DIRECTSHOW_CAMERA_PROJECT_ROOT_PATH}/src/directshow_camera")
 
 # Add cmake module
-list(APPEND CMAKE_MODULE_PATH "${WIN_CAMERA_ROOT_PATH}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${DIRECTSHOW_CAMERA_PROJECT_ROOT_PATH}/cmake")
 
 # Initialize variables
 include(CMakeUtils)
@@ -37,19 +37,19 @@ endif()
 check_opencv()
 
 # -------- Source --------
-add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/src")
+add_subdirectory("${DIRECTSHOW_CAMERA_PROJECT_SOURCES_PATH}/src")
 
 if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
     # Only build examples and test when this project is built as the main project
 
     # -------- Example --------
-    add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/examples")
+    add_subdirectory("${DIRECTSHOW_CAMERA_PROJECT_SOURCES_PATH}/examples")
 
     # -------- Test --------
 
     include(CTest)
     if(BUILD_TESTING)
         enable_testing()
-        add_subdirectory("${WIN_CAMERA_SOURCES_PATH}/test")
+        add_subdirectory("${DIRECTSHOW_CAMERA_PROJECT_SOURCES_PATH}/test")
     endif()
 endif()
