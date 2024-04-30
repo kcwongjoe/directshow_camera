@@ -12,7 +12,7 @@ A DirectShow-based camera library in c++ for window. Supported USB Camera.
 
 ## Requirements
 
-WinCamera is based on DirectShow, which is a part of the Windows SDK. You have to install the Windows SDK to use this library.
+DirectShow Camera is based on DirectShow, which is a part of the Windows SDK. You have to install the Windows SDK to use this library.
 
 1.  Install: https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk/
 
@@ -30,7 +30,7 @@ To add this library to your project, just use FetchContent_Declare() in your cma
     include(FetchContent)
     FetchContent_Declare(
         DirectShowCamera
-        GIT_REPOSITORY https://github.com/kcwongjoe/win_camera.git
+        GIT_REPOSITORY https://github.com/kcwongjoe/directshow_camera.git
     )
     FetchContent_MakeAvailable(DirectShowCamera)
 
@@ -51,11 +51,11 @@ See the *deploy_example* folder for details.
 
 ## Run Examples
 
-Example code is a good start to learn how to use this library. You can find the example code in the *win_camera_examples* folder.
+Example code is a good start to learn how to use this library. You can find the example code in the *src/directshow_camera/examples* folder.
 
 1.  Clone this repository
     ```
-    git clone --recurse-submodules https://github.com/kcwongjoe/win_camera.git
+    git clone --recurse-submodules https://github.com/kcwongjoe/directshow_camera.git
     ```
 
 2.  Build solution from the cmake command line. Solution will be built in the *build* folder.
@@ -66,7 +66,7 @@ Example code is a good start to learn how to use this library. You can find the 
     ```
     Change the `-A` to win32 for a x86 build. Notes that OpenCV doesn't provide a X86 pre-build, you have to build OpenCV by yourself if you want to use the OpenCV features.
 
-3. Run *win_camera_examples* to get start.
+3. Run *directshow_camera_examples* project to get start.
 
 ## Supported camera properties
 

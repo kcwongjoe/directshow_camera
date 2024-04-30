@@ -6,7 +6,7 @@ macro(install_opencv)
         # Platform == x86
         set(${OpenCV_FOUND} FALSE)
 
-        message("OpenCV no longer provides prebuilt in x86 versions. WinCamera can still works with no openCV. If you want to use Opencv feature, please download and install OpenCV manually. See https://docs.opencv.org/4.x/d3/d52/tutorial_windows_install.html")
+        message("OpenCV no longer provides prebuilt in x86 versions. DirectShow Camera can still works with no openCV. If you want to use Opencv feature, please download and install OpenCV manually. See https://docs.opencv.org/4.x/d3/d52/tutorial_windows_install.html")
     else()
         # Platform == x64
 

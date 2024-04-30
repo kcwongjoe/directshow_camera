@@ -27,6 +27,9 @@ CMakeCache.txt
 /config/vcpkg_path.txt
 /config/window_sdk_path.txt
 
+# VS code
+.vscode
+
 # Prerequisites
 *.d
 
