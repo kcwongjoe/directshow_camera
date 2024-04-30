@@ -1,4 +1,4 @@
-# Directshow Camera project will not be updated anymore. Please go to [Win Camera](https://github.com/kcwongjoe/win_camera)
+# I am making a big change. Please don't use this library until I finish the change.
 
 # Directshow Camera
 
