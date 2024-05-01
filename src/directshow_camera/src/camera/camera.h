@@ -95,6 +95,15 @@ namespace DirectShowCamera
 #pragma region Connection
 
         /**
+         * @brief Open the first camera in the camera list. The support resolution can be retrieved from CameraDevice. If the frame width and height is not specified, the default resolution will be used.
+         * @param[in] width (Optional) The frame width in pixel.
+         * @param[in] height (Optional) The frame height in pixel.
+         * @param[in] rgb (Optional) Set as true to capture RGB image. Otherwise it capture MonoChrome image. Default as true.
+         * @return Return true if success.
+        */
+        bool Open(const int width = -1, const int height = -1, const bool rgb = true);
+
+        /**
          * @brief Open camera with the specific resolution. The support resolution can be retrieved from CameraDevice. If the frame width and height is not specified, the default resolution will be used.
          * @param[in] device The camera to be opened. You can use getCameras() to extract the available cameras.
          * @param[in] width (Optional) The frame width in pixel.

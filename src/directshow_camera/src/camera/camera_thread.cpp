@@ -60,45 +60,41 @@ namespace DirectShowCamera
 
     bool CameraThread::Stop(const bool async, const bool stopCapture)
     {
-        if (this && m_isRunning)
+        // CameraThread already stopped.
+        if(!(this && m_isRunning)) return true;
+
+        // Call for stop
+        m_stopCapture = stopCapture;
+        m_stopThread = true;
+
+        if (async == false)
         {
-            m_stopCapture = stopCapture;
-            m_stopThread = true;
+            // Sync mode
 
-            if (async == false)
+            // Wait
+            int waitingTime = 0;
+            int delayTime = 100;
+            while (m_isRunning && (waitingTime <= m_waitForStopTimeout || m_waitForStopTimeout == 0))
             {
-                // Sync mode
+                std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
+                waitingTime += delayTime;
+            }
 
-                // Wait
-                int waitingTime = 0;
-                int delayTime = 100;
-                while (m_isRunning && (waitingTime <= m_waitForStopTimeout || m_waitForStopTimeout == 0))
-                {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(delayTime));
-                    waitingTime += delayTime;
-                }
-
-                // Return
-                if (m_waitForStopTimeout > 0 && waitingTime > m_waitForStopTimeout)
-                {
-                    // Time out
-                    return false;
-                }
-                else
-                {
-                    // Success
-                    return true;
-                }
+            // Return
+            if (m_waitForStopTimeout > 0 && waitingTime > m_waitForStopTimeout)
+            {
+                // Time out
+                return false;
             }
             else
             {
-                // Async mode
+                // Success
                 return true;
             }
         }
         else
         {
-            // Looper already stopped.
+            // Async mode
             return true;
         }
         

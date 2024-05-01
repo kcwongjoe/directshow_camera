@@ -13,8 +13,9 @@
 void eg3_camera_thread()
 {
     std::cout << "Example 3: Camera Thread" << std::endl;
+    std::cout << "Camera Thread is a thread which keep capture image from camera." << std::endl;
 
-    // Create a looper
+    // Create a camera thread
     DirectShowCamera::CameraThread cameraThread = DirectShowCamera::CameraThread();
 
     // Open the first camera

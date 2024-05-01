@@ -77,6 +77,20 @@ namespace DirectShowCamera
 
 #pragma region Connection
 
+    bool Camera::Open(const int width, const int height, const bool rgb)
+    {
+        const auto cameras = getCameras();
+
+        if (cameras.size() == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return Open(cameras[0], width, height, rgb);
+        }
+    }
+
     bool Camera::Open(
         const CameraDevice& device,
         const int width,

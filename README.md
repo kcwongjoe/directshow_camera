@@ -5,10 +5,11 @@ A DirectShow-based camera library in c++ for window. Supported USB Camera.
 ## Table of contents
 
 1. [Requirements](#Requirements)
-2. [Deploy](#Deploy)
-3. [Run Examples](#Run-Examples)
-4. [Supported camera properties](#Supported-camera-properties)
-5. [License](#License)
+2. [How to use](#How-to-use])
+3. [Deploy](#Deploy)
+4. [Run Examples](#Run-Examples)
+5. [Supported camera properties](#Supported-camera-properties)
+6. [License](#License)
 
 ## Requirements
 
@@ -19,6 +20,29 @@ DirectShow Camera is based on DirectShow, which is a part of the Windows SDK. Yo
 2.  If your Windows SDK has installed apart from C:/Program Files (x86)/Windows Kits/10, you have to set your Window SDK path manually.
 
     Go to *config* folder, Rename *window_sdk_path_example.txt* to *window_sdk_path.txt* and type your Window SDK path in the text file.
+
+## How to use
+
+```cpp
+#include "camera/camera.h"
+
+auto camera = DirectShowCamera::Camera();
+
+// Open camera and start capture
+camera.Open();
+camera.StartCapture();
+
+// Get frame and save
+DirectShowCamera::Frame frame;
+camera.getFrame(frame);
+frame.Save("image.jpg");
+
+// Stop capture and close camera
+camera.StopCapture();
+camera.Close();
+```
+
+For more details, see the *src/directshow_camera/examples* folder.
 
 ## Deploy
 

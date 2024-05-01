@@ -64,16 +64,16 @@ namespace DirectShowCamera
 #pragma region Thread control
 
         /**
-         * @brief Start looper
+         * @brief Start the Camera Thread
          * @param[in] startCapture (Optional) Set it as true if you want to run startCapture() on the camera. Default as true.
         */
         void Start(const bool startCapture = true);
 
         /**
-         * @brief Stop the looper. This stop function default operating in sync mode which will wait for the thread stopped.
+         * @brief Stop the Camera Thread. This stop function default operating in sync mode which will wait for the thread stopped.
          *
          * @param[in] async (Optional) Set it as true to stop in async mode. Default as false.
-         * @param[in] stopCapture (Optional) Set it as true if you want to run stopCapture() after looper is stopped. Default as true.
+         * @param[in] stopCapture (Optional) Set it as true if you want to run stopCapture() after the thread is stopped. Default as true.
          * @return Return true if success to close. Return false if timeout.
         */
         bool Stop(const bool async = false, const bool stopCapture = true);
